@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-ember: #FF4D00;
+    --color-flare: #FFB703;
+    --color-cyber: #0070F3;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Default light theme like modern Indian Tech Giants (Razorpay, Zoho, Postman) */
+  html:not(.dark) body {
+    background-color: #FAFBFC;
+    color: #0F172A;
+  }
+
+  /* Dark mode */
+  html.dark body {
+    background-color: #05070B;
+    color: #F4F4F5;
+  }
+
+  body {
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Custom subtle scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 9999px;
+  }
+  .dark ::-webkit-scrollbar-thumb {
+    background: #1D263B;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #FF4D00;
+  }
+}
+
+@layer utilities {
+  .text-glow-ember {
+    text-shadow: 0 0 20px rgba(255, 77, 0, 0.5);
+  }
+  .text-glow-cyan {
+    text-shadow: 0 0 20px rgba(0, 112, 243, 0.5);
+  }
+  
+  /* Adaptive Grid Pattern */
+  .bg-grid-pattern {
+    background-size: 40px 40px;
+    background-image: 
+      linear-gradient(to right, rgba(15, 23, 42, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(15, 23, 42, 0.04) 1px, transparent 1px);
+  }
+  .dark .bg-grid-pattern {
+    background-image: 
+      linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  }
+
+  .bg-dots-pattern {
+    background-image: radial-gradient(rgba(15, 23, 42, 0.08) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+  .dark .bg-dots-pattern {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  }
+}
+
+/* Glassmorphism panel utility that works in both Light and Dark mode */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
+}
+
+.dark .glass-panel {
+  background: rgba(12, 17, 28, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4);
+}
+
+.glass-panel:hover {
+  border-color: rgba(255, 77, 0, 0.4);
+}
+
+/* Shimmer animation */
+@keyframes sweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+.animate-sweep {
+  animation: sweep 2.5s infinite;
+}
+
+/* Fade In Slide Up Animation */
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
