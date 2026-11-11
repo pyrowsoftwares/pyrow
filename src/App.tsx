@@ -129,7 +129,7 @@ export default function App() {
       />
 
       {/* Main Content Sections: Premium continuous scroll-reactive flow */}
-      <main className="relative z-10">
+      <main className="relative z-10 w-full overflow-x-hidden">
         {/* Section 1: Hero */}
         <Hero
           onOpenStrategyCall={() => handleOpenStrategyCall()}

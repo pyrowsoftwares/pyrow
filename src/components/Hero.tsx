@@ -33,27 +33,35 @@ export const Hero: React.FC<HeroProps> = ({ onOpenStrategyCall }) => {
   };
 
   return (
-    <section id="hero" className="relative min-h-[90vh] flex flex-col justify-between pt-24 sm:pt-28 pb-0 overflow-hidden">
+    <section id="hero" className="relative w-full min-h-[90vh] flex flex-col justify-between pt-20 sm:pt-28 pb-0 overflow-hidden">
       {/* High-End Dynamic Orbitals & Harmonic Wave Engine */}
       <TechGrowthMatrix />
 
       {/* Main Hero Content */}
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10 my-auto">
+      <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10 my-4 sm:my-auto flex flex-col items-center">
         {/* Eyebrow Tag with Live High-Tech Status */}
         <motion.div
           initial={{ opacity: 0, y: -16, scale: 0.96 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 dark:bg-obsidian-850/90 border border-slate-200/90 dark:border-white/10 text-xs tracking-tight text-slate-800 dark:text-zinc-300 shadow-sm mb-5 backdrop-blur-md"
+          className="inline-flex items-center justify-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-white/90 dark:bg-obsidian-850/90 border border-slate-200/90 dark:border-white/10 text-xs tracking-tight text-slate-800 dark:text-zinc-300 shadow-sm mb-4 sm:mb-5 backdrop-blur-md max-w-full"
         >
-          <span className="relative flex h-2 w-2">
+          <span className="relative flex h-2 w-2 flex-shrink-0">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75" />
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
           </span>
-          <span className="text-zinc-700 dark:text-zinc-300 font-medium">
+
+          {/* Desktop full text */}
+          <span className="hidden sm:inline text-zinc-700 dark:text-zinc-300 font-medium truncate">
             Digital Agency & Software Partner <span className="text-slate-300 dark:text-white/20 mx-1.5">•</span>
             <span className="text-ember-600 dark:text-ember-400 font-semibold">Websites • Custom Software • Mobile Apps • Google & Meta Ads</span>
           </span>
+
+          {/* Mobile concise centered text */}
+          <span className="sm:hidden text-zinc-700 dark:text-zinc-300 font-medium text-[11px] truncate">
+            Digital Agency & Software Partner <span className="text-ember-600 dark:text-ember-400 font-semibold">• High-Growth</span>
+          </span>
+
           <span className="hidden sm:inline-flex items-center gap-1 pl-2 border-l border-slate-200 dark:border-white/10 text-[10px] font-mono font-bold text-emerald-600 dark:text-emerald-400">
             <CheckCircle2 className="w-3 h-3 text-emerald-500" /> 100% Client Ownership
           </span>
@@ -64,7 +72,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenStrategyCall }) => {
           initial={{ opacity: 0, y: 26 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
-          className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black font-display tracking-[-0.03em] text-slate-900 dark:text-zinc-50 max-w-5xl mx-auto leading-[1.1] sm:leading-[1.08]"
+          className="w-full text-2xl sm:text-5xl md:text-6xl lg:text-7xl font-black font-display tracking-tight text-slate-900 dark:text-zinc-50 max-w-5xl mx-auto leading-tight sm:leading-[1.08] text-center px-1"
         >
           We Build Websites & Software That Work.{' '}
           <br className="hidden sm:inline" />
@@ -78,7 +86,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenStrategyCall }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.22, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-4 text-base sm:text-lg text-slate-600 dark:text-zinc-300 max-w-3xl mx-auto leading-relaxed"
+          className="w-full mt-3 sm:mt-4 text-sm sm:text-lg text-slate-600 dark:text-zinc-300 max-w-3xl mx-auto leading-relaxed text-center px-2 sm:px-0"
         >
           Pyrow is India's dedicated technology and digital growth partner. We build lightning-fast websites, custom billing & management software, mobile apps, and high-converting ad campaigns — with 100% complete intellectual property ownership from Day 1.
         </motion.p>
@@ -88,7 +96,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenStrategyCall }) => {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto px-4"
+          className="w-full mt-6 sm:mt-7 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 max-w-xs sm:max-w-none mx-auto px-2"
         >
           <MagneticButton
             variant="primary"
@@ -116,7 +124,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenStrategyCall }) => {
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.42, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-9 max-w-5xl mx-auto overflow-hidden relative"
+          className="w-full max-w-5xl mx-auto overflow-hidden relative mt-8 sm:mt-9"
         >
           <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-r from-light-bg dark:from-obsidian to-transparent z-10 pointer-events-none" />
           <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-l from-light-bg dark:from-obsidian to-transparent z-10 pointer-events-none" />
@@ -140,7 +148,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenStrategyCall }) => {
           initial={{ opacity: 0, y: 30, scale: 0.97 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.9, delay: 0.52, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-5"
+          className="w-full max-w-5xl mx-auto mt-6 sm:mt-8"
         >
           <HeroVisualShowcase />
         </motion.div>

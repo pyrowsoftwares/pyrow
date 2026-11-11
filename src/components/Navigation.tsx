@@ -390,9 +390,8 @@ export const Navigation: React.FC<NavigationProps> = ({
                 </SheetTrigger>
                 <SheetContent side="right" className="w-[320px] sm:w-[380px] p-6 bg-white dark:bg-obsidian-900 border-l border-slate-200 dark:border-white/10 z-50">
                   <SheetHeader className="mb-6">
-                    <SheetTitle className="flex items-center gap-2 text-left">
+                    <SheetTitle className="flex items-center text-left">
                       <FlameLogo />
-                      <span className="font-display font-black text-lg text-slate-900 dark:text-white">PYROW</span>
                     </SheetTitle>
                   </SheetHeader>
                   <div className="flex flex-col space-y-3">

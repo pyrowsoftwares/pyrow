@@ -53,9 +53,9 @@ export const HeroVisualShowcase: React.FC = () => {
   ] as const;
 
   return (
-    <div className="relative mt-12 sm:mt-16 max-w-5xl mx-auto px-2">
+    <div className="relative w-full max-w-5xl mx-auto px-0 sm:px-2 mt-4 sm:mt-12">
       {/* Radiant Subtle Dual-Glow Background halo */}
-      <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-ember-500 via-amber-400 to-cyan-500 opacity-20 dark:opacity-8 blur-lg pointer-events-none -z-10" />
+      <div className="absolute -inset-1 rounded-2xl sm:rounded-3xl bg-gradient-to-r from-ember-500 via-amber-400 to-cyan-500 opacity-20 dark:opacity-8 blur-lg pointer-events-none -z-10" />
 
       {/* Main Glassmorphic Showcase Card with 3D Depth */}
       <div
@@ -65,7 +65,7 @@ export const HeroVisualShowcase: React.FC = () => {
         }}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        className="relative rounded-3xl bg-white/95 dark:bg-obsidian-900/95 border-2 border-slate-200 dark:border-white/10 shadow-2xl backdrop-blur-2xl overflow-hidden"
+        className="relative w-full rounded-2xl sm:rounded-3xl bg-white/95 dark:bg-obsidian-900/95 border border-slate-200/90 dark:border-white/10 shadow-xl backdrop-blur-2xl overflow-hidden"
       >
         {/* Dynamic Glass Glare Highlight */}
         <div
@@ -76,23 +76,30 @@ export const HeroVisualShowcase: React.FC = () => {
         />
 
         {/* Top Control Bar */}
-        <div className="flex flex-wrap items-center justify-between px-5 sm:px-6 py-3.5 bg-slate-100/90 dark:bg-obsidian-950/90 border-b border-slate-200 dark:border-white/10 gap-3 relative z-10">
-          <div className="flex items-center gap-3">
-            {/* Window control dots */}
-            <div className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded-full bg-rose-500" />
-              <span className="w-3 h-3 rounded-full bg-amber-400" />
-              <span className="w-3 h-3 rounded-full bg-emerald-500" />
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-4 sm:px-6 py-3 sm:py-3.5 bg-slate-100/90 dark:bg-obsidian-950/90 border-b border-slate-200 dark:border-white/10 gap-3 relative z-10">
+          <div className="flex items-center justify-between w-full sm:w-auto">
+            <div className="flex items-center gap-3">
+              {/* Window control dots */}
+              <div className="flex items-center gap-1.5">
+                <span className="w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full bg-rose-500" />
+                <span className="w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full bg-amber-400" />
+                <span className="w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full bg-emerald-500" />
+              </div>
+
+              <div className="flex items-center gap-2 pl-2.5 sm:pl-3 border-l border-slate-300 dark:border-white/10 text-xs font-medium">
+                <span className="text-slate-900 dark:text-white font-bold text-[11px] sm:text-xs">What We Build For You</span>
+                <span className="text-slate-400 dark:text-zinc-500 hidden sm:inline">• Live Service Preview</span>
+              </div>
             </div>
 
-            <div className="flex items-center gap-2 pl-3 border-l border-slate-300 dark:border-white/10 text-xs font-medium">
-              <span className="text-slate-900 dark:text-white font-bold">What We Build For You</span>
-              <span className="text-slate-400 dark:text-zinc-500 hidden sm:inline">• Live Service Preview</span>
+            <div className="flex sm:hidden items-center gap-1.5 text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-bold">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span>100% Client Owned</span>
             </div>
           </div>
 
           {/* Interactive Feature View Switcher */}
-          <div className="flex items-center gap-1 p-1 rounded-xl bg-white dark:bg-obsidian-850 border border-slate-200 dark:border-white/10 text-xs font-semibold overflow-x-auto max-w-full scrollbar-none">
+          <div className="w-full sm:w-auto flex items-center gap-1 p-1 rounded-xl bg-white dark:bg-obsidian-850 border border-slate-200 dark:border-white/10 text-xs font-semibold overflow-x-auto max-w-full scrollbar-none -webkit-overflow-scrolling-touch">
             {tabs.map((tab) => {
               const isActive = activeTab === tab.id;
               return (
@@ -131,7 +138,7 @@ export const HeroVisualShowcase: React.FC = () => {
         </div>
 
         {/* Content Pane */}
-        <div className="p-6 sm:p-8 min-h-[300px] relative z-10">
+        <div className="p-3.5 sm:p-8 min-h-[260px] sm:min-h-[300px] relative z-10">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}

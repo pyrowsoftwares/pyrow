@@ -16,46 +16,28 @@ export interface LeaderProfile {
 export const leadershipTeam: LeaderProfile[] = [
   {
     name: 'Barathraj S',
-    role: 'Founder & Chief Executive Architect',
-    titleBadge: 'Vision & Systems Architecture',
-    bio: 'Pioneered Pyrow with a radical premise: high-end software architecture must be fused with aggressive digital growth distribution. Veteran architect with a track record of scaling high-throughput enterprise platforms and orchestrating viral market penetration.',
-    quote: 'We do not build software to sit quietly in repositories. We architect digital weaponry designed to capture market dominance, out-innovate incumbents, and generate compounding enterprise value.',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80',
+    role: 'Co-Founder & Head of Product',
+    titleBadge: 'Product Architecture & Engineering',
+    bio: 'Spearheads product vision, enterprise software engineering, and technical architecture at Pyrow. Focused on building sub-second digital platforms, scalable cloud infrastructure, and mission-critical enterprise systems that turn complex workflows into effortless digital products.',
+    quote: 'A great product is not just code that runs—it is an intuitive, high-speed engine that solves real business problems and scales effortlessly.',
+    avatar: 'https://res.cloudinary.com/dltti9hiw/image/upload/v1781804262/Gemini_Generated_Image_61qmy561qmy561qm_opc41j.png',
     socials: {
-      linkedin: 'https://linkedin.com',
-      twitter: 'https://x.com',
-      github: 'https://github.com',
+      linkedin: 'https://www.linkedin.com/in/sbarathraj/',
+      github: 'https://github.com/sbarathraj',
     },
     metrics: [
-      { label: 'Enterprises Scaled', value: '80+' },
+      { label: 'Products Architected', value: '50+' },
       { label: 'Architecture Reviews', value: '450+' },
       { label: 'Uptime Standard', value: '99.98%' },
     ],
   },
   {
-    name: 'Vikramaditya Rao',
-    role: 'Chief Technology Officer (CTO)',
-    titleBadge: 'Cloud & Distributed Systems',
-    bio: 'Former principal distributed systems engineer. Obsessed with sub-second database transactions, microservice fault tolerance, and zero-downtime Kubernetes orchestration across hybrid multi-cloud environments.',
-    quote: 'Clean code is table stakes. True engineering excellence is predictable performance at 50,000 transactions per second during black swan market events.',
+    name: 'Vigneshwaran',
+    role: 'Co-Founder & Head of Marketing',
+    titleBadge: 'Growth Strategy & Performance Marketing',
+    bio: 'Directs hyper-targeted customer acquisition, digital brand distribution, and revenue growth funnels at Pyrow. Specializes in turning high-performance technology into market-leading customer pipelines via Meta, Google Ads, and omnichannel organic reach.',
+    quote: 'Marketing is the lifeblood of scale. When you combine world-class software with razor-sharp acquisition campaigns, exponential business growth is the only outcome.',
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80',
-    socials: {
-      linkedin: 'https://linkedin.com',
-      github: 'https://github.com',
-    },
-    metrics: [
-      { label: 'Server Speed', value: '38ms' },
-      { label: 'Patents & Papers', value: '4' },
-      { label: 'System Uptime', value: '99.99%' },
-    ],
-  },
-  {
-    name: 'Elena Rostova',
-    role: 'Head of Growth Engineering & AI Performance',
-    titleBadge: 'Algorithmic Acquisition',
-    bio: 'Growth technologist who treats digital acquisition as a science. Architect of multi-million dollar ad spend engines and conversational LLM ad pipelines delivering unprecedented customer acquisition efficiency.',
-    quote: 'Vanity impressions do not pay payroll. We measure our marketing strictly on qualified pipeline value, customer lifetime value (LTV), and immediate payback periods.',
-    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80',
     socials: {
       linkedin: 'https://linkedin.com',
       twitter: 'https://x.com',
@@ -63,7 +45,7 @@ export const leadershipTeam: LeaderProfile[] = [
     metrics: [
       { label: 'Campaigns Scaled', value: '1,400+' },
       { label: 'Avg Client ROAS', value: '4.8x' },
-      { label: 'Enterprise Pipeline', value: '450% Growth' },
+      { label: 'Leads & Enquiries', value: '1.2M+' },
     ],
   },
 ];

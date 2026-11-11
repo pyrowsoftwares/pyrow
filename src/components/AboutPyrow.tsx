@@ -144,14 +144,14 @@ export const AboutPyrow: React.FC<AboutPyrowProps> = ({ onOpenStrategyCall }) =>
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 max-w-5xl mx-auto">
             {leadershipTeam.map((leader, idx) => (
               <div
                 key={leader.name}
                 className={`p-6 sm:p-7 rounded-3xl bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border transition-all duration-300 hover:scale-[1.01] shadow-sm dark:shadow-none ${
                   idx === 0
-                    ? 'border-ember-500/60 dark:border-ember-500/80'
-                    : 'border-slate-200/90 dark:border-slate-800/90 hover:border-slate-300 dark:hover:border-slate-700'
+                    ? 'border-ember-500/60 dark:border-ember-500/80 hover:border-ember-500'
+                    : 'border-cyber-blue/60 dark:border-cyber-blue/80 hover:border-cyber-blue'
                 }`}
               >
                 {/* Avatar & Title */}
@@ -162,16 +162,24 @@ export const AboutPyrow: React.FC<AboutPyrowProps> = ({ onOpenStrategyCall }) =>
                       alt={leader.name}
                       className="w-16 h-16 rounded-2xl object-cover border-2 border-slate-200 dark:border-slate-800 shadow-sm"
                     />
-                    {idx === 0 && (
-                      <span className="absolute -bottom-1 -right-1 p-1 rounded-full bg-ember-500 text-white">
-                        <Sparkles className="w-3 h-3 fill-white" />
-                      </span>
-                    )}
+                    <span
+                      className={`absolute -bottom-1 -right-1 p-1 rounded-full text-white ${
+                        idx === 0 ? 'bg-ember-500' : 'bg-cyber-blue'
+                      }`}
+                    >
+                      <Sparkles className="w-3 h-3 fill-white" />
+                    </span>
                   </div>
 
                   <div>
                     <h4 className="text-lg font-bold text-slate-900 dark:text-white font-display">{leader.name}</h4>
-                    <div className="text-xs font-bold text-ember-600 dark:text-ember-400">{leader.role}</div>
+                    <div
+                      className={`text-xs font-bold ${
+                        idx === 0 ? 'text-ember-600 dark:text-ember-400' : 'text-cyber-blue dark:text-cyber-blue'
+                      }`}
+                    >
+                      {leader.role}
+                    </div>
                     <div className="text-[11px] font-mono text-slate-500 dark:text-zinc-500 mt-0.5">{leader.titleBadge}</div>
                   </div>
                 </div>
