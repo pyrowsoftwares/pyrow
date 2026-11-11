@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Cpu, Terminal, Shield, Zap, Globe, Layers, CheckCircle2 } from 'lucide-react';
+import { Cpu, CheckCircle2 } from 'lucide-react';
+import { Badge } from './ui/badge';
 import { soundFX } from './ui/sound-effects';
 
 interface TechItem {
@@ -115,17 +116,23 @@ export const TechRadar: React.FC = () => {
       ? technologies
       : technologies.filter((t) => t.category === activeCategory);
 
+  const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+    e.currentTarget.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+  };
+
   return (
     <section id="tech-radar" className="relative py-16 sm:py-20 lg:py-24 bg-slate-50 dark:bg-obsidian-900/60 border-b border-slate-200 dark:border-white/5 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mb-10 sm:mb-12">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyber-blue/10 border border-cyber-blue/30 text-xs font-mono text-cyber-blue mb-3 font-bold">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-ember-500/10 border border-ember-500/25 text-xs font-mono text-ember-600 dark:text-ember-400 mb-3 font-semibold">
             <Cpu className="w-3.5 h-3.5" />
             <span>Modern Technology Stack</span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-black font-display text-slate-900 dark:text-white tracking-tight">
-            Reliable Modern Technologies.{' '}
-            <span className="bg-gradient-to-r from-cyber-blue via-cyber-cyan to-flare-gold bg-clip-text text-transparent">
+            Production Engineering.{' '}
+            <span className="bg-gradient-to-r from-ember-500 via-flare-amber to-amber-500 bg-clip-text text-transparent">
               Built to Scale.
             </span>
           </h2>
@@ -143,10 +150,10 @@ export const TechRadar: React.FC = () => {
                 soundFX.playClick();
                 setActiveCategory(c.id);
               }}
-              className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
+              className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                 activeCategory === c.id
-                  ? 'bg-cyber-blue text-white shadow-md'
-                  : 'bg-white dark:bg-obsidian-800 text-slate-700 dark:text-zinc-400 border border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20'
+                  ? 'bg-ember-500 text-white shadow-md shadow-ember-500/20'
+                  : 'bg-white dark:bg-obsidian-800 text-slate-700 dark:text-zinc-400 border border-slate-200/90 dark:border-white/10 hover:border-ember-500/30'
               }`}
             >
               {c.label}
@@ -159,19 +166,23 @@ export const TechRadar: React.FC = () => {
           {filtered.map((tech) => (
             <div
               key={tech.name}
+              onMouseMove={handleCardMouseMove}
               onMouseEnter={() => soundFX.playHover()}
-              className="p-5 sm:p-6 rounded-3xl bg-white dark:bg-obsidian-900 border border-slate-200 dark:border-white/10 hover:border-cyber-blue/50 transition-all duration-300 hover:scale-[1.015] shadow-light-card hover:shadow-light-card-hover dark:shadow-glass-edge flex flex-col justify-between group"
+              className="p-5 sm:p-6 rounded-3xl bg-white dark:bg-obsidian-900/90 border border-slate-200/90 dark:border-white/[0.08] hover:border-ember-500/40 transition-all duration-300 hover:-translate-y-1 shadow-light-card hover:shadow-light-card-hover dark:shadow-glass-edge flex flex-col justify-between group overflow-hidden"
+              style={{
+                backgroundImage: `radial-gradient(350px circle at var(--mouse-x, -200px) var(--mouse-y, -200px), rgba(255, 77, 0, 0.08), transparent 70%)`,
+              }}
             >
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-zinc-400 font-bold border border-slate-200/80 dark:border-white/5">
+                  <Badge variant="secondary" className="text-[10px] font-mono px-2 py-0.5 rounded-md text-slate-600 dark:text-zinc-400 font-semibold border border-slate-200/80 dark:border-white/5">
                     {tech.tier}
-                  </span>
-                  <span className="text-xs font-mono font-bold text-cyber-blue">
+                  </Badge>
+                  <span className="text-xs font-mono font-bold text-ember-600 dark:text-ember-400">
                     {tech.metric}
                   </span>
                 </div>
-                <h4 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white group-hover:text-cyber-blue transition-colors">
+                <h4 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white group-hover:text-ember-600 dark:group-hover:text-ember-400 transition-colors">
                   {tech.name}
                 </h4>
                 <p className="mt-2 text-xs text-slate-600 dark:text-zinc-400 leading-relaxed">

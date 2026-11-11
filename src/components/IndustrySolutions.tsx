@@ -1,26 +1,19 @@
 import React, { useState } from 'react';
 import {
   Database,
-  Layers,
-  Sparkles,
   ArrowRight,
-  ShieldCheck,
   CheckCircle,
-  Play,
-  Monitor,
-  Zap,
-  Check,
-  ExternalLink,
   Activity,
   Send,
 } from 'lucide-react';
 import { industrySolutions, IndustrySolution } from '../data/industryData';
+import { Badge } from './ui/badge';
 import { MagneticButton } from './ui/MagneticButton';
 import { soundFX } from './ui/sound-effects';
 
 interface IndustrySolutionsProps {
   onOpenDemoRequest: (softwareName: string) => void;
-  onOpenScopeCalculator: () => void;
+  onOpenScopeCalculator: (softwareName?: string) => void;
 }
 
 export const IndustrySolutions: React.FC<IndustrySolutionsProps> = ({
@@ -49,24 +42,24 @@ export const IndustrySolutions: React.FC<IndustrySolutionsProps> = ({
     <section id="industry-solutions" className="relative py-16 sm:py-20 lg:py-24 bg-slate-50 dark:bg-obsidian-900/60 border-b border-slate-200 dark:border-white/5 transition-colors duration-300">
       <div id="industries" className="absolute -top-20 left-0" />
       {/* Background glow meshes */}
-      <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-gradient-to-l from-cyber-blue/10 to-transparent blur-[140px] pointer-events-none -z-10" />
-      <div className="absolute bottom-10 left-0 w-[500px] h-[500px] bg-gradient-to-r from-ember-500/10 to-transparent blur-[140px] pointer-events-none -z-10" />
+      <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-gradient-to-l from-ember-500/5 to-transparent blur-[140px] pointer-events-none -z-10" />
+      <div className="absolute bottom-10 left-0 w-[500px] h-[500px] bg-gradient-to-r from-amber-500/5 to-transparent blur-[140px] pointer-events-none -z-10" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Heading */}
         <div className="max-w-3xl mb-10 sm:mb-14">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyber-blue/10 border border-cyber-blue/30 text-xs font-mono text-cyber-blue mb-3 font-bold">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-ember-500/10 border border-ember-500/25 text-xs font-mono text-ember-600 dark:text-ember-400 mb-3 font-semibold">
             <Database className="w-3.5 h-3.5" />
-            <span>Ready-to-Use Business Software</span>
+            <span>Ready-to-Deploy Enterprise Platforms</span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-black font-display text-slate-900 dark:text-white tracking-tight">
-            Specialized Software Suites.{' '}
-            <span className="bg-gradient-to-r from-cyber-blue via-cyber-cyan to-flare-gold bg-clip-text text-transparent">
-              Built for Your Industry.
+            Vertical Architecture.{' '}
+            <span className="bg-gradient-to-r from-ember-500 via-flare-amber to-amber-500 bg-clip-text text-transparent">
+              Engineered for Your Industry.
             </span>
           </h2>
           <p className="mt-3 text-base sm:text-lg text-slate-600 dark:text-zinc-400 leading-relaxed">
-            11 proven software systems designed for Indian businesses — from billing and school portals to hospital records and WhatsApp automation. Ready to customize and launch in days.
+            11 battle-tested software systems designed for enterprise workflows — from billing and multi-branch inventory to healthcare EHR and WhatsApp automation.
           </p>
         </div>
 
@@ -77,11 +70,13 @@ export const IndustrySolutions: React.FC<IndustrySolutionsProps> = ({
             {industrySolutions.map((sol, index) => {
               const isSelected = selectedSolution.id === sol.id;
               return (
-                <div
+                <button
+                  type="button"
                   key={sol.id}
                   onClick={() => handleSelect(sol)}
                   onMouseEnter={() => soundFX.playHover()}
-                  className={`p-3.5 sm:p-4 rounded-2xl cursor-pointer border transition-all duration-200 ${
+                  aria-pressed={isSelected}
+                  className={`w-full text-left p-3.5 sm:p-4 rounded-2xl cursor-pointer border transition-all duration-200 focus-visible:ring-2 focus-visible:ring-ember-500 focus-visible:outline-none ${
                     isSelected
                       ? 'bg-white dark:bg-obsidian-800 border-ember-500 shadow-light-card-hover dark:shadow-glow-ember text-slate-900 dark:text-white'
                       : 'bg-white/70 dark:bg-obsidian-850/80 border-slate-200/80 dark:border-white/5 text-slate-700 dark:text-zinc-300 hover:border-slate-300 dark:hover:border-white/20'
@@ -95,9 +90,9 @@ export const IndustrySolutions: React.FC<IndustrySolutionsProps> = ({
                       <h4 className="text-sm sm:text-base font-bold font-display">{sol.name}</h4>
                     </div>
                     {isSelected ? (
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-ember-500 text-white font-bold">
+                      <Badge variant="default" className="bg-ember-500 text-white text-[10px] font-mono font-bold">
                         ACTIVE
-                      </span>
+                      </Badge>
                     ) : (
                       <span className="text-[10px] font-mono text-slate-400 dark:text-zinc-500">{sol.category}</span>
                     )}
@@ -105,14 +100,14 @@ export const IndustrySolutions: React.FC<IndustrySolutionsProps> = ({
                   <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1.5 line-clamp-2 leading-relaxed">
                     {sol.tagline}
                   </p>
-                </div>
+                </button>
               );
             })}
           </div>
 
           {/* Right Column: Interactive Product Mockup (lg:col-span-7) */}
           <div className="lg:col-span-7 sticky top-24">
-            <div className="glass-panel p-6 sm:p-8 rounded-3xl bg-white dark:bg-obsidian-900/95 border border-slate-200 dark:border-white/10 shadow-xl relative overflow-hidden">
+            <div className="glass-panel p-6 sm:p-8 rounded-3xl bg-white dark:bg-obsidian-900/95 border border-slate-200/90 dark:border-white/[0.08] shadow-xl relative overflow-hidden">
               {/* Toast banner when simulated */}
               {toastMessage && (
                 <div className="absolute top-3 left-1/2 -translate-x-1/2 z-30 px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs font-mono font-bold shadow-lg animate-in slide-in-from-top-2 duration-150 flex items-center gap-2">
@@ -122,7 +117,7 @@ export const IndustrySolutions: React.FC<IndustrySolutionsProps> = ({
               )}
 
               {/* Top Bar with OS Dots */}
-              <div className="flex items-center justify-between pb-3.5 mb-5 border-b border-slate-200 dark:border-white/10">
+              <div className="flex items-center justify-between pb-3.5 mb-5 border-b border-slate-200/90 dark:border-white/10">
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-rose-500/80" />
                   <div className="w-3 h-3 rounded-full bg-amber-500/80" />
@@ -131,18 +126,18 @@ export const IndustrySolutions: React.FC<IndustrySolutionsProps> = ({
                     sys://pyrow-os/{selectedSolution.slug}
                   </span>
                 </div>
-                <span className="inline-flex items-center gap-1.5 text-xs font-mono text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/30 font-semibold">
+                <Badge variant="outline" className="border-emerald-500/30 text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 font-mono text-[11px] gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                   {selectedSolution.mockup.status}
-                </span>
+                </Badge>
               </div>
 
               {/* Title & Tagline */}
               <div>
                 <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <span className="text-xs font-mono px-2.5 py-0.5 rounded bg-ember-500/15 text-ember-600 dark:text-ember-300 border border-ember-500/40 font-semibold">
+                  <Badge variant="secondary" className="text-xs font-mono bg-ember-500/10 text-ember-600 dark:text-ember-300 border border-ember-500/30">
                     {selectedSolution.badge}
-                  </span>
+                  </Badge>
                   <span className="text-xs font-mono text-slate-500 dark:text-zinc-400">{selectedSolution.category}</span>
                 </div>
                 <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white font-display">
@@ -174,7 +169,7 @@ export const IndustrySolutions: React.FC<IndustrySolutionsProps> = ({
                   {/* Simulator Trigger Button */}
                   <button
                     onClick={handleSimulateEvent}
-                    className="flex items-center gap-1.5 text-xs font-mono font-bold px-3 py-1.5 rounded-lg bg-ember-500 hover:bg-ember-400 text-obsidian shadow-sm transition-transform active:scale-95 cursor-pointer"
+                    className="flex items-center gap-1.5 text-xs font-mono font-bold px-3 py-1.5 rounded-lg bg-ember-500 hover:bg-ember-400 text-white shadow-sm transition-transform active:scale-95 cursor-pointer"
                   >
                     <Activity className="w-3.5 h-3.5 animate-pulse" />
                     <span>Simulate Real-Time Event</span>
@@ -199,10 +194,15 @@ export const IndustrySolutions: React.FC<IndustrySolutionsProps> = ({
                     <tbody className="divide-y divide-white/10 text-zinc-200">
                       {selectedSolution.mockup.tableRows.map((row, rIdx) => (
                         <tr key={rIdx} className="hover:bg-white/5 transition-colors">
-                          <td className="py-2.5 font-semibold text-white">{row.col1}</td>
-                          <td className="py-2.5">{row.col2}</td>
-                          <td className="py-2.5">{row.col3}</td>
-                          <td className="py-2.5 text-ember-400 font-bold">{row.col4}</td>
+                          {Object.values(row).map((cell, cIdx) => (
+                            <td key={cIdx} className="py-2.5">
+                              {cIdx === 0 ? (
+                                <span className="font-bold text-white">{String(cell)}</span>
+                              ) : (
+                                String(cell)
+                              )}
+                            </td>
+                          ))}
                         </tr>
                       ))}
                     </tbody>
@@ -210,49 +210,33 @@ export const IndustrySolutions: React.FC<IndustrySolutionsProps> = ({
                 </div>
               </div>
 
-              {/* Feature Pills */}
-              <div className="mt-5 flex flex-wrap gap-2">
-                {selectedSolution.pills.map((pill) => (
-                  <span
-                    key={pill}
-                    className="text-xs font-mono px-3 py-1 rounded-lg bg-slate-100 dark:bg-obsidian-800 text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-white/10 flex items-center gap-1.5 font-medium"
+              {/* Bottom Actions */}
+              <div className="mt-6 pt-5 border-t border-slate-100 dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-2 text-xs font-mono text-slate-500 dark:text-zinc-400">
+                  <CheckCircle className="w-4 h-4 text-emerald-500" />
+                  <span>Deployment Window: 5 to 14 Days</span>
+                </div>
+
+                <div className="flex items-center gap-3 w-full sm:w-auto">
+                  <MagneticButton
+                    variant="primary"
+                    size="sm"
+                    onClick={() => onOpenDemoRequest(selectedSolution.name)}
+                    icon={<Send className="w-3.5 h-3.5" />}
+                    className="w-full sm:w-auto justify-center"
                   >
-                    <Check className="w-3 h-3 text-ember-500" />
-                    {pill}
-                  </span>
-                ))}
-              </div>
-
-              {/* Key Architecture Bullets */}
-              <div className="mt-4 space-y-2">
-                {selectedSolution.features.map((feat, fIdx) => (
-                  <div key={fIdx} className="flex items-start gap-2.5 text-xs text-slate-700 dark:text-zinc-300">
-                    <div className="w-1.5 h-1.5 rounded-full bg-cyber-blue mt-1.5 flex-shrink-0" />
-                    <span>{feat}</span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Action Buttons */}
-              <div className="mt-6 pt-5 border-t border-slate-200 dark:border-white/10 flex flex-col sm:flex-row items-center gap-3">
-                <MagneticButton
-                  variant="primary"
-                  size="md"
-                  onClick={() => onOpenDemoRequest(selectedSolution.name)}
-                  icon={<Play className="w-4 h-4 fill-obsidian" />}
-                  className="w-full sm:w-auto"
-                >
-                  Request Live Interactive Demo
-                </MagneticButton>
-
-                <MagneticButton
-                  variant="outline"
-                  size="md"
-                  onClick={onOpenScopeCalculator}
-                  className="w-full sm:w-auto"
-                >
-                  Calculate Deployment Cost
-                </MagneticButton>
+                    Request Live Demo
+                  </MagneticButton>
+                  <MagneticButton
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => onOpenScopeCalculator(selectedSolution.name)}
+                    icon={<ArrowRight className="w-3.5 h-3.5" />}
+                    className="w-full sm:w-auto justify-center"
+                  >
+                    Scope Deployment
+                  </MagneticButton>
+                </div>
               </div>
             </div>
           </div>

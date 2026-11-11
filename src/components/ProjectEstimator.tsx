@@ -57,6 +57,8 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
     '₹50 Lakhs+ (Full Ecosystem)',
   ];
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const toggleDiscipline = (item: string) => {
     soundFX.playClick();
     if (selectedDisciplines.includes(item)) {
@@ -70,8 +72,13 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    soundFX.playChime();
-    setSubmitted(true);
+    setIsSubmitting(true);
+    soundFX.playClick();
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setSubmitted(true);
+      soundFX.playChime();
+    }, 600);
   };
 
   const openWhatsApp = () => {
@@ -120,10 +127,12 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                       {disciplines.map((d) => {
                         const isSelected = selectedDisciplines.includes(d);
                         return (
-                          <div
+                          <button
+                            type="button"
                             key={d}
                             onClick={() => toggleDiscipline(d)}
-                            className={`p-3.5 rounded-2xl border text-xs font-bold cursor-pointer flex items-center justify-between transition-all ${
+                            aria-pressed={isSelected}
+                            className={`p-3.5 rounded-2xl border text-xs font-bold cursor-pointer flex items-center justify-between transition-all focus-visible:ring-2 focus-visible:ring-ember-500 focus-visible:outline-none ${
                               isSelected
                                 ? 'bg-ember-500/10 border-ember-500 text-ember-600 dark:text-white shadow-sm'
                                 : 'bg-slate-50 dark:bg-obsidian-800 text-slate-600 dark:text-zinc-400 border-slate-200/80 dark:border-white/5 hover:border-slate-300'
@@ -137,7 +146,7 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                             >
                               {isSelected && <CheckCircle className="w-3 h-3 stroke-[3]" />}
                             </div>
-                          </div>
+                          </button>
                         );
                       })}
                     </div>
@@ -271,10 +280,11 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                       variant="primary"
                       size="lg"
                       type="submit"
+                      disabled={isSubmitting}
                       className="w-full justify-center mt-2"
                       icon={<Send className="w-4 h-4" />}
                     >
-                      Submit & Get Fixed-Price Estimate
+                      {isSubmitting ? 'Calculating & Dispatching...' : 'Submit & Get Fixed-Price Estimate'}
                     </MagneticButton>
                   </div>
                 </form>

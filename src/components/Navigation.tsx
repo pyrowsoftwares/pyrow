@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { motion, useScroll } from 'framer-motion';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from './ui/sheet';
 import {
   ChevronDown,
   Volume2,
@@ -46,17 +48,20 @@ export const Navigation: React.FC<NavigationProps> = ({
   const [soundEnabled, setSoundEnabled] = useState(soundFX.enabled);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const { scrollYProgress } = useScroll();
 
   useEffect(() => {
+    let lastScrolled = window.scrollY > 20;
+    setScrolled(lastScrolled);
+
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-      const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
-      if (totalScroll > 0) {
-        setScrollProgress((window.scrollY / totalScroll) * 100);
+      const isScrolled = window.scrollY > 20;
+      if (isScrolled !== lastScrolled) {
+        lastScrolled = isScrolled;
+        setScrolled(isScrolled);
       }
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -76,11 +81,11 @@ export const Navigation: React.FC<NavigationProps> = ({
 
   return (
     <>
-      {/* Top Scroll Progress Flame Line */}
-      <div className="fixed top-0 left-0 right-0 h-1 z-50 bg-transparent">
-        <div
-          className="h-full bg-gradient-to-r from-ember-500 via-flare-amber to-cyber-blue transition-all duration-100 ease-out"
-          style={{ width: `${scrollProgress}%` }}
+      {/* Top Scroll Progress Flame Line (GPU Accelerated via useScroll) */}
+      <div className="fixed top-0 left-0 right-0 h-[2px] z-50 bg-transparent overflow-hidden pointer-events-none">
+        <motion.div
+          className="h-full bg-gradient-to-r from-ember-500 via-flare-amber to-amber-500 origin-left will-change-transform"
+          style={{ scaleX: scrollYProgress }}
         />
       </div>
 
@@ -394,85 +399,88 @@ export const Navigation: React.FC<NavigationProps> = ({
                 Launch Project
               </MagneticButton>
 
-              {/* Mobile Hamburger Toggle */}
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 rounded-full bg-slate-100 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-zinc-300 lg:hidden"
-                aria-label="Toggle Navigation Menu"
-              >
-                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-              </button>
+              {/* Mobile Drawer Navigation with shadcn Sheet */}
+              <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+                <SheetTrigger
+                  className="p-2 rounded-full bg-slate-100 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-zinc-300 lg:hidden cursor-pointer"
+                  aria-label="Toggle Navigation Menu"
+                >
+                  <Menu className="w-5 h-5" />
+                </SheetTrigger>
+                <SheetContent side="right" className="w-[320px] sm:w-[380px] p-6 bg-white dark:bg-obsidian-900 border-l border-slate-200 dark:border-white/10 z-50">
+                  <SheetHeader className="mb-6">
+                    <SheetTitle className="flex items-center gap-2 text-left">
+                      <FlameLogo />
+                      <span className="font-display font-black text-lg text-slate-900 dark:text-white">PYROW</span>
+                    </SheetTitle>
+                  </SheetHeader>
+                  <div className="flex flex-col space-y-3">
+                    <button
+                      onClick={() => scrollTo('services')}
+                      className="text-left text-sm font-semibold text-slate-900 dark:text-white py-2.5 border-b border-slate-100 dark:border-white/5 flex items-center justify-between cursor-pointer hover:text-ember-500 transition-colors"
+                    >
+                      <span>Services Matrix</span>
+                      <ArrowRight className="w-4 h-4 text-ember-500" />
+                    </button>
+                    <button
+                      onClick={() => scrollTo('industries')}
+                      className="text-left text-sm font-semibold text-slate-900 dark:text-white py-2.5 border-b border-slate-100 dark:border-white/5 flex items-center justify-between cursor-pointer hover:text-cyber-blue transition-colors"
+                    >
+                      <span>11 Industry Solutions</span>
+                      <ArrowRight className="w-4 h-4 text-cyber-blue" />
+                    </button>
+                    <button
+                      onClick={() => scrollTo('how-it-works')}
+                      className="text-left text-sm font-semibold text-slate-900 dark:text-white py-2.5 border-b border-slate-100 dark:border-white/5 flex items-center justify-between cursor-pointer hover:text-emerald-500 transition-colors"
+                    >
+                      <span>How We Partner (4 Steps)</span>
+                      <ArrowRight className="w-4 h-4 text-emerald-500" />
+                    </button>
+                    <button
+                      onClick={() => scrollTo('case-studies')}
+                      className="text-left text-sm font-semibold text-slate-900 dark:text-white py-2.5 border-b border-slate-100 dark:border-white/5 flex items-center justify-between cursor-pointer hover:text-amber-500 transition-colors"
+                    >
+                      <span>Case Studies</span>
+                      <ArrowRight className="w-4 h-4 text-amber-500" />
+                    </button>
+                    <button
+                      onClick={() => scrollTo('estimator')}
+                      className="text-left text-sm font-semibold text-slate-900 dark:text-white py-2.5 border-b border-slate-100 dark:border-white/5 flex items-center justify-between cursor-pointer hover:text-ember-500 transition-colors"
+                    >
+                      <span>Budget & Scope Estimator</span>
+                      <ArrowRight className="w-4 h-4 text-ember-500" />
+                    </button>
+
+                    <div className="pt-6 flex flex-col gap-2.5">
+                      <MagneticButton
+                        variant="primary"
+                        size="md"
+                        onClick={() => {
+                          setMobileMenuOpen(false);
+                          onOpenScopeCalculator();
+                        }}
+                        className="w-full justify-center"
+                      >
+                        Launch Project (Scope Estimator)
+                      </MagneticButton>
+                      <MagneticButton
+                        variant="secondary"
+                        size="md"
+                        onClick={() => {
+                          setMobileMenuOpen(false);
+                          onOpenStrategyCall();
+                        }}
+                        className="w-full justify-center"
+                      >
+                        Schedule Strategy Call
+                      </MagneticButton>
+                    </div>
+                  </div>
+                </SheetContent>
+              </Sheet>
             </div>
           </div>
         </div>
-
-        {/* Mobile Drawer Navigation */}
-        {mobileMenuOpen && (
-          <div className="lg:hidden fixed inset-x-3 top-20 bg-white/98 dark:bg-obsidian-900/98 border border-slate-200 dark:border-white/10 rounded-3xl p-6 shadow-2xl backdrop-blur-2xl z-50 animate-in slide-in-from-top-4 duration-200">
-            <div className="flex flex-col space-y-3">
-              <button
-                onClick={() => scrollTo('services')}
-                className="text-left text-sm font-bold text-slate-900 dark:text-white py-2 border-b border-slate-100 dark:border-white/5 flex items-center justify-between"
-              >
-                <span>Services Matrix</span>
-                <ArrowRight className="w-4 h-4 text-ember-500" />
-              </button>
-              <button
-                onClick={() => scrollTo('industries')}
-                className="text-left text-sm font-bold text-slate-900 dark:text-white py-2 border-b border-slate-100 dark:border-white/5 flex items-center justify-between"
-              >
-                <span>11 Industry Solutions</span>
-                <ArrowRight className="w-4 h-4 text-cyber-blue" />
-              </button>
-              <button
-                onClick={() => scrollTo('how-it-works')}
-                className="text-left text-sm font-bold text-slate-900 dark:text-white py-2 border-b border-slate-100 dark:border-white/5 flex items-center justify-between"
-              >
-                <span>How We Partner (4 Steps)</span>
-                <ArrowRight className="w-4 h-4 text-emerald-500" />
-              </button>
-              <button
-                onClick={() => scrollTo('case-studies')}
-                className="text-left text-sm font-bold text-slate-900 dark:text-white py-2 border-b border-slate-100 dark:border-white/5 flex items-center justify-between"
-              >
-                <span>Case Studies</span>
-                <ArrowRight className="w-4 h-4 text-flare-amber" />
-              </button>
-              <button
-                onClick={() => scrollTo('estimator')}
-                className="text-left text-sm font-bold text-slate-900 dark:text-white py-2 border-b border-slate-100 dark:border-white/5 flex items-center justify-between"
-              >
-                <span>Budget & Scope Estimator</span>
-                <ArrowRight className="w-4 h-4 text-ember-500" />
-              </button>
-
-              <div className="pt-3 flex flex-col gap-2">
-                <MagneticButton
-                  variant="primary"
-                  size="md"
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    onOpenScopeCalculator();
-                  }}
-                  className="w-full justify-center"
-                >
-                  Launch Project (Scope Estimator)
-                </MagneticButton>
-                <MagneticButton
-                  variant="secondary"
-                  size="md"
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    onOpenStrategyCall();
-                  }}
-                  className="w-full justify-center"
-                >
-                  Schedule Strategy Call
-                </MagneticButton>
-              </div>
-            </div>
-          </div>
-        )}
       </header>
     </>
   );

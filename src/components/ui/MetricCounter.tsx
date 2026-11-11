@@ -6,7 +6,7 @@ interface MetricCounterProps {
   suffix?: string;
   duration?: number;
   decimals?: number;
-  label: string;
+  label?: string;
   sublabel?: string;
 }
 
@@ -68,7 +68,7 @@ export const MetricCounter: React.FC<MetricCounterProps> = ({
         </span>
         <span className="text-flare-amber ml-0.5">{suffix}</span>
       </div>
-      <div className="mt-1 text-sm font-bold tracking-wide text-slate-700 dark:text-zinc-300">{label}</div>
+      {label && <div className="mt-1 text-sm font-bold tracking-wide text-slate-700 dark:text-zinc-300">{label}</div>}
       {sublabel && <div className="text-xs text-slate-500 dark:text-zinc-500 font-mono mt-0.5">{sublabel}</div>}
     </div>
   );

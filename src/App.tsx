@@ -16,12 +16,15 @@ import { ScopeCalculatorModal } from './components/Modals/ScopeCalculatorModal';
 import { StrategyCallModal } from './components/Modals/StrategyCallModal';
 import { DemoRequestModal } from './components/Modals/DemoRequestModal';
 import { CommandPalette } from './components/ui/CommandPalette';
+import { KineticCursorGlow } from './components/ui/KineticCursorGlow';
+import { TooltipProvider } from './components/ui/tooltip';
 import { ArrowUp, PhoneCall, Sparkles } from 'lucide-react';
 import { soundFX } from './components/ui/sound-effects';
 
 export default function App() {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [scopeModalOpen, setScopeModalOpen] = useState(false);
+  const [selectedScopeService, setSelectedScopeService] = useState<string | undefined>();
   const [strategyCallModalOpen, setStrategyCallModalOpen] = useState(false);
   const [demoModalOpen, setDemoModalOpen] = useState(false);
   const [demoSoftwareName, setDemoSoftwareName] = useState('Enterprise ERP Software');
@@ -51,19 +54,17 @@ export default function App() {
     }
   };
 
-  // Kinetic cursor tracking & scroll top visibility
-  const [cursorPos, setCursorPos] = useState({ x: -1000, y: -1000 });
-
+  // Scroll top visibility & keyboard shortcuts
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setCursorPos({ x: e.clientX, y: e.clientY });
-    };
-
+    let lastShow = false;
     const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 400);
+      const show = window.scrollY > 400;
+      if (show !== lastShow) {
+        lastShow = show;
+        setShowScrollTop(show);
+      }
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('scroll', handleScroll, { passive: true });
 
     // Keyboard shortcut (⌘K or Ctrl+K)
@@ -76,11 +77,16 @@ export default function App() {
     window.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
+
+  const handleOpenScopeCalculator = (serviceTitle?: string) => {
+    soundFX.playClick();
+    setSelectedScopeService(serviceTitle);
+    setScopeModalOpen(true);
+  };
 
   const handleOpenDemoRequest = (softwareTitle?: string) => {
     soundFX.playClick();
@@ -94,24 +100,14 @@ export default function App() {
   };
 
   return (
-    <div className="relative min-h-screen bg-light-bg dark:bg-obsidian text-slate-900 dark:text-zinc-100 selection:bg-ember-500 selection:text-white font-sans overflow-x-hidden transition-colors duration-300">
-      {/* Kinetic Ambient Glow following mouse */}
-      <div
-        className="fixed pointer-events-none rounded-full blur-[120px] transition-transform duration-75 ease-out -z-10"
-        style={{
-          width: '420px',
-          height: '420px',
-          transform: `translate3d(${cursorPos.x - 210}px, ${cursorPos.y - 210}px, 0)`,
-          background:
-            theme === 'dark'
-              ? 'radial-gradient(circle, rgba(255, 77, 0, 0.08) 0%, rgba(0, 112, 243, 0.04) 50%, transparent 70%)'
-              : 'radial-gradient(circle, rgba(255, 77, 0, 0.05) 0%, rgba(0, 112, 243, 0.03) 50%, transparent 70%)',
-        }}
-      />
+    <TooltipProvider>
+      <div className="relative min-h-screen bg-light-bg dark:bg-obsidian text-slate-900 dark:text-zinc-100 selection:bg-ember-500 selection:text-white font-sans overflow-x-hidden transition-colors duration-300">
+        {/* Isolated Kinetic Ambient Glow (Zero Virtual-DOM Root Re-renders) */}
+        <KineticCursorGlow theme={theme} />
 
       {/* Global Navigation Bar */}
       <Navigation
-        onOpenScopeCalculator={() => setScopeModalOpen(true)}
+        onOpenScopeCalculator={() => handleOpenScopeCalculator()}
         onOpenStrategyCall={() => setStrategyCallModalOpen(true)}
         onOpenDemoRequest={handleOpenDemoRequest}
         onOpenCommandPalette={() => setCommandPaletteOpen(true)}
@@ -123,36 +119,36 @@ export default function App() {
       <main className="relative z-10">
         {/* Section 1: Hero */}
         <Hero
-          onOpenScopeCalculator={() => setScopeModalOpen(true)}
+          onOpenScopeCalculator={() => handleOpenScopeCalculator()}
           onOpenStrategyCall={() => setStrategyCallModalOpen(true)}
         />
 
         {/* Section 2: Services */}
         <Services
-          onOpenScopeCalculator={() => setScopeModalOpen(true)}
+          onOpenScopeCalculator={handleOpenScopeCalculator}
           onOpenStrategyCall={() => setStrategyCallModalOpen(true)}
         />
 
         {/* Section 3: How We Work (4 Simple Steps) */}
         <HowItWorks
-          onOpenScopeCalculator={() => setScopeModalOpen(true)}
+          onOpenScopeCalculator={() => handleOpenScopeCalculator()}
           onOpenStrategyCall={() => setStrategyCallModalOpen(true)}
         />
 
         {/* Section 4: Industry-Specific Software Solutions */}
         <IndustrySolutions
           onOpenDemoRequest={handleOpenDemoRequest}
-          onOpenScopeCalculator={() => setScopeModalOpen(true)}
+          onOpenScopeCalculator={() => handleOpenScopeCalculator()}
         />
 
         {/* Section 5: Case Studies (Real Stories & Client Growth) */}
         <CaseStudies
-          onOpenScopeCalculator={() => setScopeModalOpen(true)}
+          onOpenScopeCalculator={() => handleOpenScopeCalculator()}
         />
 
         {/* Section 6: ROI Calculator */}
         <RoiCalculator
-          onOpenScopeCalculator={() => setScopeModalOpen(true)}
+          onOpenScopeCalculator={() => handleOpenScopeCalculator()}
         />
 
         {/* Section 7: Technology Stack */}
@@ -172,13 +168,13 @@ export default function App() {
         {/* Section 11: Project Estimator & Contact */}
         <ProjectEstimator
           onOpenStrategyCall={() => setStrategyCallModalOpen(true)}
-          onOpenScopeCalculator={() => setScopeModalOpen(true)}
+          onOpenScopeCalculator={() => handleOpenScopeCalculator()}
         />
       </main>
 
       {/* Section 12: Footer */}
       <Footer
-        onOpenScopeCalculator={() => setScopeModalOpen(true)}
+        onOpenScopeCalculator={() => handleOpenScopeCalculator()}
         onOpenStrategyCall={() => setStrategyCallModalOpen(true)}
         onOpenDemoRequest={handleOpenDemoRequest}
       />
@@ -211,6 +207,7 @@ export default function App() {
       <ScopeCalculatorModal
         isOpen={scopeModalOpen}
         onClose={() => setScopeModalOpen(false)}
+        initialService={selectedScopeService}
         onOpenStrategyCall={() => {
           setScopeModalOpen(false);
           setStrategyCallModalOpen(true);
@@ -236,5 +233,6 @@ export default function App() {
         onOpenDemoRequest={handleOpenDemoRequest}
       />
     </div>
+  </TooltipProvider>
   );
 }

@@ -7,15 +7,27 @@ interface ScopeCalculatorModalProps {
   isOpen: boolean;
   onClose: () => void;
   onOpenStrategyCall: () => void;
+  initialService?: string;
 }
 
 export const ScopeCalculatorModal: React.FC<ScopeCalculatorModalProps> = ({
   isOpen,
   onClose,
   onOpenStrategyCall,
+  initialService,
 }) => {
   const [step, setStep] = useState(1);
-  const [projectTypes, setProjectTypes] = useState<string[]>(['Website & E-Commerce']);
+  const [projectTypes, setProjectTypes] = useState<string[]>(() => {
+    if (initialService) return [initialService];
+    return ['Website & E-Commerce'];
+  });
+
+  // Keep in sync when initialService changes on modal open
+  React.useEffect(() => {
+    if (initialService && isOpen) {
+      setProjectTypes([initialService]);
+    }
+  }, [initialService, isOpen]);
   const [timeline, setTimeline] = useState('1 - 3 Months');
   const [budgetTier, setBudgetTier] = useState('₹5 Lakhs - ₹15 Lakhs');
   const [addons, setAddons] = useState<string[]>(['24/7 Hosting & DevOps Support']);

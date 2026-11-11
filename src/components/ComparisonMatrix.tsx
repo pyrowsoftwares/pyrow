@@ -1,5 +1,6 @@
 import React from 'react';
-import { Check, X, Shield, Zap, Sparkles } from 'lucide-react';
+import { Check, X, Shield, Sparkles } from 'lucide-react';
+import { Badge } from './ui/badge';
 
 export const ComparisonMatrix: React.FC = () => {
   const rows = [
@@ -45,37 +46,37 @@ export const ComparisonMatrix: React.FC = () => {
     <section id="comparison" className="relative py-16 sm:py-20 lg:py-24 bg-white dark:bg-obsidian-950 border-b border-slate-200 dark:border-white/5 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-14">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyber-blue/10 border border-cyber-blue/30 text-xs font-mono text-cyber-blue mb-3 font-bold">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-ember-500/10 border border-ember-500/25 text-xs font-mono text-ember-600 dark:text-ember-400 mb-3 font-semibold">
             <Shield className="w-3.5 h-3.5" />
-            <span>Honest Comparison</span>
+            <span>Competitive Matrix</span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-black font-display text-slate-900 dark:text-white tracking-tight">
-            Why Growing Businesses Choose Pyrow
+            Why High-Growth Companies Choose Pyrow
           </h2>
           <p className="mt-3 text-base sm:text-lg text-slate-600 dark:text-zinc-400">
-            See how Pyrow compares to traditional agencies, generic freelancers, and slow internal hiring cycles.
+            Compare Pyrow's integrated engineering and growth approach against traditional vendor and hiring models.
           </p>
         </div>
 
         {/* Comparison Table */}
-        <div className="overflow-x-auto scrollbar-none rounded-3xl border border-slate-200 dark:border-white/10 shadow-xl bg-white dark:bg-obsidian-900">
+        <div className="overflow-x-auto scrollbar-none rounded-3xl border border-slate-200/90 dark:border-white/[0.08] shadow-xl bg-white dark:bg-obsidian-900/90">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-obsidian-850">
-                <th className="py-4 sm:py-5 px-6 text-xs sm:text-sm font-bold text-slate-900 dark:text-white w-1/3">
-                  Key Evaluation Factor
+              <tr className="border-b border-slate-200/90 dark:border-white/10 bg-slate-50 dark:bg-obsidian-850">
+                <th className="py-4 sm:py-5 px-6 text-xs sm:text-sm font-semibold text-slate-900 dark:text-white w-1/3">
+                  Evaluation Dimension
                 </th>
-                <th className="py-4 sm:py-5 px-6 text-xs sm:text-sm font-black text-ember-600 dark:text-ember-400 bg-ember-500/10 dark:bg-ember-500/15 border-x-2 border-ember-500/40 w-1/3">
+                <th className="py-4 sm:py-5 px-6 text-xs sm:text-sm font-bold text-ember-600 dark:text-ember-400 bg-ember-500/10 dark:bg-ember-500/15 border-x-2 border-ember-500/40 w-1/3">
                   <div className="flex items-center gap-2">
                     <Sparkles className="w-4 h-4 text-ember-500" />
-                    <span>Pyrow Advantage</span>
+                    <span>The Pyrow Model</span>
                   </div>
                 </th>
-                <th className="py-4 sm:py-5 px-6 text-xs sm:text-sm font-bold text-slate-500 dark:text-zinc-400 w-1/6 hidden sm:table-cell">
-                  Traditional Agencies
+                <th className="py-4 sm:py-5 px-6 text-xs sm:text-sm font-medium text-slate-500 dark:text-zinc-400 w-1/6 hidden sm:table-cell">
+                  Traditional Agency
                 </th>
-                <th className="py-4 sm:py-5 px-6 text-xs sm:text-sm font-bold text-slate-500 dark:text-zinc-400 w-1/6 hidden md:table-cell">
-                  In-House Hiring
+                <th className="py-4 sm:py-5 px-6 text-xs sm:text-sm font-medium text-slate-500 dark:text-zinc-400 w-1/6 hidden md:table-cell">
+                  Internal Hiring
                 </th>
               </tr>
             </thead>
@@ -85,7 +86,7 @@ export const ComparisonMatrix: React.FC = () => {
                   <td className="py-4 sm:py-5 px-6 font-semibold text-slate-900 dark:text-white">
                     {row.feature}
                   </td>
-                  <td className="py-4 sm:py-5 px-6 font-bold text-slate-900 dark:text-white bg-ember-500/5 dark:bg-ember-500/10 border-x-2 border-ember-500/40">
+                  <td className="py-4 sm:py-5 px-6 font-semibold text-slate-900 dark:text-white bg-ember-500/5 dark:bg-ember-500/10 border-x-2 border-ember-500/40">
                     <div className="flex items-start gap-2">
                       <Check className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5 stroke-[3]" />
                       <span>{row.pyrow}</span>
