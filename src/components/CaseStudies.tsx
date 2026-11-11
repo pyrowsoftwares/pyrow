@@ -18,20 +18,20 @@ export interface CaseStudy {
   tags: string[];
 }
 
-export const CaseStudies: React.FC<{ onOpenScopeCalculator: (title?: string) => void }> = ({ onOpenScopeCalculator }) => {
+export const CaseStudies: React.FC<{ onOpenStrategyCall: (title?: string) => void }> = ({ onOpenStrategyCall }) => {
   const studies: CaseStudy[] = [
     {
       id: 'fintech-gateway',
       client: 'Vanguard Capital',
       industry: 'FinTech & Online Payments',
-      title: 'High-Speed Payment Engine Processing ₹1,200 Cr+ with 99.99% Reliability',
+      title: 'High-Speed Payment Engine Processing 10M+ Monthly Transactions with 99.99% Reliability',
       challenge:
         'Legacy banking software was slow (4.2 seconds latency per payment), dropped transactions during spike sales, and took 5 full business days to reconcile accounts manually across branches.',
       solution:
         'Pyrow engineered an event-driven payment processing platform with sub-30ms automated multi-bank routing and instant double-entry database reconciliation.',
       impactMetrics: [
         { label: 'Payment Speed', value: '28ms', change: '-94% Wait' },
-        { label: 'Quarterly Volume', value: '₹1,200 Cr+', change: '+280%' },
+        { label: 'Monthly Throughput', value: '10M+ Txns', change: '+280%' },
         { label: 'Account Balancing', value: '3 Mins', change: 'Instant' },
       ],
       tags: ['Fast Payments', 'Distributed Go/Node', 'PostgreSQL', 'Bank Security'],
@@ -56,13 +56,13 @@ export const CaseStudies: React.FC<{ onOpenScopeCalculator: (title?: string) => 
       id: 'd2c-hypergrowth',
       client: 'Aether Retail & Apparel',
       industry: 'D2C E-Commerce & Growth',
-      title: 'Scaling D2C Store to ₹150 Cr ARR via Sub-Second Storefront & Precision Ads',
+      title: 'Scaling D2C Store to 500,000+ Customers via Sub-Second Storefront & Precision Ads',
       challenge:
         'A bloated store loading in 5+ seconds on mobile caused a 72% abandonment rate. Uncoordinated social ads were exhausting marketing capital with deteriorating ROAS.',
       solution:
         'Pyrow rebuilt the entire online store using Next.js with sub-second page loads, restructured Meta/Google acquisition funnels, and automated WhatsApp re-engagement.',
       impactMetrics: [
-        { label: 'Annual Revenue', value: '₹150 Cr', change: '15x Growth' },
+        { label: 'Orders Delivered', value: '500,000+', change: '15x Growth' },
         { label: 'Return on Ad Spend', value: '5.4x', change: '+142%' },
         { label: 'Mobile Checkout Rate', value: '4.6%', change: '+180%' },
       ],
@@ -77,10 +77,7 @@ export const CaseStudies: React.FC<{ onOpenScopeCalculator: (title?: string) => 
   };
 
   return (
-    <section id="case-studies" className="relative py-16 sm:py-20 lg:py-24 bg-white dark:bg-obsidian-950 border-b border-slate-200 dark:border-white/5 transition-colors duration-300">
-      {/* Background glow highlights */}
-      <div className="absolute top-1/3 right-10 w-[550px] h-[550px] bg-ember-500/5 blur-[150px] pointer-events-none -z-10" />
-
+    <section id="case-studies" className="relative py-16 sm:py-20 lg:py-24 bg-transparent transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 sm:mb-14 gap-6">
@@ -103,10 +100,10 @@ export const CaseStudies: React.FC<{ onOpenScopeCalculator: (title?: string) => 
           <MagneticButton
             variant="outline"
             size="md"
-            onClick={() => onOpenScopeCalculator()}
+            onClick={() => onOpenStrategyCall()}
             icon={<ArrowUpRight className="w-4 h-4" />}
           >
-            Calculate Your Project Cost
+            Schedule Strategy Call
           </MagneticButton>
         </div>
 
@@ -117,7 +114,7 @@ export const CaseStudies: React.FC<{ onOpenScopeCalculator: (title?: string) => 
               key={study.id}
               onMouseMove={handleCardMouseMove}
               onMouseEnter={() => soundFX.playHover()}
-              className="rounded-3xl p-6 sm:p-7 flex flex-col justify-between bg-white dark:bg-obsidian-900/90 border border-slate-200/90 dark:border-white/[0.08] hover:border-ember-500/40 transition-all duration-300 hover:-translate-y-1 shadow-light-card hover:shadow-light-card-hover dark:shadow-glass-edge relative group overflow-hidden"
+              className="rounded-3xl p-6 sm:p-7 flex flex-col justify-between bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800/90 hover:border-ember-500/40 dark:hover:border-ember-500/50 transition-all duration-300 hover:-translate-y-1 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-[0_12px_36px_rgba(0,0,0,0.5)] relative group overflow-hidden"
               style={{
                 backgroundImage: `radial-gradient(450px circle at var(--mouse-x, -200px) var(--mouse-y, -200px), rgba(255, 77, 0, 0.08), transparent 70%)`,
               }}
@@ -190,7 +187,7 @@ export const CaseStudies: React.FC<{ onOpenScopeCalculator: (title?: string) => 
                 <button
                   onClick={() => {
                     soundFX.playClick();
-                    onOpenScopeCalculator(study.title);
+                    onOpenStrategyCall(study.title);
                   }}
                   className="w-full flex items-center justify-between text-xs font-semibold py-2.5 px-4 rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-ember-500 hover:text-white text-slate-800 dark:text-zinc-200 transition-all duration-300 group/btn cursor-pointer"
                 >

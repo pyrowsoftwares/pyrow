@@ -26,7 +26,7 @@ export const FaqSection: React.FC = () => {
     },
     {
       q: 'How much does it cost to build a website, app, or software?',
-      a: 'Pricing depends on your feature requirements. Starter websites begin from ₹1 Lakh, custom business software from ₹3 to ₹7 Lakhs, and comprehensive mobile apps from ₹5 Lakhs. We give you a fixed-price proposal with no surprise bills.',
+      a: 'Every project receives a clear, transparent fixed-price proposal tailored to your exact deliverables and timeline. We operate on structured milestone-based payments with zero surprise invoices, zero hidden maintenance fees, and no hourly inflation.',
       category: 'Ownership & Cost',
     },
     {
@@ -41,7 +41,7 @@ export const FaqSection: React.FC = () => {
     },
     {
       q: 'Can Pyrow also help us get paying leads and customers?',
-      a: 'Yes! Along with engineering, our growth marketing team runs profitable Google Ads, Meta (Instagram & Facebook) ad campaigns, local/national SEO, and automated WhatsApp nurturing funnels that drive real business revenue.',
+      a: 'Yes! Along with engineering, our growth marketing team runs profitable Google Ads, Meta (Instagram & Facebook) ad campaigns, local/national SEO, and automated WhatsApp nurturing funnels that drive real business growth and customer orders.',
       category: 'Marketing & Growth',
     },
     {
@@ -69,7 +69,7 @@ export const FaqSection: React.FC = () => {
   );
 
   return (
-    <section id="faq" className="relative py-16 sm:py-20 lg:py-24 bg-slate-50 dark:bg-obsidian-950 border-b border-slate-200 dark:border-white/5 transition-colors duration-300">
+    <section id="faq" className="relative py-16 sm:py-20 lg:py-24 bg-transparent transition-colors duration-300">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-12">
@@ -92,19 +92,19 @@ export const FaqSection: React.FC = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by topic (e.g. pricing, ownership, timeline, WhatsApp)..."
-              className="w-full pl-11 pr-4 py-3 rounded-2xl bg-white dark:bg-obsidian-900 border border-slate-200/90 dark:border-white/10 text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-ember-500 shadow-sm"
+              className="w-full pl-11 pr-4 py-3 rounded-2xl bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-ember-500 shadow-sm dark:shadow-none"
             />
           </div>
         </div>
 
         {/* Accordion List with shadcn Accordion */}
-        <div className="rounded-3xl bg-white dark:bg-obsidian-900/90 border border-slate-200/90 dark:border-white/[0.08] shadow-sm p-4 sm:p-6">
+        <div className="rounded-3xl bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 shadow-sm dark:shadow-none p-4 sm:p-6">
           <Accordion defaultValue={["faq-0"]} className="w-full space-y-2">
             {filtered.map((item, idx) => (
               <AccordionItem
                 key={idx}
                 value={`faq-${idx}`}
-                className="border border-slate-100 dark:border-white/5 rounded-2xl px-4 py-1 data-[open]:bg-slate-50/50 dark:data-[open]:bg-white/[0.02] transition-colors"
+                className="border border-slate-100 dark:border-slate-800/80 rounded-2xl px-4 py-1 data-[open]:bg-slate-50/50 dark:data-[open]:bg-white/[0.02] transition-colors"
               >
                 <AccordionTrigger
                   onClick={() => soundFX.playClick()}
@@ -118,7 +118,7 @@ export const FaqSection: React.FC = () => {
                 <AccordionContent className="text-xs sm:text-sm text-slate-600 dark:text-zinc-300 leading-relaxed pb-4 pt-1 pl-5">
                   <p>{item.a}</p>
                   <div className="mt-3">
-                    <Badge variant="outline" className="text-[10px] font-mono border-slate-200 dark:border-white/10 text-slate-500 dark:text-zinc-400">
+                    <Badge variant="outline" className="text-[10px] font-mono border-slate-200 dark:border-slate-800 text-slate-500 dark:text-zinc-400">
                       Category: {item.category}
                     </Badge>
                   </div>

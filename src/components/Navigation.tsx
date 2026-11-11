@@ -28,7 +28,6 @@ import { MagneticButton } from './ui/MagneticButton';
 import { soundFX } from './ui/sound-effects';
 
 interface NavigationProps {
-  onOpenScopeCalculator: () => void;
   onOpenStrategyCall: () => void;
   onOpenDemoRequest: (name?: string) => void;
   onOpenCommandPalette: () => void;
@@ -37,7 +36,6 @@ interface NavigationProps {
 }
 
 export const Navigation: React.FC<NavigationProps> = ({
-  onOpenScopeCalculator,
   onOpenStrategyCall,
   onOpenDemoRequest,
   onOpenCommandPalette,
@@ -81,14 +79,6 @@ export const Navigation: React.FC<NavigationProps> = ({
 
   return (
     <>
-      {/* Top Scroll Progress Flame Line (GPU Accelerated via useScroll) */}
-      <div className="fixed top-0 left-0 right-0 h-[2px] z-50 bg-transparent overflow-hidden pointer-events-none">
-        <motion.div
-          className="h-full bg-gradient-to-r from-ember-500 via-flare-amber to-amber-500 origin-left will-change-transform"
-          style={{ scaleX: scrollYProgress }}
-        />
-      </div>
-
       <header className="fixed top-0 left-0 right-0 z-40 px-3 sm:px-6 transition-all duration-300">
         <div
           className={`mx-auto max-w-7xl rounded-full transition-all duration-300 ${
@@ -321,12 +311,12 @@ export const Navigation: React.FC<NavigationProps> = ({
                 Case Studies
               </button>
 
-              {/* Estimator Link */}
+              {/* Contact Link */}
               <button
                 onClick={() => scrollTo('estimator')}
                 className="px-3.5 py-2 text-sm font-semibold text-slate-700 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white rounded-full transition-colors"
               >
-                Estimator
+                Contact
               </button>
             </nav>
 
@@ -381,22 +371,12 @@ export const Navigation: React.FC<NavigationProps> = ({
 
               {/* CTA 1: Schedule Strategy Call */}
               <MagneticButton
-                variant="outline"
-                size="sm"
-                onClick={onOpenStrategyCall}
-                className="hidden xl:inline-flex"
-              >
-                Schedule Call
-              </MagneticButton>
-
-              {/* CTA 2: Launch Project */}
-              <MagneticButton
                 variant="primary"
                 size="sm"
-                onClick={onOpenScopeCalculator}
+                onClick={onOpenStrategyCall}
                 icon={<Sparkles className="w-3.5 h-3.5" />}
               >
-                Launch Project
+                Schedule Call
               </MagneticButton>
 
               {/* Mobile Drawer Navigation with shadcn Sheet */}
@@ -447,7 +427,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                       onClick={() => scrollTo('estimator')}
                       className="text-left text-sm font-semibold text-slate-900 dark:text-white py-2.5 border-b border-slate-100 dark:border-white/5 flex items-center justify-between cursor-pointer hover:text-ember-500 transition-colors"
                     >
-                      <span>Budget & Scope Estimator</span>
+                      <span>Project Enquiry Desk</span>
                       <ArrowRight className="w-4 h-4 text-ember-500" />
                     </button>
 
@@ -457,22 +437,22 @@ export const Navigation: React.FC<NavigationProps> = ({
                         size="md"
                         onClick={() => {
                           setMobileMenuOpen(false);
-                          onOpenScopeCalculator();
+                          onOpenStrategyCall();
                         }}
                         className="w-full justify-center"
                       >
-                        Launch Project (Scope Estimator)
+                        Schedule Strategy Call
                       </MagneticButton>
                       <MagneticButton
                         variant="secondary"
                         size="md"
                         onClick={() => {
                           setMobileMenuOpen(false);
-                          onOpenStrategyCall();
+                          scrollTo('estimator');
                         }}
                         className="w-full justify-center"
                       >
-                        Schedule Strategy Call
+                        Project Enquiry Desk
                       </MagneticButton>
                     </div>
                   </div>

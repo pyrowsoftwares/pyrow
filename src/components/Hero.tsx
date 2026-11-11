@@ -1,69 +1,17 @@
-import React, { useState, useEffect, memo } from 'react';
-import { Sparkles, ArrowDown, Flame, Shield, TrendingUp, Star, Clock } from 'lucide-react';
-import { ParticleForge } from './ui/ParticleForge';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Sparkles, ArrowDown, Flame, Shield, TrendingUp, Clock, CheckCircle2 } from 'lucide-react';
+import { TechGrowthMatrix } from './ui/TechGrowthMatrix';
 import { MagneticButton } from './ui/MagneticButton';
 import { MetricCounter } from './ui/MetricCounter';
 import { HeroVisualShowcase } from './ui/HeroVisualShowcase';
 import { soundFX } from './ui/sound-effects';
 
 interface HeroProps {
-  onOpenScopeCalculator: () => void;
   onOpenStrategyCall: () => void;
 }
 
-const rotatingWords = [
-  'Lightning-Fast Websites',
-  'Custom Business ERPs',
-  'Android & iOS Mobile Apps',
-  'High-ROAS Ad Campaigns',
-  'Sub-Second Billing & POS',
-  'WhatsApp AI Automation',
-];
-
-// Isolated Typewriter Leaf Component (Zero Parent Hero Re-renders)
-const TypewriterDisplay = memo(() => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [displayText, setDisplayText] = useState('');
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [typingSpeed, setTypingSpeed] = useState(110);
-
-  useEffect(() => {
-    const currentWord = rotatingWords[currentIndex];
-
-    const timer = setTimeout(() => {
-      if (!isDeleting) {
-        setDisplayText(currentWord.substring(0, displayText.length + 1));
-        if (displayText === currentWord) {
-          setTimeout(() => setIsDeleting(true), 1900);
-          setTypingSpeed(60);
-        }
-      } else {
-        setDisplayText(currentWord.substring(0, displayText.length - 1));
-        if (displayText === '') {
-          setIsDeleting(false);
-          setCurrentIndex((prev) => (prev + 1) % rotatingWords.length);
-          setTypingSpeed(100);
-        }
-      }
-    }, typingSpeed);
-
-    return () => clearTimeout(timer);
-  }, [displayText, isDeleting, currentIndex, typingSpeed]);
-
-  return (
-    <div className="mt-4 flex items-center justify-center gap-2 text-sm sm:text-base font-mono text-slate-600 dark:text-zinc-400">
-      <span className="text-slate-400 dark:text-zinc-500 font-sans">We engineer →</span>
-      <span className="font-semibold text-ember-600 dark:text-ember-400 bg-ember-500/10 dark:bg-ember-500/15 px-3 py-1 rounded-lg border border-ember-500/30 min-w-[220px] sm:min-w-[260px] text-left">
-        {displayText}
-        <span className="animate-pulse ml-0.5 text-ember-500">|</span>
-      </span>
-    </div>
-  );
-});
-
-TypewriterDisplay.displayName = 'TypewriterDisplay';
-
-export const Hero: React.FC<HeroProps> = ({ onOpenScopeCalculator, onOpenStrategyCall }) => {
+export const Hero: React.FC<HeroProps> = ({ onOpenStrategyCall }) => {
   const techLogos = [
     { name: 'React', category: 'Frontend' },
     { name: 'Next.js', category: 'Full-Stack' },
@@ -85,56 +33,70 @@ export const Hero: React.FC<HeroProps> = ({ onOpenScopeCalculator, onOpenStrateg
   };
 
   return (
-    <section id="hero" className="relative min-h-[88vh] flex flex-col justify-between pt-24 sm:pt-28 pb-0 overflow-hidden">
-      {/* Interactive Cybernetic Particle Forge Canvas */}
-      <ParticleForge />
-
-      {/* Adaptive Background Radial Glow */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] sm:w-[900px] h-[450px] bg-gradient-to-tr from-ember-500/10 via-amber-500/8 to-orange-500/5 blur-[140px] rounded-full pointer-events-none -z-10" />
-
-      {/* Grid Pattern */}
-      <div className="absolute inset-0 bg-grid-pattern opacity-30 dark:opacity-20 pointer-events-none -z-10" />
+    <section id="hero" className="relative min-h-[90vh] flex flex-col justify-between pt-24 sm:pt-28 pb-0 overflow-hidden">
+      {/* High-End Dynamic Orbitals & Harmonic Wave Engine */}
+      <TechGrowthMatrix />
 
       {/* Main Hero Content */}
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10 my-auto">
-        {/* Eyebrow Tag */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 dark:bg-obsidian-800/90 border border-slate-200/90 dark:border-white/10 text-xs tracking-tight text-slate-800 dark:text-zinc-300 shadow-sm mb-5 backdrop-blur-sm">
+        {/* Eyebrow Tag with Live High-Tech Status */}
+        <motion.div
+          initial={{ opacity: 0, y: -16, scale: 0.96 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 dark:bg-obsidian-850/90 border border-slate-200/90 dark:border-white/10 text-xs tracking-tight text-slate-800 dark:text-zinc-300 shadow-sm mb-5 backdrop-blur-md"
+        >
           <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-ember-500 opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-ember-500" />
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
           </span>
           <span className="text-zinc-700 dark:text-zinc-300 font-medium">
-            Next-Gen Software Agency <span className="text-slate-300 dark:text-white/20 mx-1.5">•</span>
-            <span className="text-ember-600 dark:text-ember-400 font-semibold">Web • Mobile • Enterprise ERP • Growth</span>
+            Digital Agency & Software Partner <span className="text-slate-300 dark:text-white/20 mx-1.5">•</span>
+            <span className="text-ember-600 dark:text-ember-400 font-semibold">Websites • Custom Software • Mobile Apps • Google & Meta Ads</span>
           </span>
-        </div>
+          <span className="hidden sm:inline-flex items-center gap-1 pl-2 border-l border-slate-200 dark:border-white/10 text-[10px] font-mono font-bold text-emerald-600 dark:text-emerald-400">
+            <CheckCircle2 className="w-3 h-3 text-emerald-500" /> 100% Client Ownership
+          </span>
+        </motion.div>
 
         {/* Primary Headline with Monochromatic Base & Clean Ember Accent */}
-        <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black font-display tracking-[-0.03em] text-slate-900 dark:text-zinc-50 max-w-5xl mx-auto leading-[1.1] sm:leading-[1.08]">
-          We Engineer Software That Works.{' '}
+        <motion.h1
+          initial={{ opacity: 0, y: 26 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+          className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black font-display tracking-[-0.03em] text-slate-900 dark:text-zinc-50 max-w-5xl mx-auto leading-[1.1] sm:leading-[1.08]"
+        >
+          We Build Websites & Software That Work.{' '}
           <br className="hidden sm:inline" />
           <span className="bg-gradient-to-r from-ember-500 via-flare-amber to-amber-500 bg-clip-text text-transparent">
-            We Run Growth That Scales.
+            We Run Marketing That Grows Your Business.
           </span>
-        </h1>
-
-        {/* Dynamic Memoized Text Rotator */}
-        <TypewriterDisplay />
+        </motion.h1>
 
         {/* Sub-headline */}
-        <p className="mt-4 text-base sm:text-lg text-slate-600 dark:text-zinc-300 max-w-3xl mx-auto leading-relaxed">
-          Pyrow is India's dedicated technology and marketing powerhouse. We build fast websites, dependable mobile apps, custom ERP systems, and high-converting ad campaigns — with 100% intellectual property ownership from Day 1.
-        </p>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.22, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-4 text-base sm:text-lg text-slate-600 dark:text-zinc-300 max-w-3xl mx-auto leading-relaxed"
+        >
+          Pyrow is India's dedicated technology and digital growth partner. We build lightning-fast websites, custom billing & management software, mobile apps, and high-converting ad campaigns — with 100% complete intellectual property ownership from Day 1.
+        </motion.p>
 
         {/* Action Buttons */}
-        <div className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4"
+        >
           <MagneticButton
             variant="primary"
             size="lg"
-            onClick={onOpenScopeCalculator}
+            onClick={onOpenStrategyCall}
             icon={<Sparkles className="w-5 h-5" />}
           >
-            Calculate Project Cost (Instant Quote)
+            Schedule Strategy Call
           </MagneticButton>
 
           <MagneticButton
@@ -145,10 +107,15 @@ export const Hero: React.FC<HeroProps> = ({ onOpenScopeCalculator, onOpenStrateg
           >
             Explore What We Do
           </MagneticButton>
-        </div>
+        </motion.div>
 
         {/* Tech Stack Floating Marquee */}
-        <div className="mt-9 max-w-5xl mx-auto overflow-hidden relative">
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.42, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-9 max-w-5xl mx-auto overflow-hidden relative"
+        >
           <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-r from-light-bg dark:from-obsidian to-transparent z-10 pointer-events-none" />
           <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-l from-light-bg dark:from-obsidian to-transparent z-10 pointer-events-none" />
 
@@ -164,16 +131,26 @@ export const Hero: React.FC<HeroProps> = ({ onOpenScopeCalculator, onOpenStrateg
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* Hero Interactive Visual Showcase */}
-        <div className="mt-5">
+        <motion.div
+          initial={{ opacity: 0, y: 30, scale: 0.97 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.9, delay: 0.52, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-5"
+        >
           <HeroVisualShowcase />
-        </div>
+        </motion.div>
       </div>
 
       {/* KPI Trust Bar */}
-      <div className="relative z-10 mt-10 border-t border-b border-slate-200/90 dark:border-white/[0.08] bg-slate-50/90 dark:bg-obsidian-900/90 backdrop-blur-md py-6 sm:py-7">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.65, ease: [0.16, 1, 0.3, 1] }}
+        className="relative z-10 mt-10 border-t border-b border-slate-200/90 dark:border-slate-800 bg-slate-50/90 dark:bg-[#141D30] backdrop-blur-md py-6 sm:py-7"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 text-center">
             {/* Metric 1 */}
@@ -221,7 +198,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenScopeCalculator, onOpenStrateg
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };

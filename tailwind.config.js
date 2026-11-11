@@ -41,13 +41,13 @@ export default {
         input: 'var(--input)',
         ring: 'var(--ring)',
         obsidian: {
-          DEFAULT: '#05070B',
-          950: '#030508',
-          900: '#070B12',
-          850: '#0A0E17',
-          800: '#0C111C',
-          700: '#131A2B',
-          600: '#1D263B',
+          DEFAULT: '#0B0F19', // Modern Midnight Slate Base (No pure black)
+          950: '#0F172A',     // Deepest surface tone (Tailwind Slate-900)
+          900: '#141D30',     // Primary card surface: Rich, modern midnight slate
+          850: '#1A253D',     // Elevated card / Sub-card surface
+          800: '#22304F',     // Active card / hovered surface
+          700: '#2E3F66',     // Elevated borders / pill surfaces
+          600: '#3D5280',     // Accent borders
         },
         light: {
           bg: '#FAFBFC',

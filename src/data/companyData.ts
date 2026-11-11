@@ -44,9 +44,9 @@ export const leadershipTeam: LeaderProfile[] = [
       github: 'https://github.com',
     },
     metrics: [
-      { label: 'Avg API P99', value: '38ms' },
+      { label: 'Server Speed', value: '38ms' },
       { label: 'Patents & Papers', value: '4' },
-      { label: 'System SLA', value: '99.99%' },
+      { label: 'System Uptime', value: '99.99%' },
     ],
   },
   {
@@ -61,9 +61,9 @@ export const leadershipTeam: LeaderProfile[] = [
       twitter: 'https://x.com',
     },
     metrics: [
-      { label: 'Paid Ad Capital', value: '$40M+' },
+      { label: 'Campaigns Scaled', value: '1,400+' },
       { label: 'Avg Client ROAS', value: '4.8x' },
-      { label: 'Qualified Pipeline', value: '$120M+' },
+      { label: 'Enterprise Pipeline', value: '450% Growth' },
     ],
   },
 ];
@@ -84,7 +84,7 @@ export const pyrowPillars = [
   {
     number: '03',
     title: 'Growth Without Vanity Metrics',
-    desc: 'Clicks and impressions mean nothing without bottom-line cash flow. We align our engineering and marketing milestones directly to revenue, margins, and retained enterprise value.',
+    desc: 'Clicks and impressions mean nothing without bottom-line cash flow. We align our engineering and marketing milestones directly to customer acquisition, efficiency, and retained enterprise value.',
     glow: 'from-cyber-cyan to-cyber-blue',
   },
 ];
@@ -99,7 +99,7 @@ export const clientTestimonials = [
     avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80',
   },
   {
-    quote: 'The synergy of software engineering with aggressive Meta & Google ads generated over $4.2M in net new ARR within 9 months of launch. Pyrow doesn’t just build software; they engineer hyper-growth.',
+    quote: 'The synergy of software engineering with aggressive Meta & Google ads generated over 350,000 new verified customers within 9 months of launch. Pyrow doesn’t just build software; they engineer hyper-growth.',
     author: 'Seraphina Chen',
     role: 'VP of Digital Commerce',
     company: 'Aether Brands Network',

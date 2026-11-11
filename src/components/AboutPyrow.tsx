@@ -21,10 +21,7 @@ interface AboutPyrowProps {
 
 export const AboutPyrow: React.FC<AboutPyrowProps> = ({ onOpenStrategyCall }) => {
   return (
-    <section id="about" className="relative py-16 sm:py-20 lg:py-24 bg-white dark:bg-obsidian-950 border-b border-slate-200 dark:border-white/5 transition-colors duration-300">
-      {/* Background glow highlights */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-ember-500/5 blur-[150px] pointer-events-none -z-10" />
-
+    <section id="about" className="relative py-16 sm:py-20 lg:py-24 bg-transparent transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Story Section */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center mb-16 sm:mb-20">
@@ -52,7 +49,7 @@ export const AboutPyrow: React.FC<AboutPyrowProps> = ({ onOpenStrategyCall }) =>
               </p>
             </div>
 
-            <div className="mt-8 flex flex-wrap gap-4 pt-4 border-t border-slate-200 dark:border-white/10">
+            <div className="mt-8 flex flex-wrap gap-4 pt-4 border-t border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-2 text-xs font-mono text-slate-700 dark:text-zinc-300 font-semibold">
                 <CheckCircle2 className="w-4 h-4 text-ember-500" />
                 <span>100% In-House Team (Zero Outsourcing)</span>
@@ -114,7 +111,7 @@ export const AboutPyrow: React.FC<AboutPyrowProps> = ({ onOpenStrategyCall }) =>
             {pyrowPillars.map((pillar) => (
               <div
                 key={pillar.number}
-                className="glass-panel p-7 rounded-3xl bg-white dark:bg-obsidian-900/80 border border-slate-200 dark:border-white/10 hover:border-ember-500/40 transition-all duration-300 relative group shadow-light-card"
+                className="p-7 rounded-3xl bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800/90 hover:border-ember-500/40 dark:hover:border-ember-500/50 transition-all duration-300 relative group shadow-sm hover:shadow-md dark:shadow-none"
               >
                 <div className="text-3xl font-black font-mono bg-gradient-to-r from-ember-500 to-flare-gold bg-clip-text text-transparent mb-4">
                   {pillar.number}
@@ -151,10 +148,10 @@ export const AboutPyrow: React.FC<AboutPyrowProps> = ({ onOpenStrategyCall }) =>
             {leadershipTeam.map((leader, idx) => (
               <div
                 key={leader.name}
-                className={`glass-panel p-6 sm:p-7 rounded-3xl bg-white dark:bg-obsidian-900 border transition-all duration-300 hover:scale-[1.01] shadow-light-card ${
+                className={`p-6 sm:p-7 rounded-3xl bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border transition-all duration-300 hover:scale-[1.01] shadow-sm dark:shadow-none ${
                   idx === 0
-                    ? 'border-ember-500/60 shadow-light-card-hover dark:shadow-glow-ember'
-                    : 'border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/25'
+                    ? 'border-ember-500/60 dark:border-ember-500/80'
+                    : 'border-slate-200/90 dark:border-slate-800/90 hover:border-slate-300 dark:hover:border-slate-700'
                 }`}
               >
                 {/* Avatar & Title */}
@@ -163,7 +160,7 @@ export const AboutPyrow: React.FC<AboutPyrowProps> = ({ onOpenStrategyCall }) =>
                     <img
                       src={leader.avatar}
                       alt={leader.name}
-                      className="w-16 h-16 rounded-2xl object-cover border-2 border-slate-200 dark:border-white/10 shadow-sm"
+                      className="w-16 h-16 rounded-2xl object-cover border-2 border-slate-200 dark:border-slate-800 shadow-sm"
                     />
                     {idx === 0 && (
                       <span className="absolute -bottom-1 -right-1 p-1 rounded-full bg-ember-500 text-white">
@@ -259,7 +256,7 @@ export const AboutPyrow: React.FC<AboutPyrowProps> = ({ onOpenStrategyCall }) =>
             {clientTestimonials.map((t, idx) => (
               <div
                 key={idx}
-                className="glass-panel p-6 rounded-3xl bg-white dark:bg-obsidian-900/90 border border-slate-200 dark:border-white/10 flex flex-col justify-between shadow-light-card"
+                className="p-6 rounded-3xl bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800/90 flex flex-col justify-between shadow-sm dark:shadow-none"
               >
                 <div>
                   <div className="flex items-center gap-1 text-amber-500 mb-3">
@@ -272,12 +269,12 @@ export const AboutPyrow: React.FC<AboutPyrowProps> = ({ onOpenStrategyCall }) =>
                   </p>
                 </div>
 
-                <div className="mt-5 pt-4 border-t border-slate-100 dark:border-white/10 flex items-center justify-between">
+                <div className="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <img
                       src={t.avatar}
                       alt={t.author}
-                      className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-white/10"
+                      className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-800"
                     />
                     <div>
                       <div className="text-xs font-bold text-slate-900 dark:text-white">{t.author}</div>

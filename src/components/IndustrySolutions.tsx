@@ -13,12 +13,12 @@ import { soundFX } from './ui/sound-effects';
 
 interface IndustrySolutionsProps {
   onOpenDemoRequest: (softwareName: string) => void;
-  onOpenScopeCalculator: (softwareName?: string) => void;
+  onOpenStrategyCall: (softwareName?: string) => void;
 }
 
 export const IndustrySolutions: React.FC<IndustrySolutionsProps> = ({
   onOpenDemoRequest,
-  onOpenScopeCalculator,
+  onOpenStrategyCall,
 }) => {
   const [selectedSolution, setSelectedSolution] = useState<IndustrySolution>(industrySolutions[0]);
   const [simulatedCounter, setSimulatedCounter] = useState<number>(0);
@@ -39,11 +39,8 @@ export const IndustrySolutions: React.FC<IndustrySolutionsProps> = ({
   };
 
   return (
-    <section id="industry-solutions" className="relative py-16 sm:py-20 lg:py-24 bg-slate-50 dark:bg-obsidian-900/60 border-b border-slate-200 dark:border-white/5 transition-colors duration-300">
+    <section id="industry-solutions" className="relative py-16 sm:py-20 lg:py-24 bg-transparent transition-colors duration-300">
       <div id="industries" className="absolute -top-20 left-0" />
-      {/* Background glow meshes */}
-      <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-gradient-to-l from-ember-500/5 to-transparent blur-[140px] pointer-events-none -z-10" />
-      <div className="absolute bottom-10 left-0 w-[500px] h-[500px] bg-gradient-to-r from-amber-500/5 to-transparent blur-[140px] pointer-events-none -z-10" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Heading */}
@@ -78,8 +75,8 @@ export const IndustrySolutions: React.FC<IndustrySolutionsProps> = ({
                   aria-pressed={isSelected}
                   className={`w-full text-left p-3.5 sm:p-4 rounded-2xl cursor-pointer border transition-all duration-200 focus-visible:ring-2 focus-visible:ring-ember-500 focus-visible:outline-none ${
                     isSelected
-                      ? 'bg-white dark:bg-obsidian-800 border-ember-500 shadow-light-card-hover dark:shadow-glow-ember text-slate-900 dark:text-white'
-                      : 'bg-white/70 dark:bg-obsidian-850/80 border-slate-200/80 dark:border-white/5 text-slate-700 dark:text-zinc-300 hover:border-slate-300 dark:hover:border-white/20'
+                      ? 'bg-white dark:bg-[#1A253D] border-ember-500 shadow-md dark:shadow-none text-slate-900 dark:text-white'
+                      : 'bg-white/95 dark:bg-[#141D30]/95 border-slate-200/90 dark:border-slate-800/90 text-slate-700 dark:text-zinc-300 hover:border-slate-300 dark:hover:border-slate-700'
                   }`}
                 >
                   <div className="flex items-center justify-between gap-2">
@@ -107,7 +104,7 @@ export const IndustrySolutions: React.FC<IndustrySolutionsProps> = ({
 
           {/* Right Column: Interactive Product Mockup (lg:col-span-7) */}
           <div className="lg:col-span-7 sticky top-24">
-            <div className="glass-panel p-6 sm:p-8 rounded-3xl bg-white dark:bg-obsidian-900/95 border border-slate-200/90 dark:border-white/[0.08] shadow-xl relative overflow-hidden">
+            <div className="p-6 sm:p-8 rounded-3xl bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800/90 shadow-sm dark:shadow-none relative overflow-hidden">
               {/* Toast banner when simulated */}
               {toastMessage && (
                 <div className="absolute top-3 left-1/2 -translate-x-1/2 z-30 px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs font-mono font-bold shadow-lg animate-in slide-in-from-top-2 duration-150 flex items-center gap-2">
@@ -116,14 +113,14 @@ export const IndustrySolutions: React.FC<IndustrySolutionsProps> = ({
                 </div>
               )}
 
-              {/* Top Bar with OS Dots */}
-              <div className="flex items-center justify-between pb-3.5 mb-5 border-b border-slate-200/90 dark:border-white/10">
+              {/* Top Bar with Window Control Dots */}
+              <div className="flex items-center justify-between pb-3.5 mb-5 border-b border-slate-200/90 dark:border-slate-800">
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-rose-500/80" />
                   <div className="w-3 h-3 rounded-full bg-amber-500/80" />
                   <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
                   <span className="text-xs font-mono text-slate-500 dark:text-zinc-400 ml-3">
-                    sys://pyrow-os/{selectedSolution.slug}
+                    cloud.pyrow.com/{selectedSolution.slug}
                   </span>
                 </div>
                 <Badge variant="outline" className="border-emerald-500/30 text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 font-mono text-[11px] gap-1.5">
@@ -211,7 +208,7 @@ export const IndustrySolutions: React.FC<IndustrySolutionsProps> = ({
               </div>
 
               {/* Bottom Actions */}
-              <div className="mt-6 pt-5 border-t border-slate-100 dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="mt-6 pt-5 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-2 text-xs font-mono text-slate-500 dark:text-zinc-400">
                   <CheckCircle className="w-4 h-4 text-emerald-500" />
                   <span>Deployment Window: 5 to 14 Days</span>
@@ -230,11 +227,11 @@ export const IndustrySolutions: React.FC<IndustrySolutionsProps> = ({
                   <MagneticButton
                     variant="secondary"
                     size="sm"
-                    onClick={() => onOpenScopeCalculator(selectedSolution.name)}
+                    onClick={() => onOpenStrategyCall(selectedSolution.name)}
                     icon={<ArrowRight className="w-3.5 h-3.5" />}
                     className="w-full sm:w-auto justify-center"
                   >
-                    Scope Deployment
+                    Enquire Deployment
                   </MagneticButton>
                 </div>
               </div>

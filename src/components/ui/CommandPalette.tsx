@@ -14,7 +14,6 @@ interface CommandItem {
 interface CommandPaletteProps {
   isOpen: boolean;
   onClose: () => void;
-  onOpenScopeCalculator: () => void;
   onOpenStrategyCall: () => void;
   onOpenDemoRequest: (softwareName?: string) => void;
 }
@@ -22,7 +21,6 @@ interface CommandPaletteProps {
 export const CommandPalette: React.FC<CommandPaletteProps> = ({
   isOpen,
   onClose,
-  onOpenScopeCalculator,
   onOpenStrategyCall,
   onOpenDemoRequest,
 }) => {
@@ -40,15 +38,12 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
 
   const commandItems: CommandItem[] = [
     {
-      id: 'calc',
-      title: 'Ignite Project / Budget & Scope Estimator',
+      id: 'contact-jump',
+      title: 'Project Roadmap & Enquiries Desk',
       category: 'Actions',
       icon: <Sparkles className="w-4 h-4 text-ember-500" />,
-      action: () => {
-        onClose();
-        onOpenScopeCalculator();
-      },
-      badge: 'Interactive Tool',
+      action: () => scrollToSection('estimator'),
+      badge: 'Enquiry Desk',
     },
     {
       id: 'call',

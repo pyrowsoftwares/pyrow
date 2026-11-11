@@ -17,13 +17,11 @@ import { MagneticButton } from './ui/MagneticButton';
 import { soundFX } from './ui/sound-effects';
 
 interface FooterProps {
-  onOpenScopeCalculator: () => void;
   onOpenStrategyCall: () => void;
   onOpenDemoRequest: (name?: string) => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({
-  onOpenScopeCalculator,
   onOpenStrategyCall,
   onOpenDemoRequest,
 }) => {
@@ -44,10 +42,10 @@ export const Footer: React.FC<FooterProps> = ({
   };
 
   return (
-    <footer className="relative bg-white dark:bg-obsidian-950 border-t border-slate-200 dark:border-white/10 overflow-hidden transition-colors duration-300">
+    <footer className="relative bg-white/80 dark:bg-[#0B0F19]/80 backdrop-blur-md border-t border-slate-200/70 dark:border-slate-800 overflow-hidden transition-colors duration-300">
       {/* High-Impact Animated Call-To-Action Marquee Banner */}
       <div
-        onClick={onOpenScopeCalculator}
+        onClick={onOpenStrategyCall}
         className="group relative cursor-pointer py-6 sm:py-8 bg-gradient-to-r from-ember-600 via-ember-500 to-flare-amber text-white overflow-hidden select-none transition-all duration-300 hover:brightness-105"
       >
         <div className="flex items-center gap-6 animate-marquee whitespace-nowrap text-xl sm:text-3xl lg:text-4xl font-black font-display tracking-tight">
@@ -132,7 +130,7 @@ export const Footer: React.FC<FooterProps> = ({
                   onClick={() => scrollTo('services')}
                   className="hover:text-ember-600 dark:hover:text-ember-400 transition-colors"
                 >
-                  Web Development & UI/UX
+                  Web Development & Bespoke UI/UX
                 </button>
               </li>
               <li>

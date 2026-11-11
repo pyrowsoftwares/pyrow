@@ -16,12 +16,10 @@ import { MagneticButton } from './ui/MagneticButton';
 import { soundFX } from './ui/sound-effects';
 
 interface HowItWorksProps {
-  onOpenScopeCalculator: () => void;
   onOpenStrategyCall: () => void;
 }
 
 export const HowItWorks: React.FC<HowItWorksProps> = ({
-  onOpenScopeCalculator,
   onOpenStrategyCall,
 }) => {
   const [activeStep, setActiveStep] = useState(0);
@@ -85,15 +83,12 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({
         'Automated WhatsApp bot for instant 24/7 customer replies',
         '24/7 technical monitoring and monthly performance reports',
       ],
-      clientAction: 'Watch customer enquiries, orders, and business revenue grow.',
+      clientAction: 'Watch customer enquiries, orders, and business market share grow.',
     },
   ];
 
   return (
-    <section id="how-it-works" className="relative py-16 sm:py-20 lg:py-24 bg-slate-50 dark:bg-obsidian-950 border-b border-slate-200 dark:border-white/5 transition-colors duration-300">
-      {/* Background ambient light */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-ember-500/10 blur-[140px] pointer-events-none -z-10" />
-
+    <section id="how-it-works" className="relative py-16 sm:py-20 lg:py-24 bg-transparent transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
@@ -124,34 +119,30 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({
                   setActiveStep(idx);
                 }}
                 onMouseEnter={() => soundFX.playHover()}
-                className={`p-4 sm:p-5 rounded-2xl cursor-pointer border transition-all duration-300 relative ${
-                  isActive
-                    ? 'bg-white dark:bg-obsidian-850 border-ember-500 shadow-light-card-hover dark:shadow-glow-ember scale-[1.02]'
-                    : 'bg-white/80 dark:bg-obsidian-900/60 border-slate-200 dark:border-white/5 hover:border-slate-300 dark:hover:border-white/20'
-                }`}
+                className={`p-4 sm:p-5 rounded-2xl cursor-pointer border transition-all duration-300 relative ${isActive
+                    ? 'bg-white dark:bg-[#1A253D] border-ember-500 shadow-md dark:shadow-none scale-[1.02]'
+                    : 'bg-white/95 dark:bg-[#141D30]/95 border-slate-200/90 dark:border-slate-800/90 hover:border-slate-300 dark:hover:border-slate-700'
+                  }`}
               >
                 <div className="flex items-center justify-between mb-2">
                   <span
-                    className={`text-xl sm:text-2xl font-black font-mono ${
-                      isActive ? 'text-ember-500' : 'text-slate-300 dark:text-zinc-600'
-                    }`}
+                    className={`text-xl sm:text-2xl font-black font-mono ${isActive ? 'text-ember-500' : 'text-slate-300 dark:text-zinc-600'
+                      }`}
                   >
                     {s.number}
                   </span>
                   <span
-                    className={`text-[10px] font-mono px-2 py-0.5 rounded-full font-bold ${
-                      isActive
+                    className={`text-[10px] font-mono px-2 py-0.5 rounded-full font-bold ${isActive
                         ? 'bg-ember-500/15 text-ember-600 dark:text-ember-400 border border-ember-500/30'
                         : 'bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-zinc-500'
-                    }`}
+                      }`}
                   >
                     {s.timeline}
                   </span>
                 </div>
                 <h3
-                  className={`text-xs sm:text-sm font-bold font-display line-clamp-2 ${
-                    isActive ? 'text-slate-900 dark:text-white' : 'text-slate-600 dark:text-zinc-400'
-                  }`}
+                  className={`text-xs sm:text-sm font-bold font-display line-clamp-2 ${isActive ? 'text-slate-900 dark:text-white' : 'text-slate-600 dark:text-zinc-400'
+                    }`}
                 >
                   {s.title}
                 </h3>
@@ -161,7 +152,7 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({
         </div>
 
         {/* Active Step Detailed Card */}
-        <div className="glass-panel rounded-3xl p-6 sm:p-9 bg-white dark:bg-obsidian-900/90 border border-slate-200 dark:border-white/10 shadow-xl">
+        <div className="rounded-3xl p-6 sm:p-9 bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800/90 shadow-sm dark:shadow-none">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             {/* Step Summary (lg:col-span-7) */}
             <div className="lg:col-span-7 space-y-6">

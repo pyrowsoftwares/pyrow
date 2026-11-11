@@ -15,12 +15,10 @@ import { MagneticButton } from './ui/MagneticButton';
 import { soundFX } from './ui/sound-effects';
 
 interface ServicesProps {
-  onOpenScopeCalculator: (serviceTitle?: string) => void;
-  onOpenStrategyCall: () => void;
+  onOpenStrategyCall: (serviceTitle?: string) => void;
 }
 
 export const Services: React.FC<ServicesProps> = ({
-  onOpenScopeCalculator,
   onOpenStrategyCall,
 }) => {
   const [activeTab, setActiveTab] = useState<'all' | 'web' | 'marketing' | 'software' | 'mobile'>('all');
@@ -60,11 +58,7 @@ export const Services: React.FC<ServicesProps> = ({
   };
 
   return (
-    <section id="services" className="relative py-16 sm:py-20 lg:py-24 bg-white dark:bg-obsidian-950/80 border-b border-slate-200 dark:border-white/5 transition-colors duration-300">
-      {/* Background radial highlight */}
-      <div className="absolute top-1/2 left-0 w-96 h-96 bg-ember-500/5 blur-[140px] pointer-events-none -z-10" />
-      <div className="absolute bottom-10 right-0 w-96 h-96 bg-amber-500/5 blur-[140px] pointer-events-none -z-10" />
-
+    <section id="services" className="relative py-16 sm:py-20 lg:py-24 bg-transparent transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-12 gap-6">
@@ -88,7 +82,7 @@ export const Services: React.FC<ServicesProps> = ({
             <MagneticButton
               variant="outline"
               size="md"
-              onClick={onOpenStrategyCall}
+              onClick={() => onOpenStrategyCall()}
             >
               Consult with Our Team
             </MagneticButton>
@@ -136,8 +130,8 @@ export const Services: React.FC<ServicesProps> = ({
                 onMouseMove={handleCardMouseMove}
                 onMouseEnter={() => soundFX.playHover()}
                 className={`group relative rounded-3xl p-6 sm:p-7 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 overflow-hidden ${isFeatured
-                    ? 'bg-gradient-to-br from-white via-orange-50/15 to-amber-50/10 dark:from-obsidian-850 dark:via-obsidian-900 dark:to-obsidian-950 border border-ember-500/40 shadow-light-card-hover dark:shadow-glow-ember'
-                    : 'bg-white dark:bg-obsidian-900/90 border border-slate-200/90 dark:border-white/[0.08] hover:border-ember-500/35 dark:hover:border-ember-500/40 shadow-light-card hover:shadow-light-card-hover dark:shadow-glass-edge'
+                    ? 'bg-gradient-to-br from-white/95 via-orange-50/20 to-amber-50/15 dark:from-[#1A253D]/95 dark:via-[#141D30]/95 dark:to-[#0F172A]/95 backdrop-blur-md border border-ember-500/40 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-[0_12px_36px_rgba(0,0,0,0.5)]'
+                    : 'bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800/90 hover:border-ember-500/35 dark:hover:border-ember-500/50 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-[0_12px_36px_rgba(0,0,0,0.5)]'
                   }`}
                 style={{
                   backgroundImage: `radial-gradient(400px circle at var(--mouse-x, -200px) var(--mouse-y, -200px), rgba(255, 77, 0, 0.08), transparent 70%)`,
@@ -212,11 +206,11 @@ export const Services: React.FC<ServicesProps> = ({
                   <button
                     onClick={() => {
                       soundFX.playClick();
-                      onOpenScopeCalculator(service.title);
+                      onOpenStrategyCall(service.title);
                     }}
                     className="w-full flex items-center justify-between text-xs font-semibold py-2.5 px-4 rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-ember-500 hover:text-white text-slate-800 dark:text-zinc-200 transition-all duration-300 group/btn cursor-pointer"
                   >
-                    <span>Scope This Capability</span>
+                    <span>Consult On This Service</span>
                     <ArrowRight className="w-4 h-4 text-slate-400 group-hover/btn:text-white group-hover/btn:translate-x-1 transition-all" />
                   </button>
                 </div>

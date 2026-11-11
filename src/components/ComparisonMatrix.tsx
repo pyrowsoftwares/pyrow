@@ -43,7 +43,7 @@ export const ComparisonMatrix: React.FC = () => {
   ];
 
   return (
-    <section id="comparison" className="relative py-16 sm:py-20 lg:py-24 bg-white dark:bg-obsidian-950 border-b border-slate-200 dark:border-white/5 transition-colors duration-300">
+    <section id="comparison" className="relative py-16 sm:py-20 lg:py-24 bg-transparent transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-14">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-ember-500/10 border border-ember-500/25 text-xs font-mono text-ember-600 dark:text-ember-400 mb-3 font-semibold">
@@ -59,10 +59,10 @@ export const ComparisonMatrix: React.FC = () => {
         </div>
 
         {/* Comparison Table */}
-        <div className="overflow-x-auto scrollbar-none rounded-3xl border border-slate-200/90 dark:border-white/[0.08] shadow-xl bg-white dark:bg-obsidian-900/90">
+        <div className="overflow-x-auto scrollbar-none rounded-3xl border border-slate-200/90 dark:border-slate-800/90 shadow-sm dark:shadow-none bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-slate-200/90 dark:border-white/10 bg-slate-50 dark:bg-obsidian-850">
+              <tr className="border-b border-slate-200/90 dark:border-slate-800 bg-slate-50 dark:bg-[#1A253D]">
                 <th className="py-4 sm:py-5 px-6 text-xs sm:text-sm font-semibold text-slate-900 dark:text-white w-1/3">
                   Evaluation Dimension
                 </th>
@@ -80,7 +80,7 @@ export const ComparisonMatrix: React.FC = () => {
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-white/5 text-xs sm:text-sm">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 text-xs sm:text-sm">
               {rows.map((row, idx) => (
                 <tr key={idx} className="hover:bg-slate-50/60 dark:hover:bg-white/5 transition-colors">
                   <td className="py-4 sm:py-5 px-6 font-semibold text-slate-900 dark:text-white">

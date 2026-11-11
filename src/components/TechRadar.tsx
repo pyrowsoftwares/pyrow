@@ -40,29 +40,29 @@ export const TechRadar: React.FC = () => {
       name: 'Go (Golang)',
       category: 'backend',
       tier: 'High-Throughput',
-      metric: '50,000+ RPS',
-      summary: 'High-concurrency microservices, lightweight goroutines, and sub-millisecond memory footprint.',
+      metric: '50,000+ Users',
+      summary: 'High-speed business backends, fast data processing, and lightweight memory footprint.',
     },
     {
-      name: 'Node.js & FastAPI',
+      name: 'Node.js & Python',
       category: 'backend',
       tier: 'Production Core',
-      metric: '< 25ms P99',
-      summary: 'Asynchronous event loops, REST/GraphQL gateways, and AI agent LLM orchestration.',
+      metric: '< 25ms Speed',
+      summary: 'Fast server APIs, webhooks, WhatsApp integrations, and automated business workflows.',
     },
     {
-      name: 'PostgreSQL 16 & Citus',
+      name: 'PostgreSQL Database',
       category: 'data',
       tier: 'Enterprise Scale',
-      metric: 'Billion Rows',
-      summary: 'ACID transactional integrity, declarative partitioning, and horizontal sharding.',
+      metric: 'Zero Data Loss',
+      summary: 'Rock-solid data storage, automated daily backups, and encrypted customer records.',
     },
     {
-      name: 'Redis Enterprise',
+      name: 'Redis In-Memory Cache',
       category: 'data',
       tier: 'High-Throughput',
-      metric: '< 2ms Cache',
-      summary: 'Sub-millisecond token rate limiting, distributed session cache, and pub/sub queues.',
+      metric: 'Instant Load',
+      summary: 'Instant page loading, session management, and real-time live stock synchronization.',
     },
     {
       name: 'Flutter & Dart',
@@ -123,7 +123,7 @@ export const TechRadar: React.FC = () => {
   };
 
   return (
-    <section id="tech-radar" className="relative py-16 sm:py-20 lg:py-24 bg-slate-50 dark:bg-obsidian-900/60 border-b border-slate-200 dark:border-white/5 transition-colors duration-300">
+    <section id="tech-radar" className="relative py-16 sm:py-20 lg:py-24 bg-transparent transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mb-10 sm:mb-12">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-ember-500/10 border border-ember-500/25 text-xs font-mono text-ember-600 dark:text-ember-400 mb-3 font-semibold">
@@ -153,7 +153,7 @@ export const TechRadar: React.FC = () => {
               className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                 activeCategory === c.id
                   ? 'bg-ember-500 text-white shadow-md shadow-ember-500/20'
-                  : 'bg-white dark:bg-obsidian-800 text-slate-700 dark:text-zinc-400 border border-slate-200/90 dark:border-white/10 hover:border-ember-500/30'
+                  : 'bg-white/95 dark:bg-[#141D30]/95 text-slate-700 dark:text-zinc-400 border border-slate-200/90 dark:border-slate-800/90 hover:border-ember-500/30'
               }`}
             >
               {c.label}
@@ -168,7 +168,7 @@ export const TechRadar: React.FC = () => {
               key={tech.name}
               onMouseMove={handleCardMouseMove}
               onMouseEnter={() => soundFX.playHover()}
-              className="p-5 sm:p-6 rounded-3xl bg-white dark:bg-obsidian-900/90 border border-slate-200/90 dark:border-white/[0.08] hover:border-ember-500/40 transition-all duration-300 hover:-translate-y-1 shadow-light-card hover:shadow-light-card-hover dark:shadow-glass-edge flex flex-col justify-between group overflow-hidden"
+              className="p-5 sm:p-6 rounded-3xl bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800/90 hover:border-ember-500/40 dark:hover:border-ember-500/50 transition-all duration-300 hover:-translate-y-1 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-[0_12px_36px_rgba(0,0,0,0.5)] flex flex-col justify-between group overflow-hidden"
               style={{
                 backgroundImage: `radial-gradient(350px circle at var(--mouse-x, -200px) var(--mouse-y, -200px), rgba(255, 77, 0, 0.08), transparent 70%)`,
               }}

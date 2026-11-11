@@ -6,10 +6,17 @@ import { MagneticButton } from '../ui/MagneticButton';
 interface StrategyCallModalProps {
   isOpen: boolean;
   onClose: () => void;
+  initialTopic?: string;
 }
 
-export const StrategyCallModal: React.FC<StrategyCallModalProps> = ({ isOpen, onClose }) => {
+export const StrategyCallModal: React.FC<StrategyCallModalProps> = ({ isOpen, onClose, initialTopic }) => {
   const [selectedTopic, setSelectedTopic] = useState('Enterprise Architecture & Custom Software');
+
+  React.useEffect(() => {
+    if (initialTopic && isOpen) {
+      setSelectedTopic(initialTopic);
+    }
+  }, [initialTopic, isOpen]);
   const [selectedTime, setSelectedTime] = useState('11:00 AM IST');
   const [selectedDay, setSelectedDay] = useState('Tomorrow');
   const [formData, setFormData] = useState({

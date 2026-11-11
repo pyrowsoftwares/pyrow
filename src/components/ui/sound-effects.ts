@@ -84,6 +84,47 @@ class SoundFX {
     }
   }
 
+  // Thanos Snap / Quantum Disintegration sound effect
+  public playSnap() {
+    try {
+      this.initCtx();
+      if (!this.ctx) return;
+      const now = this.ctx.currentTime;
+
+      // 1. Crisp initial finger snap / energy crack
+      const snapOsc = this.ctx.createOscillator();
+      const snapGain = this.ctx.createGain();
+      snapOsc.type = 'triangle';
+      snapOsc.frequency.setValueAtTime(2400, now);
+      snapOsc.frequency.exponentialRampToValueAtTime(120, now + 0.08);
+
+      snapGain.gain.setValueAtTime(0.15, now);
+      snapGain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+
+      snapOsc.connect(snapGain);
+      snapGain.connect(this.ctx.destination);
+      snapOsc.start(now);
+      snapOsc.stop(now + 0.09);
+
+      // 2. Cosmic sub-bass dissolution rumble
+      const bassOsc = this.ctx.createOscillator();
+      const bassGain = this.ctx.createGain();
+      bassOsc.type = 'sine';
+      bassOsc.frequency.setValueAtTime(160, now + 0.04);
+      bassOsc.frequency.exponentialRampToValueAtTime(35, now + 0.6);
+
+      bassGain.gain.setValueAtTime(0.12, now + 0.04);
+      bassGain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+
+      bassOsc.connect(bassGain);
+      bassGain.connect(this.ctx.destination);
+      bassOsc.start(now + 0.04);
+      bassOsc.stop(now + 0.6);
+    } catch {
+      // safe ignore
+    }
+  }
+
   // Ascending futuristic chime for modal open / success
   public playChime() {
     if (!this.enabled) return;

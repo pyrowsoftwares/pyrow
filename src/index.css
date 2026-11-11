@@ -47,16 +47,36 @@
     font-family: 'Geist Variable', 'Plus Jakarta Sans', sans-serif;
   }
 
-  /* Default light theme like modern Indian Tech Giants (Razorpay, Zoho, Postman) */
+  /* Default light theme: Rich, luminous multi-stop portal gradient */
   html:not(.dark) body {
-    background-color: #FAFBFC;
+    background: linear-gradient(180deg, 
+      #FFF6EE 0%, 
+      #FAF7F3 12%, 
+      #F0F7FF 28%, 
+      #F6F2FF 44%, 
+      #FFF3F2 60%, 
+      #FEF9EC 75%, 
+      #F1F8F6 88%, 
+      #FFF6EE 100%
+    );
     color: #0F172A;
+    min-height: 100vh;
   }
 
-  /* Dark mode */
+  /* Dark mode: Rich, elegant midnight slate portal gradient (No pure black, no harsh glare) */
   html.dark body {
-    background-color: #05070B;
-    color: #F4F4F5;
+    background: linear-gradient(180deg, 
+      #0B0F19 0%, 
+      #0E1424 12%, 
+      #0B1120 28%, 
+      #110E22 44%, 
+      #140E1B 60%, 
+      #111116 75%, 
+      #0B121A 88%, 
+      #0B0F19 100%
+    );
+    color: #F8FAFC;
+    min-height: 100vh;
   }
 
   body {
@@ -167,9 +187,9 @@
 }
 
 .dark .glass-panel {
-  background: rgba(12, 17, 28, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4);
+  background: rgba(20, 29, 48, 0.95);
+  border: 1px solid rgba(51, 65, 85, 0.8);
+  box-shadow: none;
 }
 
 .glass-panel:hover {
@@ -201,3 +221,24 @@
 .animate-slide-up {
   animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* Custom Cursor Rules for Fine Pointer (Desktop) */
+@media (pointer: fine) {
+  html.has-custom-cursor,
+  html.has-custom-cursor body,
+  html.has-custom-cursor a,
+  html.has-custom-cursor button,
+  html.has-custom-cursor [role="button"],
+  html.has-custom-cursor .cursor-pointer {
+    cursor: none !important;
+  }
+
+  html.has-custom-cursor input[type="text"],
+  html.has-custom-cursor input[type="email"],
+  html.has-custom-cursor input[type="search"],
+  html.has-custom-cursor textarea,
+  html.has-custom-cursor [contenteditable="true"] {
+    cursor: text !important;
+  }
+}
+

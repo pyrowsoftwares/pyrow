@@ -18,18 +18,16 @@ import { soundFX } from './ui/sound-effects';
 
 interface ProjectEstimatorProps {
   onOpenStrategyCall: () => void;
-  onOpenScopeCalculator: () => void;
 }
 
 export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
   onOpenStrategyCall,
-  onOpenScopeCalculator,
 }) => {
   const [selectedDisciplines, setSelectedDisciplines] = useState<string[]>([
     'Website & E-Commerce Store',
   ]);
   const [selectedTimeline, setSelectedTimeline] = useState('1 - 3 Months');
-  const [selectedBudget, setSelectedBudget] = useState('₹5,00,000 - ₹15,00,000 (Growth)');
+  const [selectedBudget, setSelectedBudget] = useState('Growth Tier (Scaling Business)');
   const [contactForm, setContactForm] = useState({
     name: '',
     email: '',
@@ -51,10 +49,10 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
   const timelines = ['Urgent (< 1 Month)', '1 - 3 Months', '3 - 6 Months', 'Ongoing Retainer'];
 
   const budgets = [
-    '₹1 Lakh - ₹5 Lakhs (Starter)',
-    '₹5 Lakhs - ₹15 Lakhs (Growth)',
-    '₹15 Lakhs - ₹50 Lakhs (Enterprise)',
-    '₹50 Lakhs+ (Full Ecosystem)',
+    'Starter Tier (Essential MVP)',
+    'Growth Tier (Scaling Business)',
+    'Enterprise Scale (Multi-Branch)',
+    'Full Ecosystem (Custom End-to-End)',
   ];
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -90,32 +88,29 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
   };
 
   return (
-    <section id="estimator" className="relative py-16 sm:py-20 lg:py-24 bg-slate-50 dark:bg-obsidian-950 border-b border-slate-200 dark:border-white/5 transition-colors duration-300">
-      {/* Background ambient light */}
-      <div className="absolute top-1/4 right-1/4 w-[600px] h-[600px] bg-ember-500/5 blur-[160px] pointer-events-none -z-10" />
-
+    <section id="estimator" className="relative py-16 sm:py-20 lg:py-24 bg-transparent transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-14">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-ember-500/10 border border-ember-500/30 text-xs font-mono text-ember-600 dark:text-ember-400 mb-3 font-semibold">
             <Zap className="w-3.5 h-3.5" />
-            <span>Instant Project Estimator</span>
+            <span>Project Consultation & Scope</span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-black font-display text-slate-900 dark:text-white tracking-tight">
             Tell Us About Your Project.{' '}
             <span className="bg-gradient-to-r from-ember-500 via-flare-amber to-cyber-blue bg-clip-text text-transparent">
-              Get an Instant Estimate.
+              Get Your Dedicated Roadmap.
             </span>
           </h2>
           <p className="mt-3 text-base sm:text-lg text-slate-600 dark:text-zinc-400">
-            Select your requirements below to receive a transparent price estimate and a dedicated roadmap consultation with our lead technical architect.
+            Select your requirements below to receive a custom architecture roadmap and strategic consultation with our lead technical architect.
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Left Column: Interactive Estimator Form (lg:col-span-7) */}
           <div className="lg:col-span-7">
-            <div className="glass-panel p-6 sm:p-8 rounded-3xl bg-white dark:bg-obsidian-900/90 border border-slate-200 dark:border-white/10 shadow-xl">
+            <div className="p-6 sm:p-8 rounded-3xl bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 shadow-sm dark:shadow-none">
               {!submitted ? (
                 <form onSubmit={handleFormSubmit} className="space-y-6">
                   {/* Step 1: Disciplines */}
@@ -184,7 +179,7 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                   {/* Step 3: Investment Range */}
                   <div>
                     <label className="text-xs font-mono text-slate-500 dark:text-zinc-400 uppercase tracking-wider block mb-2 font-bold">
-                      3. Target Budget (₹ INR)
+                      3. Project Scale & Investment Tier
                     </label>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       {budgets.map((b) => {
@@ -284,7 +279,7 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                       className="w-full justify-center mt-2"
                       icon={<Send className="w-4 h-4" />}
                     >
-                      {isSubmitting ? 'Calculating & Dispatching...' : 'Submit & Get Fixed-Price Estimate'}
+                      {isSubmitting ? 'Submitting & Dispatching...' : 'Submit Project Enquiry'}
                     </MagneticButton>
                   </div>
                 </form>
@@ -339,7 +334,7 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
             </div>
 
             {/* Direct Consultation Call */}
-            <div className="glass-panel p-6 rounded-3xl bg-white dark:bg-obsidian-900 border border-slate-200 dark:border-white/10 shadow-light-card space-y-4">
+            <div className="p-6 rounded-3xl bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 shadow-sm dark:shadow-none space-y-4">
               <h4 className="text-sm font-mono uppercase tracking-wider text-slate-500 dark:text-zinc-400 font-bold">
                 Direct Engineering Desk
               </h4>
@@ -361,7 +356,7 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
             </div>
 
             {/* Trust Assurances */}
-            <div className="p-4 rounded-2xl bg-white/70 dark:bg-obsidian-900/60 border border-slate-200 dark:border-white/5 space-y-2 text-[11px] text-slate-500 dark:text-zinc-400">
+            <div className="p-4 rounded-2xl bg-white/80 dark:bg-[#141D30]/80 border border-slate-200/90 dark:border-slate-800 space-y-2 text-[11px] text-slate-500 dark:text-zinc-400">
               <div className="flex items-center gap-2">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
                 <span>100% Intellectual Property ownership signed on Day 1</span>

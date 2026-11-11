@@ -73,8 +73,8 @@ export const DemoRequestModal: React.FC<DemoRequestModalProps> = ({
                   <div className="text-xs font-mono text-slate-500 dark:text-zinc-400 uppercase font-bold">Selected Module</div>
                   <div className="text-sm font-bold text-slate-900 dark:text-white mt-0.5">{softwareName}</div>
                 </div>
-                <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-ember-500/15 text-ember-600 dark:text-ember-400 border border-ember-500/30 font-bold">
-                  Pre-configured v4.2
+                <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 font-bold">
+                  Interactive Live Demo
                 </span>
               </div>
 

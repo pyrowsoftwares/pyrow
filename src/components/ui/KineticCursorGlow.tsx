@@ -51,8 +51,8 @@ export const KineticCursorGlow: React.FC<KineticCursorGlowProps> = ({ theme }) =
         transform: 'translate3d(-1000px, -1000px, 0)',
         background:
           theme === 'dark'
-            ? 'radial-gradient(circle, rgba(255, 77, 0, 0.09) 0%, rgba(255, 120, 0, 0.03) 45%, transparent 70%)'
-            : 'radial-gradient(circle, rgba(255, 77, 0, 0.06) 0%, rgba(240, 100, 0, 0.02) 45%, transparent 70%)',
+            ? 'radial-gradient(circle, rgba(255, 77, 0, 0.14) 0%, rgba(2, 132, 199, 0.08) 40%, transparent 70%)'
+            : 'radial-gradient(circle, rgba(255, 77, 0, 0.07) 0%, rgba(240, 100, 0, 0.02) 45%, transparent 70%)',
       }}
       aria-hidden="true"
     />

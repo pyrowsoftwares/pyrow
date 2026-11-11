@@ -6,46 +6,54 @@ import { HowItWorks } from './components/HowItWorks';
 import { IndustrySolutions } from './components/IndustrySolutions';
 import { CaseStudies } from './components/CaseStudies';
 import { TechRadar } from './components/TechRadar';
-import { RoiCalculator } from './components/RoiCalculator';
 import { ComparisonMatrix } from './components/ComparisonMatrix';
 import { AboutPyrow } from './components/AboutPyrow';
 import { ProjectEstimator } from './components/ProjectEstimator';
 import { FaqSection } from './components/FaqSection';
 import { Footer } from './components/Footer';
-import { ScopeCalculatorModal } from './components/Modals/ScopeCalculatorModal';
 import { StrategyCallModal } from './components/Modals/StrategyCallModal';
 import { DemoRequestModal } from './components/Modals/DemoRequestModal';
 import { CommandPalette } from './components/ui/CommandPalette';
+import { QuantumSnapSection } from './components/ui/QuantumSnapSection';
 import { KineticCursorGlow } from './components/ui/KineticCursorGlow';
+import { CustomCursor } from './components/ui/CustomCursor';
+import { AnimatedGlobalBackground } from './components/ui/AnimatedGlobalBackground';
 import { TooltipProvider } from './components/ui/tooltip';
 import { ArrowUp, PhoneCall, Sparkles } from 'lucide-react';
 import { soundFX } from './components/ui/sound-effects';
 
 export default function App() {
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
-  const [scopeModalOpen, setScopeModalOpen] = useState(false);
-  const [selectedScopeService, setSelectedScopeService] = useState<string | undefined>();
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof window !== 'undefined') {
+      if (!sessionStorage.getItem('pyrow-visited')) {
+        return 'light';
+      }
+      const saved = sessionStorage.getItem('pyrow-theme') || localStorage.getItem('pyrow-theme');
+      return saved === 'dark' ? 'dark' : 'light';
+    }
+    return 'light';
+  });
   const [strategyCallModalOpen, setStrategyCallModalOpen] = useState(false);
+  const [selectedStrategyTopic, setSelectedStrategyTopic] = useState<string | undefined>();
   const [demoModalOpen, setDemoModalOpen] = useState(false);
   const [demoSoftwareName, setDemoSoftwareName] = useState('Enterprise ERP Software');
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
 
-  // Initialize theme from localStorage or default to light mode
+  // Sync theme to document element
   useEffect(() => {
-    const savedTheme = localStorage.getItem('pyrow-theme') as 'light' | 'dark' | null;
-    const initialTheme = savedTheme || 'light';
-    setTheme(initialTheme);
-    if (initialTheme === 'dark') {
+    if (theme === 'dark') {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
     }
-  }, []);
+  }, [theme]);
 
   const toggleTheme = () => {
     const newTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(newTheme);
+    sessionStorage.setItem('pyrow-visited', 'true');
+    sessionStorage.setItem('pyrow-theme', newTheme);
     localStorage.setItem('pyrow-theme', newTheme);
     if (newTheme === 'dark') {
       document.documentElement.classList.add('dark');
@@ -82,10 +90,10 @@ export default function App() {
     };
   }, []);
 
-  const handleOpenScopeCalculator = (serviceTitle?: string) => {
+  const handleOpenStrategyCall = (topic?: string) => {
     soundFX.playClick();
-    setSelectedScopeService(serviceTitle);
-    setScopeModalOpen(true);
+    setSelectedStrategyTopic(topic);
+    setStrategyCallModalOpen(true);
   };
 
   const handleOpenDemoRequest = (softwareTitle?: string) => {
@@ -101,81 +109,94 @@ export default function App() {
 
   return (
     <TooltipProvider>
-      <div className="relative min-h-screen bg-light-bg dark:bg-obsidian text-slate-900 dark:text-zinc-100 selection:bg-ember-500 selection:text-white font-sans overflow-x-hidden transition-colors duration-300">
+      <div className="relative min-h-screen bg-transparent text-slate-900 dark:text-zinc-100 selection:bg-ember-500 selection:text-white font-sans overflow-x-hidden transition-colors duration-300">
+        {/* Animated Global Atmospheric Cyber Matrix & Floating Starfield */}
+        <AnimatedGlobalBackground />
+
         {/* Isolated Kinetic Ambient Glow (Zero Virtual-DOM Root Re-renders) */}
         <KineticCursorGlow theme={theme} />
 
+        {/* Unique Pyrow Cyber-Kinetic Cursor */}
+        <CustomCursor theme={theme} />
+
       {/* Global Navigation Bar */}
       <Navigation
-        onOpenScopeCalculator={() => handleOpenScopeCalculator()}
-        onOpenStrategyCall={() => setStrategyCallModalOpen(true)}
+        onOpenStrategyCall={() => handleOpenStrategyCall()}
         onOpenDemoRequest={handleOpenDemoRequest}
         onOpenCommandPalette={() => setCommandPaletteOpen(true)}
         theme={theme}
         onToggleTheme={toggleTheme}
       />
 
-      {/* Main Content Sections: Seamless, natural, continuous flow */}
+      {/* Main Content Sections: Premium continuous scroll-reactive flow */}
       <main className="relative z-10">
         {/* Section 1: Hero */}
         <Hero
-          onOpenScopeCalculator={() => handleOpenScopeCalculator()}
-          onOpenStrategyCall={() => setStrategyCallModalOpen(true)}
+          onOpenStrategyCall={() => handleOpenStrategyCall()}
         />
 
         {/* Section 2: Services */}
-        <Services
-          onOpenScopeCalculator={handleOpenScopeCalculator}
-          onOpenStrategyCall={() => setStrategyCallModalOpen(true)}
-        />
+        <QuantumSnapSection id="services-section">
+          <Services
+            onOpenStrategyCall={handleOpenStrategyCall}
+          />
+        </QuantumSnapSection>
 
         {/* Section 3: How We Work (4 Simple Steps) */}
-        <HowItWorks
-          onOpenScopeCalculator={() => handleOpenScopeCalculator()}
-          onOpenStrategyCall={() => setStrategyCallModalOpen(true)}
-        />
+        <QuantumSnapSection id="how-it-works-section">
+          <HowItWorks
+            onOpenStrategyCall={() => handleOpenStrategyCall()}
+          />
+        </QuantumSnapSection>
 
         {/* Section 4: Industry-Specific Software Solutions */}
-        <IndustrySolutions
-          onOpenDemoRequest={handleOpenDemoRequest}
-          onOpenScopeCalculator={() => handleOpenScopeCalculator()}
-        />
+        <QuantumSnapSection id="solutions-section">
+          <IndustrySolutions
+            onOpenDemoRequest={handleOpenDemoRequest}
+            onOpenStrategyCall={handleOpenStrategyCall}
+          />
+        </QuantumSnapSection>
 
         {/* Section 5: Case Studies (Real Stories & Client Growth) */}
-        <CaseStudies
-          onOpenScopeCalculator={() => handleOpenScopeCalculator()}
-        />
+        <QuantumSnapSection id="case-studies-section">
+          <CaseStudies
+            onOpenStrategyCall={handleOpenStrategyCall}
+          />
+        </QuantumSnapSection>
 
-        {/* Section 6: ROI Calculator */}
-        <RoiCalculator
-          onOpenScopeCalculator={() => handleOpenScopeCalculator()}
-        />
+        {/* Section 6: Technology Stack */}
+        <QuantumSnapSection id="tech-radar-section">
+          <TechRadar />
+        </QuantumSnapSection>
 
-        {/* Section 7: Technology Stack */}
-        <TechRadar />
+        {/* Section 7: Why Choose Pyrow (Comparison) */}
+        <QuantumSnapSection id="comparison-section">
+          <ComparisonMatrix />
+        </QuantumSnapSection>
 
-        {/* Section 8: Why Choose Pyrow (Comparison) */}
-        <ComparisonMatrix />
+        {/* Section 8: About Pyrow & Leadership */}
+        <QuantumSnapSection id="about-section">
+          <AboutPyrow
+            onOpenStrategyCall={() => handleOpenStrategyCall()}
+          />
+        </QuantumSnapSection>
 
-        {/* Section 9: About Pyrow & Leadership */}
-        <AboutPyrow
-          onOpenStrategyCall={() => setStrategyCallModalOpen(true)}
-        />
+        {/* Section 9: Frequently Asked Questions (FAQ) */}
+        <QuantumSnapSection id="faq-section">
+          <FaqSection />
+        </QuantumSnapSection>
 
-        {/* Section 10: Frequently Asked Questions (FAQ) */}
-        <FaqSection />
-
-        {/* Section 11: Project Estimator & Contact */}
-        <ProjectEstimator
-          onOpenStrategyCall={() => setStrategyCallModalOpen(true)}
-          onOpenScopeCalculator={() => handleOpenScopeCalculator()}
-        />
+        {/* Section 10: Project Consultation & Contact */}
+        <QuantumSnapSection id="estimator-section">
+          <ProjectEstimator
+            onOpenStrategyCall={() => handleOpenStrategyCall()}
+          />
+        </QuantumSnapSection>
       </main>
 
-      {/* Section 12: Footer */}
+      {/* Section 11: Footer */}
       <Footer
-        onOpenScopeCalculator={() => handleOpenScopeCalculator()}
-        onOpenStrategyCall={() => setStrategyCallModalOpen(true)}
+        onOpenStrategyCall={() => handleOpenStrategyCall()}
         onOpenDemoRequest={handleOpenDemoRequest}
       />
 
@@ -185,7 +206,7 @@ export default function App() {
           <button
             onClick={() => {
               soundFX.playClick();
-              setStrategyCallModalOpen(true);
+              handleOpenStrategyCall();
             }}
             className="hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-full bg-slate-900 dark:bg-white text-white dark:text-obsidian font-bold text-xs shadow-xl hover:scale-105 transition-all"
           >
@@ -204,19 +225,10 @@ export default function App() {
       )}
 
       {/* Global Interactive Modals */}
-      <ScopeCalculatorModal
-        isOpen={scopeModalOpen}
-        onClose={() => setScopeModalOpen(false)}
-        initialService={selectedScopeService}
-        onOpenStrategyCall={() => {
-          setScopeModalOpen(false);
-          setStrategyCallModalOpen(true);
-        }}
-      />
-
       <StrategyCallModal
         isOpen={strategyCallModalOpen}
         onClose={() => setStrategyCallModalOpen(false)}
+        initialTopic={selectedStrategyTopic}
       />
 
       <DemoRequestModal
@@ -228,8 +240,7 @@ export default function App() {
       <CommandPalette
         isOpen={commandPaletteOpen}
         onClose={() => setCommandPaletteOpen(false)}
-        onOpenScopeCalculator={() => setScopeModalOpen(true)}
-        onOpenStrategyCall={() => setStrategyCallModalOpen(true)}
+        onOpenStrategyCall={() => handleOpenStrategyCall()}
         onOpenDemoRequest={handleOpenDemoRequest}
       />
     </div>
