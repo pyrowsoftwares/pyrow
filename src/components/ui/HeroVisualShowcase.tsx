@@ -92,7 +92,7 @@ export const HeroVisualShowcase: React.FC = () => {
           </div>
 
           {/* Interactive Feature View Switcher */}
-          <div className="flex items-center gap-1 p-1 rounded-xl bg-white dark:bg-obsidian-850 border border-slate-200 dark:border-white/10 text-xs font-semibold overflow-x-auto">
+          <div className="flex items-center gap-1 p-1 rounded-xl bg-white dark:bg-obsidian-850 border border-slate-200 dark:border-white/10 text-xs font-semibold overflow-x-auto max-w-full scrollbar-none">
             {tabs.map((tab) => {
               const isActive = activeTab === tab.id;
               return (

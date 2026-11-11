@@ -77,8 +77,8 @@ export const TechGrowthMatrix: React.FC = () => {
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseleave', handleMouseLeave);
 
-    // Floating Radiant Star Embers (Pyrow Flame & Cyber Blue)
-    const emberCount = 55;
+    // Floating Radiant Star Embers (Adaptive Count: 24 on mobile, 55 on PC)
+    const emberCount = (window.innerWidth < 640) ? 24 : 55;
     const embers: Particle[] = [];
     const colors = ['#FF4D00', '#FF7A00', '#FFB703', '#0284C7', '#8B5CF6'];
 

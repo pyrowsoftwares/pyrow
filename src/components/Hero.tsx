@@ -88,13 +88,14 @@ export const Hero: React.FC<HeroProps> = ({ onOpenStrategyCall }) => {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4"
+          className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto px-4"
         >
           <MagneticButton
             variant="primary"
             size="lg"
             onClick={onOpenStrategyCall}
             icon={<Sparkles className="w-5 h-5" />}
+            className="w-full sm:w-auto justify-center"
           >
             Schedule Strategy Call
           </MagneticButton>
@@ -104,6 +105,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenStrategyCall }) => {
             size="lg"
             onClick={scrollToServices}
             icon={<ArrowDown className="w-4 h-4 text-slate-500 dark:text-zinc-400 group-hover:translate-y-1 transition-transform" />}
+            className="w-full sm:w-auto justify-center"
           >
             Explore What We Do
           </MagneticButton>

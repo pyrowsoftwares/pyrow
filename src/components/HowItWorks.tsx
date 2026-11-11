@@ -152,7 +152,7 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({
         </div>
 
         {/* Active Step Detailed Card */}
-        <div className="rounded-3xl p-6 sm:p-9 bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800/90 shadow-sm dark:shadow-none">
+        <div className="rounded-2xl sm:rounded-3xl p-5 sm:p-9 bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800/90 shadow-sm dark:shadow-none">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             {/* Step Summary (lg:col-span-7) */}
             <div className="lg:col-span-7 space-y-6">

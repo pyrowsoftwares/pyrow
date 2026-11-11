@@ -45,6 +45,11 @@
   html {
     scroll-behavior: smooth;
     font-family: 'Geist Variable', 'Plus Jakarta Sans', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  a, button, [role="button"], input, select, textarea {
+    touch-action: manipulation;
   }
 
   /* Default light theme: Rich, luminous multi-stop portal gradient */

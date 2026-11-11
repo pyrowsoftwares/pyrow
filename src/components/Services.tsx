@@ -90,8 +90,8 @@ export const Services: React.FC<ServicesProps> = ({
         </div>
 
         {/* Filter Tabs Switcher */}
-        <div className="flex justify-center w-full mb-8">
-          <div className="flex items-center justify-center gap-1.5 p-1.5 rounded-2xl bg-slate-100 dark:bg-obsidian-900 border border-slate-200 dark:border-white/10 overflow-x-auto scrollbar-none max-w-fit shadow-sm">
+        <div className="flex justify-start sm:justify-center w-full mb-8 overflow-x-auto scrollbar-none px-1">
+          <div className="flex items-center gap-1.5 p-1.5 rounded-2xl bg-slate-100 dark:bg-obsidian-900 border border-slate-200 dark:border-white/10 overflow-x-auto scrollbar-none max-w-full sm:max-w-fit shadow-sm">
             {tabs.map((tab) => {
               const isActive = activeTab === tab.id;
               return (
@@ -129,7 +129,7 @@ export const Services: React.FC<ServicesProps> = ({
                 key={service.id}
                 onMouseMove={handleCardMouseMove}
                 onMouseEnter={() => soundFX.playHover()}
-                className={`group relative rounded-3xl p-6 sm:p-7 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 overflow-hidden ${isFeatured
+                className={`group relative rounded-3xl p-5 sm:p-7 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 overflow-hidden ${isFeatured
                     ? 'bg-gradient-to-br from-white/95 via-orange-50/20 to-amber-50/15 dark:from-[#1A253D]/95 dark:via-[#141D30]/95 dark:to-[#0F172A]/95 backdrop-blur-md border border-ember-500/40 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-[0_12px_36px_rgba(0,0,0,0.5)]'
                     : 'bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800/90 hover:border-ember-500/35 dark:hover:border-ember-500/50 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-[0_12px_36px_rgba(0,0,0,0.5)]'
                   }`}

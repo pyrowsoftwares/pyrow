@@ -1,5 +1,5 @@
 import React from 'react';
-import { Check, X, Shield, Sparkles } from 'lucide-react';
+import { Check, X, Shield, Sparkles, ArrowRight } from 'lucide-react';
 import { Badge } from './ui/badge';
 
 export const ComparisonMatrix: React.FC = () => {
@@ -58,24 +58,30 @@ export const ComparisonMatrix: React.FC = () => {
           </p>
         </div>
 
+        {/* Mobile Swipe Hint */}
+        <div className="flex sm:hidden items-center justify-end gap-1.5 text-[11px] font-mono text-slate-400 dark:text-zinc-500 mb-2 px-2">
+          <span>Swipe horizontally</span>
+          <ArrowRight className="w-3 h-3 text-ember-500 animate-pulse" />
+        </div>
+
         {/* Comparison Table */}
-        <div className="overflow-x-auto scrollbar-none rounded-3xl border border-slate-200/90 dark:border-slate-800/90 shadow-sm dark:shadow-none bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md">
-          <table className="w-full text-left border-collapse">
+        <div className="overflow-x-auto scrollbar-none rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-slate-800/90 shadow-sm dark:shadow-none bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md -webkit-overflow-scrolling-touch">
+          <table className="w-full text-left border-collapse min-w-[580px] sm:min-w-0">
             <thead>
               <tr className="border-b border-slate-200/90 dark:border-slate-800 bg-slate-50 dark:bg-[#1A253D]">
-                <th className="py-4 sm:py-5 px-6 text-xs sm:text-sm font-semibold text-slate-900 dark:text-white w-1/3">
+                <th className="py-3.5 sm:py-5 px-4 sm:px-6 text-xs sm:text-sm font-semibold text-slate-900 dark:text-white w-1/3">
                   Evaluation Dimension
                 </th>
-                <th className="py-4 sm:py-5 px-6 text-xs sm:text-sm font-bold text-ember-600 dark:text-ember-400 bg-ember-500/10 dark:bg-ember-500/15 border-x-2 border-ember-500/40 w-1/3">
+                <th className="py-3.5 sm:py-5 px-4 sm:px-6 text-xs sm:text-sm font-bold text-ember-600 dark:text-ember-400 bg-ember-500/10 dark:bg-ember-500/15 border-x-2 border-ember-500/40 w-1/3">
                   <div className="flex items-center gap-2">
                     <Sparkles className="w-4 h-4 text-ember-500" />
                     <span>The Pyrow Model</span>
                   </div>
                 </th>
-                <th className="py-4 sm:py-5 px-6 text-xs sm:text-sm font-medium text-slate-500 dark:text-zinc-400 w-1/6 hidden sm:table-cell">
+                <th className="py-3.5 sm:py-5 px-4 sm:px-6 text-xs sm:text-sm font-medium text-slate-500 dark:text-zinc-400 w-1/6 hidden sm:table-cell">
                   Traditional Agency
                 </th>
-                <th className="py-4 sm:py-5 px-6 text-xs sm:text-sm font-medium text-slate-500 dark:text-zinc-400 w-1/6 hidden md:table-cell">
+                <th className="py-3.5 sm:py-5 px-4 sm:px-6 text-xs sm:text-sm font-medium text-slate-500 dark:text-zinc-400 w-1/6 hidden md:table-cell">
                   Internal Hiring
                 </th>
               </tr>
@@ -83,16 +89,16 @@ export const ComparisonMatrix: React.FC = () => {
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 text-xs sm:text-sm">
               {rows.map((row, idx) => (
                 <tr key={idx} className="hover:bg-slate-50/60 dark:hover:bg-white/5 transition-colors">
-                  <td className="py-4 sm:py-5 px-6 font-semibold text-slate-900 dark:text-white">
+                  <td className="py-3.5 sm:py-5 px-4 sm:px-6 font-semibold text-slate-900 dark:text-white">
                     {row.feature}
                   </td>
-                  <td className="py-4 sm:py-5 px-6 font-semibold text-slate-900 dark:text-white bg-ember-500/5 dark:bg-ember-500/10 border-x-2 border-ember-500/40">
+                  <td className="py-3.5 sm:py-5 px-4 sm:px-6 font-semibold text-slate-900 dark:text-white bg-ember-500/5 dark:bg-ember-500/10 border-x-2 border-ember-500/40">
                     <div className="flex items-start gap-2">
                       <Check className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5 stroke-[3]" />
                       <span>{row.pyrow}</span>
                     </div>
                   </td>
-                  <td className="py-4 sm:py-5 px-6 text-slate-500 dark:text-zinc-400 hidden sm:table-cell">
+                  <td className="py-3.5 sm:py-5 px-4 sm:px-6 text-slate-500 dark:text-zinc-400 hidden sm:table-cell">
                     <div className="flex items-start gap-2">
                       <X className="w-4 h-4 text-rose-500 flex-shrink-0 mt-0.5" />
                       <span>{row.agency}</span>

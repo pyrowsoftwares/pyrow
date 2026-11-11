@@ -127,24 +127,26 @@ export const AnimatedGlobalBackground: React.FC = () => {
         ctx.fill();
         ctx.restore();
 
-        // Connect nearby particles with subtle filament lines
-        for (let j = i + 1; j < particles.length; j++) {
-          const p2 = particles[j];
-          const ldx = p.x - p2.x;
-          const ldy = p.y - p2.y;
-          const ldist = Math.sqrt(ldx * ldx + ldy * ldy);
+        // Connect nearby particles with subtle filament lines (Full Fidelity on PC / Tablets)
+        if (width >= 640) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const p2 = particles[j];
+            const ldx = p.x - p2.x;
+            const ldy = p.y - p2.y;
+            const ldist = Math.sqrt(ldx * ldx + ldy * ldy);
 
-          if (ldist < 80) {
-            const lineAlpha = (1 - ldist / 80) * (isDark ? 0.08 : 0.05);
-            ctx.save();
-            ctx.strokeStyle = p.color;
-            ctx.globalAlpha = lineAlpha;
-            ctx.lineWidth = 0.6;
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(p2.x, p2.y);
-            ctx.stroke();
-            ctx.restore();
+            if (ldist < 80) {
+              const lineAlpha = (1 - ldist / 80) * (isDark ? 0.08 : 0.05);
+              ctx.save();
+              ctx.strokeStyle = p.color;
+              ctx.globalAlpha = lineAlpha;
+              ctx.lineWidth = 0.6;
+              ctx.beginPath();
+              ctx.moveTo(p.x, p.y);
+              ctx.lineTo(p2.x, p2.y);
+              ctx.stroke();
+              ctx.restore();
+            }
           }
         }
       }

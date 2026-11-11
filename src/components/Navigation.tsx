@@ -369,12 +369,13 @@ export const Navigation: React.FC<NavigationProps> = ({
                 {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
               </button>
 
-              {/* CTA 1: Schedule Strategy Call */}
+              {/* CTA 1: Schedule Strategy Call (Desktop & Tablet) */}
               <MagneticButton
                 variant="primary"
                 size="sm"
                 onClick={onOpenStrategyCall}
                 icon={<Sparkles className="w-3.5 h-3.5" />}
+                className="hidden sm:inline-flex"
               >
                 Schedule Call
               </MagneticButton>

@@ -63,7 +63,7 @@ export const IndustrySolutions: React.FC<IndustrySolutionsProps> = ({
         {/* Master-Detail Interactive Showcase */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Left Column: Solution Selector List (lg:col-span-5) */}
-          <div className="lg:col-span-5 space-y-2 max-h-[640px] overflow-y-auto pr-1 scrollbar-thin">
+          <div className="lg:col-span-5 space-y-2 max-h-[380px] sm:max-h-[640px] overflow-y-auto pr-1 scrollbar-thin">
             {industrySolutions.map((sol, index) => {
               const isSelected = selectedSolution.id === sol.id;
               return (
@@ -104,7 +104,7 @@ export const IndustrySolutions: React.FC<IndustrySolutionsProps> = ({
 
           {/* Right Column: Interactive Product Mockup (lg:col-span-7) */}
           <div className="lg:col-span-7 sticky top-24">
-            <div className="p-6 sm:p-8 rounded-3xl bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800/90 shadow-sm dark:shadow-none relative overflow-hidden">
+            <div className="p-5 sm:p-8 rounded-2xl sm:rounded-3xl bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800/90 shadow-sm dark:shadow-none relative overflow-hidden">
               {/* Toast banner when simulated */}
               {toastMessage && (
                 <div className="absolute top-3 left-1/2 -translate-x-1/2 z-30 px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs font-mono font-bold shadow-lg animate-in slide-in-from-top-2 duration-150 flex items-center gap-2">
