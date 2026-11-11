@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "pyrow-1d510"
+  },
+  "targets": {
+    "pyrow-1d510": {
+      "hosting": {
+        "pyrow": [
+          "pyrow"
+        ]
+      }
+    }
+  }
+}
