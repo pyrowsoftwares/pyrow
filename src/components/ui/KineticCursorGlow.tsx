@@ -8,6 +8,11 @@ export const KineticCursorGlow: React.FC<KineticCursorGlowProps> = ({ theme }) =
   const glowRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Disable on touch devices or reduced motion preference
+    if (window.matchMedia('(pointer: coarse), (prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
+
     let animationFrameId: number;
     let targetX = -1000;
     let targetY = -1000;
@@ -15,12 +20,11 @@ export const KineticCursorGlow: React.FC<KineticCursorGlowProps> = ({ theme }) =
     let currentY = -1000;
 
     const handleMouseMove = (e: MouseEvent) => {
-      targetX = e.clientX - 210;
-      targetY = e.clientY - 210;
+      targetX = e.clientX - 175;
+      targetY = e.clientY - 175;
     };
 
     const animate = () => {
-      // Smooth lerp for buttery organic cursor lag
       currentX += (targetX - currentX) * 0.15;
       currentY += (targetY - currentY) * 0.15;
 
@@ -42,20 +46,19 @@ export const KineticCursorGlow: React.FC<KineticCursorGlowProps> = ({ theme }) =
   return (
     <div
       ref={glowRef}
-      className="fixed pointer-events-none rounded-full blur-[130px] -z-10 will-change-transform"
+      className="fixed pointer-events-none rounded-full -z-10 will-change-transform opacity-60 dark:opacity-40"
       style={{
-        width: '420px',
-        height: '420px',
+        width: '350px',
+        height: '350px',
         top: 0,
         left: 0,
         transform: 'translate3d(-1000px, -1000px, 0)',
         background:
           theme === 'dark'
-            ? 'radial-gradient(circle, rgba(255, 77, 0, 0.14) 0%, rgba(2, 132, 199, 0.08) 40%, transparent 70%)'
-            : 'radial-gradient(circle, rgba(255, 77, 0, 0.07) 0%, rgba(240, 100, 0, 0.02) 45%, transparent 70%)',
+            ? 'radial-gradient(circle, rgba(255, 77, 0, 0.12) 0%, rgba(2, 132, 199, 0.06) 35%, transparent 70%)'
+            : 'radial-gradient(circle, rgba(255, 77, 0, 0.08) 0%, rgba(240, 100, 0, 0.03) 40%, transparent 70%)',
       }}
       aria-hidden="true"
     />
   );
 };
-

@@ -187,7 +187,7 @@ export default function App() {
         </QuantumSnapSection>
 
         {/* Section 10: Project Consultation & Contact */}
-        <QuantumSnapSection id="estimator-section">
+        <QuantumSnapSection id="estimator-section" className="!mb-0 !my-0">
           <ProjectEstimator
             onOpenStrategyCall={() => handleOpenStrategyCall()}
           />

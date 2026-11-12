@@ -87,6 +87,9 @@ export const CustomCursor: React.FC<CustomCursorProps> = ({ theme }) => {
       }
     };
 
+    let lastHovering = false;
+    let lastTextMode = false;
+
     const handleMouseMove = (e: MouseEvent) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
@@ -100,24 +103,30 @@ export const CustomCursor: React.FC<CustomCursorProps> = ({ theme }) => {
 
       // Generate ember spark trail when moving
       const dist = Math.hypot(mouseX - prevMouseX, mouseY - prevMouseY);
-      if (dist > 7) {
+      if (dist > 12) {
         createSpark(mouseX, mouseY, mouseX - prevMouseX, mouseY - prevMouseY, 1, false);
         prevMouseX = mouseX;
         prevMouseY = mouseY;
       }
 
-      // Check hover states
+      // Check hover states only when target exists and state changes
       const target = e.target as HTMLElement | null;
       if (target) {
         const isInteractive = Boolean(
           target.closest('a, button, [role="button"], input, textarea, select, .cursor-pointer, [data-cursor="pointer"]')
         );
-        setIsHovering(isInteractive);
+        if (isInteractive !== lastHovering) {
+          lastHovering = isInteractive;
+          setIsHovering(isInteractive);
+        }
 
         const isInput = Boolean(
           target.closest('input[type="text"], input[type="email"], input[type="search"], textarea, [contenteditable="true"]')
         );
-        setIsTextMode(isInput);
+        if (isInput !== lastTextMode) {
+          lastTextMode = isInput;
+          setIsTextMode(isInput);
+        }
       }
     };
 
@@ -165,15 +174,11 @@ export const CustomCursor: React.FC<CustomCursorProps> = ({ theme }) => {
           s.alpha = Math.max(0, 1 - progress);
           s.size = Math.max(0.4, s.size * 0.96);
 
-          ctx.save();
           ctx.globalAlpha = s.alpha * 0.85;
           ctx.fillStyle = s.color;
-          ctx.shadowBlur = 8;
-          ctx.shadowColor = s.color;
           ctx.beginPath();
           ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
           ctx.fill();
-          ctx.restore();
 
           if (s.life >= s.maxLife || s.alpha <= 0.01) {
             sparks.splice(i, 1);

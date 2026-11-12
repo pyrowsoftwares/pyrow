@@ -88,11 +88,11 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
   };
 
   return (
-    <section id="estimator" className="relative py-16 sm:py-20 lg:py-24 bg-transparent transition-colors duration-300">
+    <section id="estimator" className="relative pt-12 sm:pt-16 pb-6 sm:pb-10 bg-transparent transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-14">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-ember-500/10 border border-ember-500/30 text-xs font-mono text-ember-600 dark:text-ember-400 mb-3 font-semibold">
+        <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-9">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-ember-500/10 border border-ember-500/30 text-xs font-mono text-ember-600 dark:text-ember-400 mb-2.5 font-semibold">
             <Zap className="w-3.5 h-3.5" />
             <span>Project Consultation & Scope</span>
           </div>
@@ -358,16 +358,38 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
             {/* Trust Assurances */}
             <div className="p-4 rounded-2xl bg-white/80 dark:bg-[#141D30]/80 border border-slate-200/90 dark:border-slate-800 space-y-2 text-[11px] text-slate-500 dark:text-zinc-400">
               <div className="flex items-center gap-2">
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
                 <span>100% Intellectual Property ownership signed on Day 1</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle className="w-3.5 h-3.5 text-cyber-blue" />
+                <CheckCircle className="w-3.5 h-3.5 text-cyber-blue shrink-0" />
                 <span>Strict Non-Disclosure Agreement (NDA) protection</span>
               </div>
               <div className="flex items-center gap-2">
-                <Sparkles className="w-3.5 h-3.5 text-ember-500" />
+                <Sparkles className="w-3.5 h-3.5 text-ember-500 shrink-0" />
                 <span>Transparent milestone pricing with zero hidden maintenance fees</span>
+              </div>
+            </div>
+
+            {/* What Happens Next? - Fills the empty space and aligns flush with the submit button */}
+            <div className="p-5 rounded-2xl bg-gradient-to-br from-slate-50 to-orange-50/20 dark:from-white/5 dark:to-ember-500/5 border border-slate-200/90 dark:border-white/10 space-y-3">
+              <h4 className="text-xs font-mono uppercase tracking-wider text-ember-600 dark:text-ember-400 font-bold flex items-center gap-1.5">
+                <Clock className="w-3.5 h-3.5" />
+                <span>What Happens Next?</span>
+              </h4>
+              <div className="space-y-2.5 text-xs text-slate-600 dark:text-zinc-300">
+                <div className="flex items-start gap-2.5">
+                  <span className="w-5 h-5 rounded-full bg-ember-500/10 text-ember-600 dark:text-ember-400 font-mono font-bold flex items-center justify-center shrink-0 text-[10px]">1</span>
+                  <span><strong>Scope Review (&lt; 2 hrs):</strong> Our lead technical architect analyzes your tech stack and requirements.</span>
+                </div>
+                <div className="flex items-start gap-2.5">
+                  <span className="w-5 h-5 rounded-full bg-ember-500/10 text-ember-600 dark:text-ember-400 font-mono font-bold flex items-center justify-center shrink-0 text-[10px]">2</span>
+                  <span><strong>Roadmap & Quote:</strong> You receive an estimated timeline and architecture blueprint.</span>
+                </div>
+                <div className="flex items-start gap-2.5">
+                  <span className="w-5 h-5 rounded-full bg-ember-500/10 text-ember-600 dark:text-ember-400 font-mono font-bold flex items-center justify-center shrink-0 text-[10px]">3</span>
+                  <span><strong>Direct Strategy Call:</strong> A focused 30-minute discovery session with senior engineering leads.</span>
+                </div>
               </div>
             </div>
           </div>

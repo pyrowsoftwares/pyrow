@@ -3,8 +3,6 @@ import { motion, useScroll } from 'framer-motion';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from './ui/sheet';
 import {
   ChevronDown,
-  Volume2,
-  VolumeX,
   Search,
   Sparkles,
   Laptop,
@@ -43,7 +41,6 @@ export const Navigation: React.FC<NavigationProps> = ({
   onToggleTheme,
 }) => {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
-  const [soundEnabled, setSoundEnabled] = useState(soundFX.enabled);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { scrollYProgress } = useScroll();
@@ -62,11 +59,6 @@ export const Navigation: React.FC<NavigationProps> = ({
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  const toggleSound = () => {
-    const state = soundFX.toggle();
-    setSoundEnabled(state);
-  };
 
   const scrollTo = (id: string) => {
     setActiveMenu(null);
@@ -353,20 +345,6 @@ export const Navigation: React.FC<NavigationProps> = ({
                 <kbd className="text-[10px] font-mono px-1 py-0.2 rounded bg-white dark:bg-black/40 border border-slate-200 dark:border-white/10">
                   ⌘K
                 </kbd>
-              </button>
-
-              {/* Sound FX Toggle Pill */}
-              <button
-                onClick={toggleSound}
-                className={`p-2 rounded-full border transition-all ${
-                  soundEnabled
-                    ? 'bg-ember-500/15 border-ember-500/50 text-ember-500 shadow-sm'
-                    : 'bg-slate-100 dark:bg-obsidian-800 border-slate-200 dark:border-white/10 text-slate-400 dark:text-zinc-500'
-                }`}
-                title={soundEnabled ? 'Mute audio feedback' : 'Enable futuristic sound FX'}
-                aria-label="Toggle Sound Effects"
-              >
-                {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
               </button>
 
               {/* CTA 1: Schedule Strategy Call (Desktop & Tablet) */}

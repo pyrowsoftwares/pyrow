@@ -34,4 +34,9 @@ firebase-debug.log*
 firestore-debug.log*
 ui-debug.log*
 
+# Reference files
+piperocket.html
+main.css
+main.js
+
 

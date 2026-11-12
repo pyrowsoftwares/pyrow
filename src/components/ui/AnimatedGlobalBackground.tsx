@@ -35,43 +35,29 @@ export const AnimatedGlobalBackground: React.FC = () => {
       '#10B981', // Emerald
     ];
 
-    const mouse = { x: -1000, y: -1000, radius: 160 };
-
-    const handleMouseMove = (e: MouseEvent) => {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
-    };
-
-    const handleMouseLeave = () => {
-      mouse.x = -1000;
-      mouse.y = -1000;
-    };
-
     const handleResize = () => {
       if (!canvas) return;
       width = canvas.width = window.innerWidth;
       height = canvas.height = window.innerHeight;
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseleave', handleMouseLeave);
     window.addEventListener('resize', handleResize);
 
-    // Create 110 floating light stardust sparks
-    const particleCount = Math.min(Math.floor((width * height) / 12000), 120);
+    // Optimized lightweight ambient floating sparks
+    const particleCount = Math.min(Math.floor((width * height) / 45000), 30);
     const particles: Particle[] = [];
 
     for (let i = 0; i < particleCount; i++) {
       particles.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.45,
-        vy: -(Math.random() * 0.45 + 0.15), // Gentle upward drift
-        size: Math.random() * 2.2 + 1.0,
+        vx: (Math.random() - 0.5) * 0.35,
+        vy: -(Math.random() * 0.35 + 0.1), // Gentle upward drift
+        size: Math.random() * 2.0 + 1.0,
         color: colors[Math.floor(Math.random() * colors.length)],
-        alpha: Math.random() * 0.55 + 0.25,
+        alpha: Math.random() * 0.45 + 0.2,
         pulse: Math.random() * Math.PI * 2,
-        pulseSpeed: Math.random() * 0.025 + 0.015,
+        pulseSpeed: Math.random() * 0.02 + 0.01,
       });
     }
 
@@ -79,7 +65,7 @@ export const AnimatedGlobalBackground: React.FC = () => {
       ctx.clearRect(0, 0, width, height);
       const isDark = document.documentElement.classList.contains('dark');
 
-      // Update and draw particles
+      // Update and draw particles with zero heavy shadow filters
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
         p.x += p.vx;
@@ -94,61 +80,14 @@ export const AnimatedGlobalBackground: React.FC = () => {
         if (p.x < -15) p.x = width + 15;
         if (p.x > width + 15) p.x = -15;
 
-        // Refined mouse interaction: ZERO clumping.
-        // If cursor gets very close, particles gently glide outward (soft dispersion),
-        // and softly illuminate with a luminous glow rather than rushing into the cursor.
-        const dx = mouse.x - p.x;
-        const dy = mouse.y - p.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
+        const currentSize = p.size + Math.sin(p.pulse) * 0.4;
+        const currentAlpha = p.alpha * (0.8 + Math.sin(p.pulse) * 0.2);
 
-        let proximityGlow = 0;
-        if (dist < mouse.radius) {
-          proximityGlow = (1 - dist / mouse.radius);
-
-          // Gentle soft parting away from cursor if within 75px (No clumping)
-          if (dist < 75 && dist > 1) {
-            const pushForce = (1 - dist / 75) * 0.7;
-            p.x -= (dx / dist) * pushForce;
-            p.y -= (dy / dist) * pushForce;
-          }
-        }
-
-        // Draw particle with gentle breathing halo + proximity illumination
-        const currentSize = p.size + Math.sin(p.pulse) * 0.5 + proximityGlow * 1.2;
-        const currentAlpha = Math.min(1, p.alpha * (0.8 + Math.sin(p.pulse) * 0.2) + proximityGlow * 0.45);
-
-        ctx.save();
         ctx.globalAlpha = isDark ? currentAlpha : currentAlpha * 0.75;
         ctx.fillStyle = p.color;
-        ctx.shadowBlur = isDark ? 10 : 6;
-        ctx.shadowColor = p.color;
         ctx.beginPath();
         ctx.arc(p.x, p.y, Math.max(0.6, currentSize), 0, Math.PI * 2);
         ctx.fill();
-        ctx.restore();
-
-        // Connect nearby particles with subtle filament lines (Full Fidelity on PC / Tablets)
-        if (width >= 640) {
-          for (let j = i + 1; j < particles.length; j++) {
-            const p2 = particles[j];
-            const ldx = p.x - p2.x;
-            const ldy = p.y - p2.y;
-            const ldist = Math.sqrt(ldx * ldx + ldy * ldy);
-
-            if (ldist < 80) {
-              const lineAlpha = (1 - ldist / 80) * (isDark ? 0.08 : 0.05);
-              ctx.save();
-              ctx.strokeStyle = p.color;
-              ctx.globalAlpha = lineAlpha;
-              ctx.lineWidth = 0.6;
-              ctx.beginPath();
-              ctx.moveTo(p.x, p.y);
-              ctx.lineTo(p2.x, p2.y);
-              ctx.stroke();
-              ctx.restore();
-            }
-          }
-        }
       }
 
       animId = requestAnimationFrame(render);
@@ -158,8 +97,6 @@ export const AnimatedGlobalBackground: React.FC = () => {
 
     return () => {
       cancelAnimationFrame(animId);
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseleave', handleMouseLeave);
       window.removeEventListener('resize', handleResize);
     };
   }, []);
