@@ -30,7 +30,7 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({
       title: 'Step 1: Discover, Plan & Quote',
       timeline: 'Days 1 – 3',
       badge: '100% Free Plan',
-      icon: <Compass className="w-5 h-5 text-ember-500" />,
+      icon: <Compass className="w-5 h-5 text-violet-600" />,
       desc: 'We talk with you to understand your exact business needs, identify what features you want, and give you a clear roadmap with fixed pricing and timelines. No hidden charges.',
       deliverables: [
         'Complete project scope and feature checklist',
@@ -75,7 +75,7 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({
       title: 'Step 4: Launch & Customer Growth',
       timeline: 'Launch & Scale',
       badge: 'Ongoing Support',
-      icon: <Rocket className="w-5 h-5 text-flare-amber" />,
+      icon: <Rocket className="w-5 h-5 text-purple-500" />,
       desc: 'We launch your system smoothly with zero downtime. Then, our marketing team launches targeted Google and Meta ad campaigns and WhatsApp automations to bring you paying clients.',
       deliverables: [
         'Smooth live deployment to your custom domain',
@@ -92,13 +92,13 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-ember-500/10 border border-ember-500/30 text-xs font-mono text-ember-600 dark:text-ember-400 mb-3 font-bold">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/30 text-xs font-mono text-violet-600 dark:text-purple-400 mb-3 font-bold">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Simple 4-Step Process</span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-black font-display text-slate-900 dark:text-white tracking-tight">
             How We Work With You.{' '}
-            <span className="bg-gradient-to-r from-ember-500 via-flare-amber to-cyber-blue bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-violet-600 via-purple-500 to-indigo-500 bg-clip-text text-transparent">
               Simple, Fast & Transparent.
             </span>
           </h2>
@@ -120,20 +120,20 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({
                 }}
                 onMouseEnter={() => soundFX.playHover()}
                 className={`p-4 sm:p-5 rounded-2xl cursor-pointer border transition-all duration-300 relative ${isActive
-                    ? 'bg-white dark:bg-[#1A253D] border-ember-500 shadow-md dark:shadow-none scale-[1.02]'
+                    ? 'bg-white dark:bg-[#1A253D] border-violet-500 shadow-md dark:shadow-none scale-[1.02]'
                     : 'bg-white/95 dark:bg-[#141D30]/95 border-slate-200/90 dark:border-slate-800/90 hover:border-slate-300 dark:hover:border-slate-700'
                   }`}
               >
                 <div className="flex items-center justify-between mb-2">
                   <span
-                    className={`text-xl sm:text-2xl font-black font-mono ${isActive ? 'text-ember-500' : 'text-slate-300 dark:text-zinc-600'
+                    className={`text-xl sm:text-2xl font-black font-mono ${isActive ? 'text-violet-600' : 'text-slate-300 dark:text-zinc-600'
                       }`}
                   >
                     {s.number}
                   </span>
                   <span
                     className={`text-[10px] font-mono px-2 py-0.5 rounded-full font-bold ${isActive
-                        ? 'bg-ember-500/15 text-ember-600 dark:text-ember-400 border border-ember-500/30'
+                        ? 'bg-violet-500/15 text-violet-600 dark:text-purple-400 border border-violet-500/30'
                         : 'bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-zinc-500'
                       }`}
                   >
@@ -157,11 +157,11 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({
             {/* Step Summary (lg:col-span-7) */}
             <div className="lg:col-span-7 space-y-6">
               <div className="flex items-center gap-3">
-                <div className="p-3 rounded-2xl bg-ember-500/10 border border-ember-500/20 text-ember-500">
+                <div className="p-3 rounded-2xl bg-violet-500/10 border border-violet-500/20 text-violet-600">
                   {steps[activeStep].icon}
                 </div>
                 <div>
-                  <span className="text-xs font-mono text-ember-600 dark:text-ember-400 uppercase tracking-wider font-bold">
+                  <span className="text-xs font-mono text-violet-600 dark:text-purple-400 uppercase tracking-wider font-bold">
                     Phase {steps[activeStep].number} // {steps[activeStep].timeline}
                   </span>
                   <h3 className="text-2xl sm:text-3xl font-black font-display text-slate-900 dark:text-white mt-0.5">

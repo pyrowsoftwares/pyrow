@@ -92,13 +92,13 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-9">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-ember-500/10 border border-ember-500/30 text-xs font-mono text-ember-600 dark:text-ember-400 mb-2.5 font-semibold">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/30 text-xs font-mono text-violet-600 dark:text-purple-400 mb-2.5 font-semibold">
             <Zap className="w-3.5 h-3.5" />
             <span>Project Consultation & Scope</span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-black font-display text-slate-900 dark:text-white tracking-tight">
             Tell Us About Your Project.{' '}
-            <span className="bg-gradient-to-r from-ember-500 via-flare-amber to-cyber-blue bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-violet-600 via-purple-500 to-indigo-500 bg-clip-text text-transparent">
               Get Your Dedicated Roadmap.
             </span>
           </h2>
@@ -127,16 +127,16 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                             key={d}
                             onClick={() => toggleDiscipline(d)}
                             aria-pressed={isSelected}
-                            className={`p-3.5 rounded-2xl border text-xs font-bold cursor-pointer flex items-center justify-between transition-all focus-visible:ring-2 focus-visible:ring-ember-500 focus-visible:outline-none ${
+                            className={`p-3.5 rounded-2xl border text-xs font-bold cursor-pointer flex items-center justify-between transition-all focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none ${
                               isSelected
-                                ? 'bg-ember-500/10 border-ember-500 text-ember-600 dark:text-white shadow-sm'
+                                ? 'bg-violet-500/10 border-violet-500 text-violet-600 dark:text-white shadow-sm'
                                 : 'bg-slate-50 dark:bg-obsidian-800 text-slate-600 dark:text-zinc-400 border-slate-200/80 dark:border-white/5 hover:border-slate-300'
                             }`}
                           >
                             <span>{d}</span>
                             <div
                               className={`w-4 h-4 rounded-full border flex items-center justify-center ${
-                                isSelected ? 'bg-ember-500 border-ember-400 text-white' : 'border-slate-300 dark:border-zinc-600'
+                                isSelected ? 'bg-violet-600 border-violet-400 text-white' : 'border-slate-300 dark:border-zinc-600'
                               }`}
                             >
                               {isSelected && <CheckCircle className="w-3 h-3 stroke-[3]" />}
@@ -165,7 +165,7 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                             }}
                             className={`py-2 px-2 text-xs font-semibold rounded-xl border text-center transition-all cursor-pointer ${
                               isSelected
-                                ? 'bg-flare-amber text-slate-900 font-bold border-flare-amber shadow-sm'
+                                ? 'bg-purple-600 text-white font-bold border-purple-600 shadow-sm'
                                 : 'bg-slate-50 dark:bg-obsidian-800 text-slate-600 dark:text-zinc-400 border-slate-200/80 dark:border-white/5 hover:text-slate-900'
                             }`}
                           >
@@ -194,7 +194,7 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                             }}
                             className={`py-2.5 px-3 text-xs font-mono rounded-xl border text-center transition-all cursor-pointer ${
                               isSelected
-                                ? 'bg-ember-500 text-white font-bold border-ember-500 shadow-sm'
+                                ? 'bg-violet-600 text-white font-bold border-violet-600 shadow-sm'
                                 : 'bg-slate-50 dark:bg-obsidian-800 text-slate-600 dark:text-zinc-400 border-slate-200/80 dark:border-white/5 hover:text-slate-900'
                             }`}
                           >
@@ -220,7 +220,7 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                           value={contactForm.name}
                           onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
                           placeholder="e.g. Rajesh Kumar"
-                          className="w-full bg-slate-50 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 rounded-xl px-3.5 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-ember-500"
+                          className="w-full bg-slate-50 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 rounded-xl px-3.5 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-violet-500"
                         />
                       </div>
                       <div>
@@ -231,7 +231,7 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                           value={contactForm.email}
                           onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
                           placeholder="rajesh@company.com"
-                          className="w-full bg-slate-50 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 rounded-xl px-3.5 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-ember-500"
+                          className="w-full bg-slate-50 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 rounded-xl px-3.5 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-violet-500"
                         />
                       </div>
                     </div>
@@ -245,7 +245,7 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                           value={contactForm.phone}
                           onChange={(e) => setContactForm({ ...contactForm, phone: e.target.value })}
                           placeholder="+91 98765 43210"
-                          className="w-full bg-slate-50 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 rounded-xl px-3.5 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-ember-500"
+                          className="w-full bg-slate-50 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 rounded-xl px-3.5 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-violet-500"
                         />
                       </div>
                       <div>
@@ -255,7 +255,7 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                           value={contactForm.company}
                           onChange={(e) => setContactForm({ ...contactForm, company: e.target.value })}
                           placeholder="Your Brand / Company"
-                          className="w-full bg-slate-50 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 rounded-xl px-3.5 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-ember-500"
+                          className="w-full bg-slate-50 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 rounded-xl px-3.5 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-violet-500"
                         />
                       </div>
                     </div>
@@ -267,7 +267,7 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                         value={contactForm.message}
                         onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
                         placeholder="Tell us what features or goals you have in mind..."
-                        className="w-full bg-slate-50 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 rounded-xl px-3.5 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-ember-500 resize-none"
+                        className="w-full bg-slate-50 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 rounded-xl px-3.5 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-violet-500 resize-none"
                       />
                     </div>
 
@@ -297,7 +297,7 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                   </p>
                   <button
                     onClick={() => setSubmitted(false)}
-                    className="text-xs font-mono text-ember-600 dark:text-ember-400 font-bold underline"
+                    className="text-xs font-mono text-violet-600 dark:text-purple-400 font-bold underline"
                   >
                     Submit another enquiry
                   </button>
@@ -341,15 +341,15 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
 
               <div className="space-y-3 text-xs">
                 <div className="flex items-center gap-3 text-slate-700 dark:text-zinc-300">
-                  <PhoneCall className="w-4 h-4 text-ember-500" />
-                  <a href="tel:+919876543210" className="hover:text-ember-500 font-mono font-semibold">+91 98765 43210</a>
+                  <PhoneCall className="w-4 h-4 text-violet-600 dark:text-purple-400" />
+                  <a href="tel:+919876543210" className="hover:text-violet-600 dark:hover:text-purple-400 font-mono font-semibold">+91 98765 43210</a>
                 </div>
                 <div className="flex items-center gap-3 text-slate-700 dark:text-zinc-300">
                   <Clock className="w-4 h-4 text-cyber-blue" />
                   <span>Mon – Sat: 9:00 AM – 8:00 PM IST</span>
                 </div>
                 <div className="flex items-start gap-3 text-slate-700 dark:text-zinc-300">
-                  <MapPin className="w-4 h-4 text-flare-amber flex-shrink-0 mt-0.5" />
+                  <MapPin className="w-4 h-4 text-purple-500 flex-shrink-0 mt-0.5" />
                   <span>Pyrow Digital HQ, Tech Corridor, Bengaluru & Hyderabad, India</span>
                 </div>
               </div>
@@ -366,28 +366,28 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                 <span>Strict Non-Disclosure Agreement (NDA) protection</span>
               </div>
               <div className="flex items-center gap-2">
-                <Sparkles className="w-3.5 h-3.5 text-ember-500 shrink-0" />
+                <Sparkles className="w-3.5 h-3.5 text-violet-600 dark:text-purple-400 shrink-0" />
                 <span>Transparent milestone pricing with zero hidden maintenance fees</span>
               </div>
             </div>
 
             {/* What Happens Next? - Fills the empty space and aligns flush with the submit button */}
-            <div className="p-5 rounded-2xl bg-gradient-to-br from-slate-50 to-orange-50/20 dark:from-white/5 dark:to-ember-500/5 border border-slate-200/90 dark:border-white/10 space-y-3">
-              <h4 className="text-xs font-mono uppercase tracking-wider text-ember-600 dark:text-ember-400 font-bold flex items-center gap-1.5">
+            <div className="p-5 rounded-2xl bg-gradient-to-br from-slate-50 to-purple-50/30 dark:from-white/5 dark:to-violet-500/5 border border-slate-200/90 dark:border-white/10 space-y-3">
+              <h4 className="text-xs font-mono uppercase tracking-wider text-violet-600 dark:text-purple-400 font-bold flex items-center gap-1.5">
                 <Clock className="w-3.5 h-3.5" />
                 <span>What Happens Next?</span>
               </h4>
               <div className="space-y-2.5 text-xs text-slate-600 dark:text-zinc-300">
                 <div className="flex items-start gap-2.5">
-                  <span className="w-5 h-5 rounded-full bg-ember-500/10 text-ember-600 dark:text-ember-400 font-mono font-bold flex items-center justify-center shrink-0 text-[10px]">1</span>
+                  <span className="w-5 h-5 rounded-full bg-violet-500/10 text-violet-600 dark:text-purple-400 font-mono font-bold flex items-center justify-center shrink-0 text-[10px]">1</span>
                   <span><strong>Scope Review (&lt; 2 hrs):</strong> Our lead technical architect analyzes your tech stack and requirements.</span>
                 </div>
                 <div className="flex items-start gap-2.5">
-                  <span className="w-5 h-5 rounded-full bg-ember-500/10 text-ember-600 dark:text-ember-400 font-mono font-bold flex items-center justify-center shrink-0 text-[10px]">2</span>
+                  <span className="w-5 h-5 rounded-full bg-violet-500/10 text-violet-600 dark:text-purple-400 font-mono font-bold flex items-center justify-center shrink-0 text-[10px]">2</span>
                   <span><strong>Roadmap & Quote:</strong> You receive an estimated timeline and architecture blueprint.</span>
                 </div>
                 <div className="flex items-start gap-2.5">
-                  <span className="w-5 h-5 rounded-full bg-ember-500/10 text-ember-600 dark:text-ember-400 font-mono font-bold flex items-center justify-center shrink-0 text-[10px]">3</span>
+                  <span className="w-5 h-5 rounded-full bg-violet-500/10 text-violet-600 dark:text-purple-400 font-mono font-bold flex items-center justify-center shrink-0 text-[10px]">3</span>
                   <span><strong>Direct Strategy Call:</strong> A focused 30-minute discovery session with senior engineering leads.</span>
                 </div>
               </div>

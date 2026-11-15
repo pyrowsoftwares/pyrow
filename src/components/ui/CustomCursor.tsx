@@ -60,7 +60,7 @@ export const CustomCursor: React.FC<CustomCursorProps> = ({ theme }) => {
     let animId: number;
 
     const sparks: Spark[] = [];
-    const emberPalette = ['#FF4D00', '#FF8A00', '#FFB703', '#FB8500', '#FF3700'];
+    const emberPalette = ['#7C3AED', '#8B5CF6', '#A855F7', '#C084FC', '#6D28D9'];
 
     const createSpark = (x: number, y: number, vx: number, vy: number, count = 1, burst = false) => {
       for (let i = 0; i < count; i++) {
@@ -101,7 +101,7 @@ export const CustomCursor: React.FC<CustomCursorProps> = ({ theme }) => {
         dotRef.current.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
       }
 
-      // Generate ember spark trail when moving
+      // Generate spark trail when moving
       const dist = Math.hypot(mouseX - prevMouseX, mouseY - prevMouseY);
       if (dist > 12) {
         createSpark(mouseX, mouseY, mouseX - prevMouseX, mouseY - prevMouseY, 1, false);
@@ -220,7 +220,7 @@ export const CustomCursor: React.FC<CustomCursorProps> = ({ theme }) => {
       }`}
       aria-hidden="true"
     >
-      {/* 1. Canvas for Floating Pyrow Ember Sparks Trail */}
+      {/* 1. Canvas for Floating Pyrow Sparks Trail */}
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" />
 
       {/* 2. Magnetic Fluid Lens Ring */}
@@ -238,29 +238,29 @@ export const CustomCursor: React.FC<CustomCursorProps> = ({ theme }) => {
         <div
           className={`w-full h-full rounded-[inherit] transition-all duration-200 ${
             isTextMode
-              ? 'border-2 border-ember-500 bg-ember-500/10'
+              ? 'border-2 border-violet-600 bg-violet-600/10'
               : isHovering
               ? isDark
-                ? 'border-[1.5px] border-ember-400 bg-ember-500/15 shadow-[0_0_20px_rgba(255,77,0,0.5)] scale-110'
-                : 'border-[1.5px] border-ember-500 bg-ember-500/10 shadow-[0_0_16px_rgba(255,77,0,0.3)] scale-110'
+                ? 'border-[1.5px] border-purple-400 bg-violet-600/15 shadow-[0_0_20px_rgba(124,58,237,0.5)] scale-110'
+                : 'border-[1.5px] border-violet-600 bg-violet-600/10 shadow-[0_0_16px_rgba(124,58,237,0.35)] scale-110'
               : isDark
-              ? 'border border-ember-500/60 bg-ember-500/[0.04] shadow-[0_0_10px_rgba(255,77,0,0.2)]'
-              : 'border border-ember-500/70 bg-ember-500/[0.05] shadow-[0_0_8px_rgba(255,77,0,0.15)]'
+              ? 'border border-violet-500/60 bg-violet-500/[0.04] shadow-[0_0_10px_rgba(124,58,237,0.25)]'
+              : 'border border-violet-500/70 bg-violet-500/[0.05] shadow-[0_0_8px_rgba(124,58,237,0.2)]'
           }`}
         >
           {/* Rotating target accent tick marks on hover */}
           {isHovering && !isTextMode && (
             <div className="absolute inset-0 flex items-center justify-center animate-[spin_6s_linear_infinite]">
-              <span className="absolute -top-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-ember-500 shadow-[0_0_6px_#FF4D00]" />
-              <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_6px_#FFB703]" />
-              <span className="absolute top-1/2 -left-0.5 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-ember-500 shadow-[0_0_6px_#FF4D00]" />
-              <span className="absolute top-1/2 -right-0.5 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_6px_#FFB703]" />
+              <span className="absolute -top-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-violet-600 shadow-[0_0_6px_#7C3AED]" />
+              <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-purple-400 shadow-[0_0_6px_#A855F7]" />
+              <span className="absolute top-1/2 -left-0.5 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-violet-600 shadow-[0_0_6px_#7C3AED]" />
+              <span className="absolute top-1/2 -right-0.5 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-purple-400 shadow-[0_0_6px_#A855F7]" />
             </div>
           )}
         </div>
       </div>
 
-      {/* 3. Central Precision Focal Ember Dot (Instant 0ms Response) */}
+      {/* 3. Central Precision Focal Violet Dot (Instant 0ms Response) */}
       <div
         ref={dotRef}
         className="absolute -top-1 -left-1 w-2 h-2 rounded-full pointer-events-none will-change-transform flex items-center justify-center"
@@ -270,10 +270,10 @@ export const CustomCursor: React.FC<CustomCursorProps> = ({ theme }) => {
             isTextMode
               ? 'opacity-0'
               : isHovering
-              ? 'w-2.5 h-2.5 bg-gradient-to-tr from-ember-600 via-ember-400 to-white shadow-[0_0_10px_#FF4D00]'
+              ? 'w-2.5 h-2.5 bg-gradient-to-tr from-violet-600 via-purple-400 to-white shadow-[0_0_10px_#7C3AED]'
               : isClicking
-              ? 'w-1.5 h-1.5 bg-white shadow-[0_0_12px_#FF4D00]'
-              : 'w-2 h-2 bg-ember-500 shadow-[0_0_8px_rgba(255,77,0,0.9)]'
+              ? 'w-1.5 h-1.5 bg-white shadow-[0_0_12px_#7C3AED]'
+              : 'w-2 h-2 bg-violet-600 shadow-[0_0_8px_rgba(124,58,237,0.9)]'
           }`}
         />
       </div>

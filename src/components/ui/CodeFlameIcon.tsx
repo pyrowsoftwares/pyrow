@@ -25,27 +25,27 @@ export const CodeFlameIcon: React.FC<CodeFlameIconProps> = ({
         </linearGradient>
 
         <linearGradient id="cfBorder" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#FF4D00" stopOpacity="0.8" />
-          <stop offset="50%" stopColor="#FFB703" stopOpacity="0.5" />
-          <stop offset="100%" stopColor="#00E5FF" stopOpacity="0.3" />
+          <stop offset="0%" stopColor="#7C3AED" stopOpacity="0.8" />
+          <stop offset="50%" stopColor="#A855F7" stopOpacity="0.5" />
+          <stop offset="100%" stopColor="#C084FC" stopOpacity="0.3" />
         </linearGradient>
 
         <linearGradient id="cfFlame" x1="0%" y1="100%" x2="0%" y2="0%">
-          <stop offset="0%" stopColor="#FF3700" />
-          <stop offset="45%" stopColor="#FF6B00" />
-          <stop offset="80%" stopColor="#FFB703" />
-          <stop offset="100%" stopColor="#FFF066" />
+          <stop offset="0%" stopColor="#5B21B6" />
+          <stop offset="45%" stopColor="#7C3AED" />
+          <stop offset="80%" stopColor="#A855F7" />
+          <stop offset="100%" stopColor="#E9D5FF" />
         </linearGradient>
 
         <linearGradient id="cfCore" x1="0%" y1="100%" x2="0%" y2="0%">
-          <stop offset="0%" stopColor="#FF8A00" />
-          <stop offset="70%" stopColor="#FFF6A6" />
+          <stop offset="0%" stopColor="#7C3AED" />
+          <stop offset="70%" stopColor="#DDD6FE" />
           <stop offset="100%" stopColor="#FFFFFF" />
         </linearGradient>
 
         <linearGradient id="cfBracket" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#FFB703" />
-          <stop offset="100%" stopColor="#FF4D00" />
+          <stop offset="0%" stopColor="#A855F7" />
+          <stop offset="100%" stopColor="#7C3AED" />
         </linearGradient>
 
         <filter id="cfGlow" x="-20%" y="-20%" width="140%" height="140%">
@@ -114,9 +114,9 @@ export const CodeFlameIcon: React.FC<CodeFlameIconProps> = ({
       </g>
 
       {/* Code Particle Sparks */}
-      <circle cx="32" cy="11" r="1.5" fill="#FFE866" />
-      <circle cx="23" cy="18" r="1" fill="#FF8A00" opacity="0.8" />
-      <circle cx="41" cy="17" r="1" fill="#FFB703" opacity="0.8" />
+      <circle cx="32" cy="11" r="1.5" fill="#E9D5FF" />
+      <circle cx="23" cy="18" r="1" fill="#C084FC" opacity="0.8" />
+      <circle cx="41" cy="17" r="1" fill="#A855F7" opacity="0.8" />
     </svg>
   );
 };

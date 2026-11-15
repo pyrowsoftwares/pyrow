@@ -45,13 +45,13 @@ export const IndustrySolutions: React.FC<IndustrySolutionsProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Heading */}
         <div className="max-w-3xl mb-10 sm:mb-14">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-ember-500/10 border border-ember-500/25 text-xs font-mono text-ember-600 dark:text-ember-400 mb-3 font-semibold">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/25 text-xs font-mono text-violet-600 dark:text-purple-400 mb-3 font-semibold">
             <Database className="w-3.5 h-3.5" />
             <span>Ready-to-Deploy Enterprise Platforms</span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-black font-display text-slate-900 dark:text-white tracking-tight">
             Vertical Architecture.{' '}
-            <span className="bg-gradient-to-r from-ember-500 via-flare-amber to-amber-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-violet-600 via-purple-500 to-fuchsia-500 bg-clip-text text-transparent">
               Engineered for Your Industry.
             </span>
           </h2>
@@ -73,9 +73,9 @@ export const IndustrySolutions: React.FC<IndustrySolutionsProps> = ({
                   onClick={() => handleSelect(sol)}
                   onMouseEnter={() => soundFX.playHover()}
                   aria-pressed={isSelected}
-                  className={`w-full text-left p-3.5 sm:p-4 rounded-2xl cursor-pointer border transition-all duration-200 focus-visible:ring-2 focus-visible:ring-ember-500 focus-visible:outline-none ${
+                  className={`w-full text-left p-3.5 sm:p-4 rounded-2xl cursor-pointer border transition-all duration-200 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none ${
                     isSelected
-                      ? 'bg-white dark:bg-[#1A253D] border-ember-500 shadow-md dark:shadow-none text-slate-900 dark:text-white'
+                      ? 'bg-white dark:bg-[#1A253D] border-violet-500 shadow-md dark:shadow-none text-slate-900 dark:text-white'
                       : 'bg-white/95 dark:bg-[#141D30]/95 border-slate-200/90 dark:border-slate-800/90 text-slate-700 dark:text-zinc-300 hover:border-slate-300 dark:hover:border-slate-700'
                   }`}
                 >
@@ -87,7 +87,7 @@ export const IndustrySolutions: React.FC<IndustrySolutionsProps> = ({
                       <h4 className="text-sm sm:text-base font-bold font-display">{sol.name}</h4>
                     </div>
                     {isSelected ? (
-                      <Badge variant="default" className="bg-ember-500 text-white text-[10px] font-mono font-bold">
+                      <Badge variant="default" className="bg-violet-600 text-white text-[10px] font-mono font-bold">
                         ACTIVE
                       </Badge>
                     ) : (
@@ -132,7 +132,7 @@ export const IndustrySolutions: React.FC<IndustrySolutionsProps> = ({
               {/* Title & Tagline */}
               <div>
                 <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <Badge variant="secondary" className="text-xs font-mono bg-ember-500/10 text-ember-600 dark:text-ember-300 border border-ember-500/30">
+                  <Badge variant="secondary" className="text-xs font-mono bg-violet-500/10 text-violet-600 dark:text-purple-300 border border-violet-500/30">
                     {selectedSolution.badge}
                   </Badge>
                   <span className="text-xs font-mono text-slate-500 dark:text-zinc-400">{selectedSolution.category}</span>
@@ -166,7 +166,7 @@ export const IndustrySolutions: React.FC<IndustrySolutionsProps> = ({
                   {/* Simulator Trigger Button */}
                   <button
                     onClick={handleSimulateEvent}
-                    className="flex items-center gap-1.5 text-xs font-mono font-bold px-3 py-1.5 rounded-lg bg-ember-500 hover:bg-ember-400 text-white shadow-sm transition-transform active:scale-95 cursor-pointer"
+                    className="flex items-center gap-1.5 text-xs font-mono font-bold px-3 py-1.5 rounded-lg bg-violet-600 hover:bg-violet-500 text-white shadow-sm transition-transform active:scale-95 cursor-pointer"
                   >
                     <Activity className="w-3.5 h-3.5 animate-pulse" />
                     <span>Simulate Real-Time Event</span>

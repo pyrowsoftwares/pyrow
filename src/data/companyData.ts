@@ -55,13 +55,13 @@ export const pyrowPillars = [
     number: '01',
     title: 'Code Without Bloat',
     desc: 'We write lean, strictly typed, performant software. No superfluous dependencies, no bloated abstractions — only clean architectures built to scale with zero tech debt.',
-    glow: 'from-ember-500 to-flare-amber',
+    glow: 'from-violet-600 to-purple-500',
   },
   {
     number: '02',
     title: 'Design Without Fluff',
     desc: 'Aesthetics serve function. Every micro-interaction, glow highlight, and typographical choice is mathematically engineered to guide user focus and drive conversion.',
-    glow: 'from-flare to-flare-gold',
+    glow: 'from-purple-500 to-indigo-500',
   },
   {
     number: '03',

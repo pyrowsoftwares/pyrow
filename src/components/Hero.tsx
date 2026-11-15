@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles, ArrowDown, Flame, Shield, TrendingUp, Clock, CheckCircle2 } from 'lucide-react';
+import { Sparkles, ArrowDown, Shield, TrendingUp, Clock, CheckCircle2 } from 'lucide-react';
 import { TechGrowthMatrix } from './ui/TechGrowthMatrix';
 import { MagneticButton } from './ui/MagneticButton';
 import { MetricCounter } from './ui/MetricCounter';
@@ -54,12 +54,12 @@ export const Hero: React.FC<HeroProps> = ({ onOpenStrategyCall }) => {
           {/* Desktop full text */}
           <span className="hidden sm:inline text-zinc-700 dark:text-zinc-300 font-medium truncate">
             Digital Agency & Software Partner <span className="text-slate-300 dark:text-white/20 mx-1.5">•</span>
-            <span className="text-ember-600 dark:text-ember-400 font-semibold">Websites • Custom Software • Mobile Apps • Google & Meta Ads</span>
+            <span className="text-violet-600 dark:text-purple-400 font-semibold">Websites • Custom Software • Mobile Apps • Google & Meta Ads</span>
           </span>
 
           {/* Mobile concise centered text */}
           <span className="sm:hidden text-zinc-700 dark:text-zinc-300 font-medium text-[11px] truncate">
-            Digital Agency & Software Partner <span className="text-ember-600 dark:text-ember-400 font-semibold">• High-Growth</span>
+            Digital Agency & Software Partner <span className="text-violet-600 dark:text-purple-400 font-semibold">• High-Growth</span>
           </span>
 
           <span className="hidden sm:inline-flex items-center gap-1 pl-2 border-l border-slate-200 dark:border-white/10 text-[10px] font-mono font-bold text-emerald-600 dark:text-emerald-400">
@@ -67,7 +67,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenStrategyCall }) => {
           </span>
         </motion.div>
 
-        {/* Primary Headline with Monochromatic Base & Clean Ember Accent */}
+        {/* Primary Headline with Monochromatic Base & Clean Violet Accent */}
         <motion.h1
           initial={{ opacity: 0, y: 26 }}
           animate={{ opacity: 1, y: 0 }}
@@ -76,7 +76,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenStrategyCall }) => {
         >
           We Build Websites & Software That Work.{' '}
           <br className="hidden sm:inline" />
-          <span className="bg-gradient-to-r from-ember-500 via-flare-amber to-amber-500 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-violet-600 via-purple-500 to-fuchsia-500 bg-clip-text text-transparent">
             We Run Marketing That Grows Your Business.
           </span>
         </motion.h1>
@@ -133,9 +133,9 @@ export const Hero: React.FC<HeroProps> = ({ onOpenStrategyCall }) => {
             {[...techLogos, ...techLogos].map((tech, idx) => (
               <div
                 key={`${tech.name}-${idx}`}
-                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/80 dark:bg-obsidian-850/80 backdrop-blur-sm border border-slate-200/90 dark:border-white/[0.08] hover:border-ember-500/40 text-xs font-mono text-slate-700 dark:text-zinc-400 hover:text-ember-600 dark:hover:text-white transition-all shadow-sm cursor-default"
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/80 dark:bg-obsidian-850/80 backdrop-blur-sm border border-slate-200/90 dark:border-white/[0.08] hover:border-violet-500/40 text-xs font-mono text-slate-700 dark:text-zinc-400 hover:text-violet-600 dark:hover:text-white transition-all shadow-sm cursor-default"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-ember-500" />
+                <span className="w-1.5 h-1.5 rounded-full bg-violet-600" />
                 <span className="font-semibold text-slate-800 dark:text-zinc-200">{tech.name}</span>
                 <span className="text-[10px] text-slate-400 dark:text-zinc-500">• {tech.category}</span>
               </div>
@@ -169,7 +169,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenStrategyCall }) => {
                 <MetricCounter end={150} suffix="+" />
               </div>
               <span className="text-xs sm:text-sm font-medium text-slate-600 dark:text-zinc-400 mt-1 flex items-center gap-1">
-                <Flame className="w-3.5 h-3.5 text-ember-500" />
+                <Sparkles className="w-3.5 h-3.5 text-purple-500" />
                 Projects Delivered in India
               </span>
             </div>
@@ -191,7 +191,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenStrategyCall }) => {
                 <MetricCounter end={4} suffix=".2x" />
               </div>
               <span className="text-xs sm:text-sm font-medium text-slate-600 dark:text-zinc-400 mt-1 flex items-center gap-1">
-                <TrendingUp className="w-3.5 h-3.5 text-amber-500" />
+                <TrendingUp className="w-3.5 h-3.5 text-purple-500" />
                 Average Client Ad ROAS
               </span>
             </div>
@@ -202,7 +202,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenStrategyCall }) => {
                 <MetricCounter end={14} suffix=" Days" />
               </div>
               <span className="text-xs sm:text-sm font-medium text-slate-600 dark:text-zinc-400 mt-1 flex items-center gap-1">
-                <Clock className="w-3.5 h-3.5 text-orange-500" />
+                <Clock className="w-3.5 h-3.5 text-violet-500" />
                 Sprint Delivery Time
               </span>
             </div>

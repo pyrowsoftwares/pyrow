@@ -63,7 +63,7 @@ export const ParticleForge: React.FC = () => {
         x: Math.random() * width,
         y: Math.random() * height,
         size: Math.random() * 2.2 + 0.8,
-        speedY: -(Math.random() * 0.7 + 0.2), // Rising up like embers
+        speedY: -(Math.random() * 0.7 + 0.2), // Rising up like particles
         speedX: (Math.random() - 0.5) * 0.4,
         opacity: Math.random() * 0.6 + 0.1,
         maxOpacity: Math.random() * 0.5 + 0.3,
@@ -93,8 +93,8 @@ export const ParticleForge: React.FC = () => {
                 : `rgba(0, 112, 243, ${alpha})`;
             } else {
               ctx.strokeStyle = isDarkMode
-                ? `rgba(255, 122, 0, ${alpha})`
-                : `rgba(230, 81, 0, ${alpha})`;
+                ? `rgba(168, 85, 247, ${alpha})`
+                : `rgba(124, 58, 237, ${alpha})`;
             }
             ctx.lineWidth = 0.75;
             ctx.moveTo(particles[i].x, particles[i].y);
@@ -152,13 +152,13 @@ export const ParticleForge: React.FC = () => {
           }
         } else {
           if (isDarkMode) {
-            gradient.addColorStop(0, `rgba(255, 140, 0, ${p.opacity})`);
-            gradient.addColorStop(0.4, `rgba(255, 77, 0, ${p.opacity * 0.6})`);
-            gradient.addColorStop(1, 'rgba(255, 77, 0, 0)');
+            gradient.addColorStop(0, `rgba(168, 85, 247, ${p.opacity})`);
+            gradient.addColorStop(0.4, `rgba(124, 58, 237, ${p.opacity * 0.6})`);
+            gradient.addColorStop(1, 'rgba(124, 58, 237, 0)');
           } else {
-            gradient.addColorStop(0, `rgba(255, 87, 34, ${p.opacity * 0.8})`);
-            gradient.addColorStop(0.4, `rgba(255, 122, 0, ${p.opacity * 0.5})`);
-            gradient.addColorStop(1, 'rgba(255, 87, 34, 0)');
+            gradient.addColorStop(0, `rgba(139, 92, 246, ${p.opacity * 0.8})`);
+            gradient.addColorStop(0.4, `rgba(168, 85, 247, ${p.opacity * 0.5})`);
+            gradient.addColorStop(1, 'rgba(139, 92, 246, 0)');
           }
         }
 
@@ -169,8 +169,8 @@ export const ParticleForge: React.FC = () => {
         // Core center
         ctx.beginPath();
         ctx.fillStyle = isDarkMode
-          ? p.isCyan ? '#E0F7FF' : '#FFF3E0'
-          : p.isCyan ? '#0066FF' : '#FF4D00';
+          ? p.isCyan ? '#E0F7FF' : '#F5F3FF'
+          : p.isCyan ? '#6366F1' : '#7C3AED';
         ctx.arc(p.x, p.y, p.size * 0.5, 0, Math.PI * 2);
         ctx.fill();
       }

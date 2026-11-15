@@ -100,14 +100,14 @@ export const Navigation: React.FC<NavigationProps> = ({
                   onClick={() => scrollTo('services')}
                   className={`flex items-center gap-1.5 px-3.5 py-2 text-sm font-semibold rounded-full transition-colors ${
                     activeMenu === 'services'
-                      ? 'text-ember-500 bg-slate-100 dark:bg-white/5'
+                      ? 'text-violet-600 bg-slate-100 dark:bg-white/5'
                       : 'text-slate-700 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5'
                   }`}
                 >
                   Services
                   <ChevronDown
                     className={`w-4 h-4 transition-transform duration-200 ${
-                      activeMenu === 'services' ? 'rotate-180 text-ember-500' : 'text-slate-400 dark:text-zinc-400'
+                      activeMenu === 'services' ? 'rotate-180 text-violet-600' : 'text-slate-400 dark:text-zinc-400'
                     }`}
                   />
                 </button>
@@ -118,17 +118,17 @@ export const Navigation: React.FC<NavigationProps> = ({
                     <div className="glass-panel p-6 rounded-2xl bg-white/95 dark:bg-obsidian-900/95 border border-slate-200 dark:border-white/10 shadow-2xl">
                       <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-200 dark:border-white/10">
                         <div className="flex items-center gap-2 text-xs font-mono text-slate-500 dark:text-zinc-400 uppercase tracking-wider font-semibold">
-                          <Sparkles className="w-3.5 h-3.5 text-ember-500" />
+                          <Sparkles className="w-3.5 h-3.5 text-violet-600" />
                           Engineering & Hyper-Growth Matrix
                         </div>
-                        <span className="text-[11px] font-mono text-ember-500 font-bold">Next-Gen Delivery SLA</span>
+                        <span className="text-[11px] font-mono text-violet-600 font-bold">Next-Gen Delivery SLA</span>
                       </div>
 
                       <div className="grid grid-cols-4 gap-4">
                         {/* Web Development */}
                         <div
                           onClick={() => scrollTo('services')}
-                          className="group p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 border border-transparent hover:border-ember-500/30 cursor-pointer transition-all"
+                          className="group p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 border border-transparent hover:border-violet-500/30 cursor-pointer transition-all"
                         >
                           <div className="flex items-center justify-between mb-2">
                             <div className="p-2 rounded-lg bg-cyber-blue/10 text-cyber-blue group-hover:scale-110 transition-transform">
@@ -138,7 +138,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                               Sub-0.6s
                             </span>
                           </div>
-                          <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-ember-500 transition-colors">
+                          <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-violet-600 transition-colors">
                             Web Dev & E-Com
                           </h4>
                           <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1 line-clamp-3">
@@ -149,17 +149,17 @@ export const Navigation: React.FC<NavigationProps> = ({
                         {/* Digital Marketing */}
                         <div
                           onClick={() => scrollTo('services')}
-                          className="group p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 border border-transparent hover:border-ember-500/30 cursor-pointer transition-all"
+                          className="group p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 border border-transparent hover:border-violet-500/30 cursor-pointer transition-all"
                         >
                           <div className="flex items-center justify-between mb-2">
-                            <div className="p-2 rounded-lg bg-ember-500/10 text-ember-500 group-hover:scale-110 transition-transform">
+                            <div className="p-2 rounded-lg bg-violet-500/10 text-violet-600 group-hover:scale-110 transition-transform">
                               <TrendingUp className="w-4 h-4" />
                             </div>
-                            <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-ember-500/15 text-ember-500">
+                            <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-violet-500/15 text-violet-600">
                               High ROAS
                             </span>
                           </div>
-                          <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-ember-500 transition-colors">
+                          <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-violet-600 transition-colors">
                             Digital Marketing
                           </h4>
                           <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1 line-clamp-3">
@@ -170,7 +170,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                         {/* Custom Software */}
                         <div
                           onClick={() => scrollTo('services')}
-                          className="group p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 border border-transparent hover:border-ember-500/30 cursor-pointer transition-all"
+                          className="group p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 border border-transparent hover:border-violet-500/30 cursor-pointer transition-all"
                         >
                           <div className="flex items-center justify-between mb-2">
                             <div className="p-2 rounded-lg bg-purple-500/10 text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform">
@@ -180,7 +180,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                               Cloud-Native
                             </span>
                           </div>
-                          <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-ember-500 transition-colors">
+                          <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-violet-600 transition-colors">
                             Custom Software
                           </h4>
                           <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1 line-clamp-3">
@@ -191,17 +191,17 @@ export const Navigation: React.FC<NavigationProps> = ({
                         {/* Mobile Apps */}
                         <div
                           onClick={() => scrollTo('services')}
-                          className="group p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 border border-transparent hover:border-ember-500/30 cursor-pointer transition-all"
+                          className="group p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 border border-transparent hover:border-violet-500/30 cursor-pointer transition-all"
                         >
                           <div className="flex items-center justify-between mb-2">
-                            <div className="p-2 rounded-lg bg-flare-amber/10 text-flare-amber group-hover:scale-110 transition-transform">
+                            <div className="p-2 rounded-lg bg-purple-500/10 text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform">
                               <Smartphone className="w-4 h-4" />
                             </div>
-                            <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-flare-amber/15 text-flare-amber">
+                            <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-purple-500/15 text-purple-600 dark:text-purple-400">
                               60fps Native
                             </span>
                           </div>
-                          <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-ember-500 transition-colors">
+                          <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-violet-600 transition-colors">
                             Mobile Engineering
                           </h4>
                           <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1 line-clamp-3">
@@ -227,14 +227,14 @@ export const Navigation: React.FC<NavigationProps> = ({
                   onClick={() => scrollTo('industries')}
                   className={`flex items-center gap-1.5 px-3.5 py-2 text-sm font-semibold rounded-full transition-colors ${
                     activeMenu === 'industries'
-                      ? 'text-ember-500 bg-slate-100 dark:bg-white/5'
+                      ? 'text-violet-600 bg-slate-100 dark:bg-white/5'
                       : 'text-slate-700 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5'
                   }`}
                 >
                   Industries
                   <ChevronDown
                     className={`w-4 h-4 transition-transform duration-200 ${
-                      activeMenu === 'industries' ? 'rotate-180 text-ember-500' : 'text-slate-400 dark:text-zinc-400'
+                      activeMenu === 'industries' ? 'rotate-180 text-violet-600' : 'text-slate-400 dark:text-zinc-400'
                     }`}
                   />
                 </button>
@@ -270,11 +270,11 @@ export const Navigation: React.FC<NavigationProps> = ({
                               scrollTo('industries');
                               onOpenDemoRequest(ind.title);
                             }}
-                            className="p-2.5 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 border border-transparent hover:border-ember-500/20 cursor-pointer flex items-start gap-2.5 transition-colors group"
+                            className="p-2.5 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 border border-transparent hover:border-violet-500/20 cursor-pointer flex items-start gap-2.5 transition-colors group"
                           >
-                            <div className="w-1.5 h-1.5 rounded-full bg-ember-500 mt-1.5 group-hover:scale-150 transition-transform" />
+                            <div className="w-1.5 h-1.5 rounded-full bg-violet-600 mt-1.5 group-hover:scale-150 transition-transform" />
                             <div>
-                              <div className="font-semibold text-slate-800 dark:text-zinc-200 group-hover:text-ember-600 dark:group-hover:text-white transition-colors">
+                              <div className="font-semibold text-slate-800 dark:text-zinc-200 group-hover:text-violet-600 dark:group-hover:text-white transition-colors">
                                 {ind.title}
                               </div>
                               <div className="text-[11px] text-slate-500 dark:text-zinc-400 line-clamp-1">{ind.sub}</div>
@@ -320,12 +320,12 @@ export const Navigation: React.FC<NavigationProps> = ({
                   soundFX.playClick();
                   onToggleTheme();
                 }}
-                className="p-2 rounded-full bg-slate-100 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-zinc-300 hover:text-amber-500 dark:hover:text-amber-400 transition-all hover:scale-105"
+                className="p-2 rounded-full bg-slate-100 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-zinc-300 hover:text-purple-500 dark:hover:text-purple-400 transition-all hover:scale-105"
                 title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
                 aria-label="Toggle Theme"
               >
                 {theme === 'dark' ? (
-                  <Sun className="w-4 h-4 text-amber-400 fill-amber-400/20" />
+                  <Sun className="w-4 h-4 text-purple-400 fill-purple-400/20" />
                 ) : (
                   <Moon className="w-4 h-4 text-slate-700 fill-slate-700/20" />
                 )}
@@ -375,10 +375,10 @@ export const Navigation: React.FC<NavigationProps> = ({
                   <div className="flex flex-col space-y-3">
                     <button
                       onClick={() => scrollTo('services')}
-                      className="text-left text-sm font-semibold text-slate-900 dark:text-white py-2.5 border-b border-slate-100 dark:border-white/5 flex items-center justify-between cursor-pointer hover:text-ember-500 transition-colors"
+                      className="text-left text-sm font-semibold text-slate-900 dark:text-white py-2.5 border-b border-slate-100 dark:border-white/5 flex items-center justify-between cursor-pointer hover:text-violet-600 transition-colors"
                     >
                       <span>Services Matrix</span>
-                      <ArrowRight className="w-4 h-4 text-ember-500" />
+                      <ArrowRight className="w-4 h-4 text-violet-600" />
                     </button>
                     <button
                       onClick={() => scrollTo('industries')}
@@ -396,17 +396,17 @@ export const Navigation: React.FC<NavigationProps> = ({
                     </button>
                     <button
                       onClick={() => scrollTo('case-studies')}
-                      className="text-left text-sm font-semibold text-slate-900 dark:text-white py-2.5 border-b border-slate-100 dark:border-white/5 flex items-center justify-between cursor-pointer hover:text-amber-500 transition-colors"
+                      className="text-left text-sm font-semibold text-slate-900 dark:text-white py-2.5 border-b border-slate-100 dark:border-white/5 flex items-center justify-between cursor-pointer hover:text-purple-500 transition-colors"
                     >
                       <span>Case Studies</span>
-                      <ArrowRight className="w-4 h-4 text-amber-500" />
+                      <ArrowRight className="w-4 h-4 text-purple-500" />
                     </button>
                     <button
                       onClick={() => scrollTo('estimator')}
-                      className="text-left text-sm font-semibold text-slate-900 dark:text-white py-2.5 border-b border-slate-100 dark:border-white/5 flex items-center justify-between cursor-pointer hover:text-ember-500 transition-colors"
+                      className="text-left text-sm font-semibold text-slate-900 dark:text-white py-2.5 border-b border-slate-100 dark:border-white/5 flex items-center justify-between cursor-pointer hover:text-violet-600 transition-colors"
                     >
                       <span>Project Enquiry Desk</span>
-                      <ArrowRight className="w-4 h-4 text-ember-500" />
+                      <ArrowRight className="w-4 h-4 text-violet-600" />
                     </button>
 
                     <div className="pt-6 flex flex-col gap-2.5">

@@ -41,7 +41,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       id: 'contact-jump',
       title: 'Project Roadmap & Enquiries Desk',
       category: 'Actions',
-      icon: <Sparkles className="w-4 h-4 text-ember-500" />,
+      icon: <Sparkles className="w-4 h-4 text-violet-600 dark:text-purple-400" />,
       action: () => scrollToSection('estimator'),
       badge: 'Enquiry Desk',
     },
@@ -49,7 +49,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       id: 'call',
       title: 'Schedule 30-Min Strategy Call (Solutions Architect)',
       category: 'Actions',
-      icon: <PhoneCall className="w-4 h-4 text-flare-amber" />,
+      icon: <PhoneCall className="w-4 h-4 text-purple-500" />,
       action: () => {
         onClose();
         onOpenStrategyCall();
@@ -68,7 +68,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       id: 'service-marketing',
       title: 'Performance Digital Marketing & SEO Dominance',
       category: 'Services',
-      icon: <TrendingUp className="w-4 h-4 text-ember-500" />,
+      icon: <TrendingUp className="w-4 h-4 text-violet-600 dark:text-purple-400" />,
       action: () => scrollToSection('services'),
       badge: 'Growth Engine',
     },
@@ -84,7 +84,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       id: 'service-mobile',
       title: 'iOS, Android & Flutter Mobile Engineering',
       category: 'Services',
-      icon: <Smartphone className="w-4 h-4 text-flare-amber" />,
+      icon: <Smartphone className="w-4 h-4 text-indigo-500" />,
       action: () => scrollToSection('services'),
       badge: 'Mobile 60fps',
     },
@@ -100,7 +100,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       id: 'case-studies-jump',
       title: 'Enterprise Case Studies & Throughput Metrics',
       category: 'Company',
-      icon: <Database className="w-4 h-4 text-flare-amber" />,
+      icon: <Database className="w-4 h-4 text-purple-500" />,
       action: () => scrollToSection('case-studies'),
       badge: 'Flagships',
     },
@@ -108,7 +108,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       id: 'ind-erp',
       title: 'Enterprise ERP Suite (Unified Multi-Branch)',
       category: 'Solutions',
-      icon: <Database className="w-4 h-4 text-ember-500" />,
+      icon: <Database className="w-4 h-4 text-violet-600 dark:text-purple-400" />,
       action: () => {
         onClose();
         onOpenDemoRequest('Enterprise ERP Suite');
@@ -200,7 +200,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       />
       <div className="relative w-full max-w-2xl bg-white dark:bg-obsidian-900 border border-slate-200 dark:border-white/10 rounded-3xl shadow-2xl overflow-hidden z-10 animate-in zoom-in-95 duration-150">
         {/* Glow ambient bar */}
-        <div className="h-1.5 bg-gradient-to-r from-ember-500 via-flare-amber to-cyber-blue" />
+        <div className="h-1.5 bg-gradient-to-r from-violet-600 via-purple-500 to-indigo-500" />
 
         {/* Input header */}
         <div className="flex items-center px-4 py-3.5 border-b border-slate-200 dark:border-white/10">
@@ -251,7 +251,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                   }}
                   className={`flex items-center justify-between px-3.5 py-2.5 rounded-2xl cursor-pointer transition-colors duration-150 ${
                     isSelected
-                      ? 'bg-ember-500/10 dark:bg-ember-500/15 text-slate-900 dark:text-white border border-ember-500/40 font-bold'
+                      ? 'bg-violet-500/10 dark:bg-violet-500/15 text-slate-900 dark:text-white border border-violet-500/40 font-bold'
                       : 'text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-white/5 border border-transparent'
                   }`}
                 >
@@ -259,7 +259,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                     <div
                       className={`p-2 rounded-xl ${
                         isSelected
-                          ? 'bg-ember-500/20 text-ember-600 dark:text-ember-400'
+                          ? 'bg-violet-500/20 text-violet-600 dark:text-purple-400'
                           : 'bg-slate-100 dark:bg-obsidian-700 text-slate-600 dark:text-zinc-400'
                       }`}
                     >
@@ -277,7 +277,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                         {item.badge}
                       </span>
                     )}
-                    {isSelected && <CornerDownLeft className="w-4 h-4 text-ember-500" />}
+                    {isSelected && <CornerDownLeft className="w-4 h-4 text-violet-600 dark:text-purple-400" />}
                   </div>
                 </div>
               );
@@ -292,7 +292,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
             <span>↵ Select</span>
             <span>ESC Close</span>
           </div>
-          <span className="text-ember-500 font-bold">Pyrow Command Engine v2.4</span>
+          <span className="text-violet-600 dark:text-purple-400 font-bold">Pyrow Command Engine v2.4</span>
         </div>
       </div>
     </div>

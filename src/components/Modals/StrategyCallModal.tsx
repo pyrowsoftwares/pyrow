@@ -53,12 +53,12 @@ export const StrategyCallModal: React.FC<StrategyCallModalProps> = ({ isOpen, on
 
       <div className="relative w-full max-w-2xl bg-white dark:bg-obsidian-900 border border-slate-200 dark:border-white/10 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden z-10 flex flex-col max-h-[94vh]">
         {/* Glowing top line */}
-        <div className="h-1.5 bg-gradient-to-r from-flare-amber via-ember-500 to-cyber-blue" />
+        <div className="h-1.5 bg-gradient-to-r from-violet-600 via-purple-500 to-indigo-500" />
 
         {/* Modal Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-white/10">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-flare-amber/15 text-flare-amber border border-flare-amber/30">
+            <div className="p-2.5 rounded-xl bg-purple-500/15 text-purple-600 dark:text-purple-400 border border-purple-500/30">
               <Video className="w-5 h-5" />
             </div>
             <div>
@@ -97,7 +97,7 @@ export const StrategyCallModal: React.FC<StrategyCallModalProps> = ({ isOpen, on
                       }}
                       className={`text-left text-xs p-3 rounded-xl border transition-all ${
                         selectedTopic === t
-                          ? 'bg-ember-500/10 dark:bg-ember-500/20 border-ember-500 text-slate-900 dark:text-white font-bold shadow-sm'
+                          ? 'bg-violet-500/10 dark:bg-violet-500/20 border-violet-500 text-slate-900 dark:text-white font-bold shadow-sm'
                           : 'bg-slate-50 dark:bg-obsidian-800 text-slate-700 dark:text-zinc-300 border-slate-200/80 dark:border-white/5 hover:border-slate-300'
                       }`}
                     >
@@ -111,7 +111,7 @@ export const StrategyCallModal: React.FC<StrategyCallModalProps> = ({ isOpen, on
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="text-xs font-mono text-slate-500 dark:text-zinc-400 uppercase tracking-wider block mb-2 flex items-center gap-1.5 font-bold">
-                    <Calendar className="w-3.5 h-3.5 text-ember-500" />
+                    <Calendar className="w-3.5 h-3.5 text-violet-600 dark:text-purple-400" />
                     Target Day
                   </label>
                   <div className="space-y-1.5">
@@ -125,7 +125,7 @@ export const StrategyCallModal: React.FC<StrategyCallModalProps> = ({ isOpen, on
                         }}
                         className={`w-full text-left text-xs px-3.5 py-2.5 rounded-xl border transition-all font-semibold ${
                           selectedDay === d
-                            ? 'bg-ember-500 text-white font-bold border-ember-500 shadow-sm'
+                            ? 'bg-violet-600 text-white font-bold border-violet-600 shadow-sm'
                             : 'bg-slate-50 dark:bg-obsidian-800 text-slate-700 dark:text-zinc-300 border-slate-200/80 dark:border-white/5 hover:bg-slate-100'
                         }`}
                       >
@@ -137,7 +137,7 @@ export const StrategyCallModal: React.FC<StrategyCallModalProps> = ({ isOpen, on
 
                 <div>
                   <label className="text-xs font-mono text-slate-500 dark:text-zinc-400 uppercase tracking-wider block mb-2 flex items-center gap-1.5 font-bold">
-                    <Clock className="w-3.5 h-3.5 text-flare-amber" />
+                    <Clock className="w-3.5 h-3.5 text-purple-500" />
                     Available Time Slot
                   </label>
                   <div className="grid grid-cols-2 gap-1.5">
@@ -151,7 +151,7 @@ export const StrategyCallModal: React.FC<StrategyCallModalProps> = ({ isOpen, on
                         }}
                         className={`text-center text-xs py-2 px-2 rounded-xl border transition-all font-mono font-bold ${
                           selectedTime === tm
-                            ? 'bg-flare-amber text-slate-900 border-flare-amber shadow-sm'
+                            ? 'bg-purple-600 text-white border-purple-600 shadow-sm'
                             : 'bg-slate-50 dark:bg-obsidian-800 text-slate-700 dark:text-zinc-300 border-slate-200/80 dark:border-white/5 hover:border-slate-300'
                         }`}
                       >
@@ -175,7 +175,7 @@ export const StrategyCallModal: React.FC<StrategyCallModalProps> = ({ isOpen, on
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         placeholder="e.g. Rahul Verma"
-                        className="w-full bg-slate-50 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 rounded-xl pl-9 pr-3 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-ember-500"
+                        className="w-full bg-slate-50 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 rounded-xl pl-9 pr-3 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-violet-500"
                       />
                     </div>
                   </div>
@@ -189,7 +189,7 @@ export const StrategyCallModal: React.FC<StrategyCallModalProps> = ({ isOpen, on
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         placeholder="rahul@company.com"
-                        className="w-full bg-slate-50 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 rounded-xl pl-9 pr-3 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-ember-500"
+                        className="w-full bg-slate-50 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 rounded-xl pl-9 pr-3 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-violet-500"
                       />
                     </div>
                   </div>
@@ -206,7 +206,7 @@ export const StrategyCallModal: React.FC<StrategyCallModalProps> = ({ isOpen, on
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                         placeholder="+91 98765 43210"
-                        className="w-full bg-slate-50 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 rounded-xl pl-9 pr-3 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-ember-500"
+                        className="w-full bg-slate-50 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 rounded-xl pl-9 pr-3 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-violet-500"
                       />
                     </div>
                   </div>
@@ -219,7 +219,7 @@ export const StrategyCallModal: React.FC<StrategyCallModalProps> = ({ isOpen, on
                         value={formData.company}
                         onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                         placeholder="Apex Technologies, Founder"
-                        className="w-full bg-slate-50 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 rounded-xl pl-9 pr-3 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-ember-500"
+                        className="w-full bg-slate-50 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 rounded-xl pl-9 pr-3 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-violet-500"
                       />
                     </div>
                   </div>
@@ -227,7 +227,7 @@ export const StrategyCallModal: React.FC<StrategyCallModalProps> = ({ isOpen, on
               </div>
 
               <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-zinc-400 bg-slate-50 dark:bg-obsidian-800/60 p-3 rounded-xl border border-slate-200 dark:border-white/5">
-                <ShieldCheck className="w-4 h-4 text-ember-500 flex-shrink-0" />
+                <ShieldCheck className="w-4 h-4 text-violet-600 dark:text-purple-400 flex-shrink-0" />
                 <span>Google Meet / Zoom calendar link will be dispatched to your email automatically.</span>
               </div>
 
@@ -245,12 +245,12 @@ export const StrategyCallModal: React.FC<StrategyCallModalProps> = ({ isOpen, on
           ) : (
             /* Success confirmation */
             <div className="py-8 text-center space-y-4">
-              <div className="w-16 h-16 rounded-full bg-ember-500/15 border border-ember-500 text-ember-600 dark:text-ember-400 mx-auto flex items-center justify-center animate-bounce">
+              <div className="w-16 h-16 rounded-full bg-violet-500/15 border border-violet-500 text-violet-600 dark:text-purple-400 mx-auto flex items-center justify-center animate-bounce">
                 <CheckCircle2 className="w-8 h-8" />
               </div>
               <h4 className="text-2xl font-bold text-slate-900 dark:text-white font-display">Strategy Session Confirmed!</h4>
               <p className="text-sm text-slate-600 dark:text-zinc-300 max-w-md mx-auto">
-                Invitation and calendar invite dispatched to <span className="text-ember-600 dark:text-ember-400 font-bold">{formData.email}</span>.
+                Invitation and calendar invite dispatched to <span className="text-violet-600 dark:text-purple-400 font-bold">{formData.email}</span>.
               </p>
 
               <div className="p-4 rounded-2xl bg-slate-50 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 max-w-sm mx-auto text-left text-xs font-mono space-y-2">
@@ -260,7 +260,7 @@ export const StrategyCallModal: React.FC<StrategyCallModalProps> = ({ isOpen, on
                 </div>
                 <div className="flex justify-between text-slate-500 dark:text-zinc-400">
                   <span>Scheduled Time:</span>
-                  <span className="text-flare-amber font-bold">{selectedDay} @ {selectedTime}</span>
+                  <span className="text-purple-500 font-bold">{selectedDay} @ {selectedTime}</span>
                 </div>
                 <div className="flex justify-between text-slate-500 dark:text-zinc-400">
                   <span>Meeting Room:</span>

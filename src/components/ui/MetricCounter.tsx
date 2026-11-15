@@ -62,11 +62,11 @@ export const MetricCounter: React.FC<MetricCounterProps> = ({
   return (
     <div ref={countRef} className="flex flex-col items-center sm:items-start text-center sm:text-left">
       <div className="flex items-baseline font-display text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 dark:text-white">
-        <span className="text-ember-600 dark:text-ember-400">{prefix}</span>
+        <span className="text-violet-600 dark:text-purple-400">{prefix}</span>
         <span className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-950 dark:from-white dark:via-zinc-100 dark:to-zinc-300 bg-clip-text text-transparent">
           {decimals > 0 ? count.toFixed(decimals) : Math.floor(count).toLocaleString()}
         </span>
-        <span className="text-flare-amber ml-0.5">{suffix}</span>
+        <span className="text-purple-600 dark:text-purple-400 ml-0.5">{suffix}</span>
       </div>
       {label && <div className="mt-1 text-sm font-bold tracking-wide text-slate-700 dark:text-zinc-300">{label}</div>}
       {sublabel && <div className="text-xs text-slate-500 dark:text-zinc-500 font-mono mt-0.5">{sublabel}</div>}

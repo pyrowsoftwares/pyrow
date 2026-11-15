@@ -25,14 +25,14 @@ export const AnimatedGlobalBackground: React.FC = () => {
     let width = (canvas.width = window.innerWidth);
     let height = (canvas.height = window.innerHeight);
 
-    // Warm, elegant agency accent colors that shine on light backgrounds
+    // Luminous, elegant violet and cyber accent palette matching new Pyrow brand
     const colors = [
-      '#FF4D00', // Pyrow Ember
-      '#FF9500', // Amber Flare
-      '#FFB703', // Solar Gold
-      '#0284C7', // Sky Blue
-      '#8B5CF6', // Purple
-      '#10B981', // Emerald
+      '#7C3AED', // Pyrow Electric Violet
+      '#8B5CF6', // Vibrant Purple
+      '#A855F7', // Neon Lavender
+      '#C084FC', // Violet Glow
+      '#6366F1', // Electric Indigo
+      '#EC4899', // Cyber Pink Accent
     ];
 
     const handleResize = () => {
@@ -108,29 +108,29 @@ export const AnimatedGlobalBackground: React.FC = () => {
         className="absolute inset-0 transition-opacity duration-700 opacity-100 dark:opacity-0"
         style={{
           background: `
-            radial-gradient(ellipse 90% 60% at 15% 10%, rgba(255, 77, 0, 0.16) 0%, transparent 55%),
-            radial-gradient(ellipse 80% 50% at 85% 18%, rgba(2, 132, 199, 0.16) 0%, transparent 55%),
-            radial-gradient(circle at 50% 45%, rgba(245, 158, 11, 0.12) 0%, transparent 50%),
-            radial-gradient(ellipse 90% 60% at 10% 75%, rgba(139, 92, 246, 0.14) 0%, transparent 60%),
-            radial-gradient(ellipse 80% 50% at 90% 85%, rgba(244, 63, 94, 0.14) 0%, transparent 55%),
-            radial-gradient(circle at 50% 95%, rgba(255, 77, 0, 0.12) 0%, transparent 50%),
-            linear-gradient(145deg, #FFF6EE 0%, #FAF8F5 18%, #F0F7FF 38%, #F6F2FF 58%, #FFF2F4 78%, #FFF8EE 100%)
+            radial-gradient(ellipse 90% 60% at 15% 10%, rgba(124, 58, 237, 0.14) 0%, transparent 55%),
+            radial-gradient(ellipse 80% 50% at 85% 18%, rgba(99, 102, 241, 0.14) 0%, transparent 55%),
+            radial-gradient(circle at 50% 45%, rgba(168, 85, 247, 0.10) 0%, transparent 50%),
+            radial-gradient(ellipse 90% 60% at 10% 75%, rgba(139, 92, 246, 0.12) 0%, transparent 60%),
+            radial-gradient(ellipse 80% 50% at 90% 85%, rgba(192, 132, 252, 0.12) 0%, transparent 55%),
+            radial-gradient(circle at 50% 95%, rgba(124, 58, 237, 0.12) 0%, transparent 50%),
+            linear-gradient(145deg, #FAF8FF 0%, #F5F3FF 18%, #EEF2FF 38%, #F3E8FF 58%, #FAF5FF 78%, #F5F3FF 100%)
           `,
         }}
       />
 
-      {/* 1B. Luminous Full-Portal Multi-Stop Gradient (Rich Midnight Velvet Dark Aesthetic - No Pure Black, No Harsh Glow) */}
+      {/* 1B. Luminous Full-Portal Multi-Stop Gradient (Rich Midnight Velvet Obsidian-Violet - No Pure Black) */}
       <div 
         className="absolute inset-0 transition-opacity duration-700 opacity-0 dark:opacity-100"
         style={{
           background: `
-            radial-gradient(ellipse 90% 60% at 15% 10%, rgba(255, 77, 0, 0.07) 0%, transparent 60%),
-            radial-gradient(ellipse 80% 50% at 85% 18%, rgba(2, 132, 199, 0.06) 0%, transparent 60%),
-            radial-gradient(circle at 50% 45%, rgba(245, 158, 11, 0.05) 0%, transparent 55%),
-            radial-gradient(ellipse 90% 60% at 10% 75%, rgba(139, 92, 246, 0.06) 0%, transparent 65%),
-            radial-gradient(ellipse 80% 50% at 90% 85%, rgba(244, 63, 94, 0.05) 0%, transparent 60%),
-            radial-gradient(circle at 50% 95%, rgba(255, 77, 0, 0.06) 0%, transparent 55%),
-            linear-gradient(145deg, #090D17 0%, #0D1322 20%, #0B101E 40%, #100D20 60%, #130D1A 80%, #090D17 100%)
+            radial-gradient(ellipse 90% 60% at 15% 10%, rgba(124, 58, 237, 0.09) 0%, transparent 60%),
+            radial-gradient(ellipse 80% 50% at 85% 18%, rgba(99, 102, 241, 0.08) 0%, transparent 60%),
+            radial-gradient(circle at 50% 45%, rgba(168, 85, 247, 0.07) 0%, transparent 55%),
+            radial-gradient(ellipse 90% 60% at 10% 75%, rgba(139, 92, 246, 0.08) 0%, transparent 65%),
+            radial-gradient(ellipse 80% 50% at 90% 85%, rgba(217, 70, 239, 0.06) 0%, transparent 60%),
+            radial-gradient(circle at 50% 95%, rgba(124, 58, 237, 0.08) 0%, transparent 55%),
+            linear-gradient(145deg, #090615 0%, #0D0A20 20%, #0A081C 40%, #100C28 60%, #120A24 80%, #090615 100%)
           `,
         }}
       />
@@ -147,18 +147,18 @@ export const AnimatedGlobalBackground: React.FC = () => {
         }}
       />
 
-      {/* 3. Floating Animated Glowing Auroras (Subtle in Dark Mode to Prevent Card Bleed) */}
-      {/* Top Left: Warm Pyrow Ember Glow */}
-      <div className="absolute -top-32 -left-32 w-[650px] sm:w-[950px] h-[650px] sm:h-[950px] rounded-full bg-gradient-to-br from-ember-500/22 via-amber-400/15 to-transparent dark:from-ember-500/8 dark:via-amber-500/4 blur-[130px] animate-[pulse_9s_ease-in-out_infinite]" />
+      {/* 3. Floating Animated Glowing Auroras */}
+      {/* Top Left: Ultra Violet Glow */}
+      <div className="absolute -top-32 -left-32 w-[650px] sm:w-[950px] h-[650px] sm:h-[950px] rounded-full bg-gradient-to-br from-violet-600/22 via-purple-500/15 to-transparent dark:from-violet-600/10 dark:via-purple-500/5 blur-[130px] animate-[pulse_9s_ease-in-out_infinite]" />
 
-      {/* Top Right: Sky Azure & Cyan Glow */}
-      <div className="absolute top-1/4 -right-40 w-[600px] sm:w-[900px] h-[600px] sm:h-[900px] rounded-full bg-gradient-to-bl from-sky-400/20 via-cyan-400/14 to-transparent dark:from-cyan-500/7 dark:via-blue-600/4 blur-[135px] animate-[pulse_11s_ease-in-out_infinite]" />
+      {/* Top Right: Electric Indigo & Cyber Blue Glow */}
+      <div className="absolute top-1/4 -right-40 w-[600px] sm:w-[900px] h-[600px] sm:h-[900px] rounded-full bg-gradient-to-bl from-indigo-500/20 via-violet-400/14 to-transparent dark:from-indigo-600/8 dark:via-violet-600/5 blur-[135px] animate-[pulse_11s_ease-in-out_infinite]" />
 
-      {/* Lower Mid: Soft Violet & Lilac Glow */}
-      <div className="absolute top-2/3 -left-32 w-[650px] sm:w-[950px] h-[650px] sm:h-[950px] rounded-full bg-gradient-to-tr from-purple-400/18 via-rose-400/14 to-transparent dark:from-purple-600/6 dark:via-ember-500/4 blur-[145px] animate-[pulse_13s_ease-in-out_infinite]" />
+      {/* Lower Mid: Soft Lavender & Neon Fuchsia Glow */}
+      <div className="absolute top-2/3 -left-32 w-[650px] sm:w-[950px] h-[650px] sm:h-[950px] rounded-full bg-gradient-to-tr from-purple-500/18 via-fuchsia-400/14 to-transparent dark:from-purple-600/8 dark:via-violet-500/5 blur-[145px] animate-[pulse_13s_ease-in-out_infinite]" />
 
-      {/* Bottom Right: Warm Amber & Solar Gold Glow */}
-      <div className="absolute -bottom-40 right-10 w-[550px] sm:w-[850px] h-[550px] sm:h-[850px] rounded-full bg-gradient-to-tl from-amber-400/20 via-yellow-400/14 to-transparent dark:from-amber-500/7 dark:via-rose-500/4 blur-[130px] animate-[pulse_10s_ease-in-out_infinite]" />
+      {/* Bottom Right: Vivid Violet & Deep Purple Glow */}
+      <div className="absolute -bottom-40 right-10 w-[550px] sm:w-[850px] h-[550px] sm:h-[850px] rounded-full bg-gradient-to-tl from-violet-500/20 via-indigo-400/14 to-transparent dark:from-violet-600/8 dark:via-purple-500/5 blur-[130px] animate-[pulse_10s_ease-in-out_infinite]" />
 
       {/* 4. Active Animated Stardust & Constellation Canvas */}
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full block" />

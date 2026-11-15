@@ -75,13 +75,13 @@ export const CaseStudies: React.FC<{ onOpenStrategyCall: (title?: string) => voi
         {/* Section Header - PipeRocket Style: Short, Clean & Direct */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-14 gap-6">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-ember-500/10 border border-ember-500/25 text-xs font-mono text-ember-600 dark:text-ember-400 mb-3.5 font-semibold">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/25 text-xs font-mono text-violet-600 dark:text-purple-400 mb-3.5 font-semibold">
               <Sparkles className="w-3.5 h-3.5" />
               <span>Proven Production Track Record</span>
             </div>
             <h2 className="text-3xl sm:text-5xl font-black font-display text-slate-900 dark:text-white tracking-tight">
               Enterprise Results.{' '}
-              <span className="bg-gradient-to-r from-ember-500 via-flare-amber to-amber-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-violet-600 via-purple-500 to-fuchsia-500 bg-clip-text text-transparent">
                 Proven In Production.
               </span>
             </h2>
@@ -105,12 +105,12 @@ export const CaseStudies: React.FC<{ onOpenStrategyCall: (title?: string) => voi
           {studies.map((study) => (
             <div
               key={study.id}
-              className="group relative rounded-2xl p-6 sm:p-7 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 border min-h-[360px] bg-white dark:bg-[#111726] border-slate-200/90 dark:border-white/10 hover:border-ember-500/50 shadow-sm hover:shadow-[0_16px_36px_rgba(255,77,0,0.1)] dark:hover:shadow-[0_16px_36px_rgba(0,0,0,0.5)]"
+              className="group relative rounded-2xl p-6 sm:p-7 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 border min-h-[360px] bg-white dark:bg-[#111726] border-slate-200/90 dark:border-white/10 hover:border-violet-500/50 shadow-sm hover:shadow-[0_16px_36px_rgba(124,58,237,0.14)] dark:hover:shadow-[0_16px_36px_rgba(0,0,0,0.5)]"
             >
               <div>
                 {/* Header Tag & Client */}
                 <div className="flex items-center justify-between gap-2 mb-4">
-                  <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-ember-500/10 text-ember-600 dark:text-ember-400 border border-ember-500/20 uppercase tracking-wider">
+                  <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-violet-500/10 text-violet-600 dark:text-purple-400 border border-violet-500/20 uppercase tracking-wider">
                     {study.industry}
                   </span>
                   <span className="text-xs font-mono font-bold text-slate-500 dark:text-zinc-400">
@@ -119,7 +119,7 @@ export const CaseStudies: React.FC<{ onOpenStrategyCall: (title?: string) => voi
                 </div>
 
                 {/* Title / Headline */}
-                <h3 className="text-xl font-bold font-display text-slate-900 dark:text-white group-hover:text-ember-500 transition-colors leading-snug">
+                <h3 className="text-xl font-bold font-display text-slate-900 dark:text-white group-hover:text-violet-600 transition-colors leading-snug">
                   {study.title}
                 </h3>
 
@@ -185,7 +185,7 @@ export const CaseStudies: React.FC<{ onOpenStrategyCall: (title?: string) => voi
               <div className="mt-5 pt-3 border-t border-slate-100 dark:border-white/10">
                 <button
                   onClick={() => onOpenStrategyCall(study.title)}
-                  className="w-full flex items-center justify-between text-xs font-semibold py-2.5 px-4 rounded-xl border border-slate-200/90 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-slate-700 dark:text-zinc-300 group-hover:bg-ember-500 group-hover:text-white group-hover:border-ember-500 transition-all duration-200 cursor-pointer"
+                  className="w-full flex items-center justify-between text-xs font-semibold py-2.5 px-4 rounded-xl border border-slate-200/90 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-slate-700 dark:text-zinc-300 group-hover:bg-violet-600 group-hover:text-white group-hover:border-violet-600 transition-all duration-200 cursor-pointer"
                 >
                   <span>Build a System Like This</span>
                   <ArrowUpRight className="w-4 h-4 text-slate-400 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />

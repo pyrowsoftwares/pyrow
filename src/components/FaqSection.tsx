@@ -73,7 +73,7 @@ export const FaqSection: React.FC = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-12">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-ember-500/10 border border-ember-500/25 text-xs font-mono text-ember-600 dark:text-ember-400 mb-3 font-semibold">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/25 text-xs font-mono text-violet-600 dark:text-purple-400 mb-3 font-semibold">
             <HelpCircle className="w-3.5 h-3.5" />
             <span>Got Questions?</span>
           </div>
@@ -92,7 +92,7 @@ export const FaqSection: React.FC = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by topic (e.g. pricing, ownership, timeline, WhatsApp)..."
-              className="w-full pl-11 pr-4 py-3 rounded-2xl bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-ember-500 shadow-sm dark:shadow-none"
+              className="w-full pl-11 pr-4 py-3 rounded-2xl bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-violet-500 shadow-sm dark:shadow-none"
             />
           </div>
         </div>
@@ -111,7 +111,7 @@ export const FaqSection: React.FC = () => {
                   className="hover:no-underline py-4 text-left font-semibold text-slate-900 dark:text-white text-sm sm:text-base gap-3"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="w-2 h-2 rounded-full bg-ember-500 flex-shrink-0" />
+                    <span className="w-2 h-2 rounded-full bg-violet-600 flex-shrink-0" />
                     <span>{item.q}</span>
                   </div>
                 </AccordionTrigger>

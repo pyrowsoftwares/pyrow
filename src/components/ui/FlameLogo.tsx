@@ -29,26 +29,26 @@ export const FlameLogo: React.FC<FlameLogoProps> = ({
       className={`group relative inline-flex items-center gap-2.5 sm:gap-3 transition-transform duration-300 hover:scale-[1.03] active:scale-[0.98] focus:outline-none select-none ${className}`}
       aria-label="Pyrow Home"
     >
-      {/* Dynamic Ambient Mesh Glow behind logo: Flaring Flame Orange + Tech Cyan */}
-      <div className="absolute -inset-2.5 rounded-2xl bg-gradient-to-r from-cyber-blue/35 via-ember-500/30 to-flare-amber/25 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+      {/* Dynamic Ambient Mesh Glow behind logo: Electric Violet + Ultra Purple */}
+      <div className="absolute -inset-2.5 rounded-2xl bg-gradient-to-r from-violet-600/35 via-purple-500/30 to-indigo-500/25 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
-      {/* 1. Official Authentic Pyrow Icon Mark (Circuit 'P' + Ascending Fire Arrow) */}
+      {/* 1. Official Authentic Pyrow Icon Mark (Geometric Violet 'P' Ribbon Mark) */}
       {(variant === 'full' || variant === 'icon-only') && (
         <div className="relative flex items-center justify-center flex-shrink-0">
-          {/* Subtle pulsating back-ember on hover */}
-          <div className="absolute -inset-1 rounded-full bg-ember-500/20 blur-md opacity-0 group-hover:opacity-80 transition-opacity duration-300 animate-pulse pointer-events-none" />
+          {/* Subtle pulsating back-violet on hover */}
+          <div className="absolute -inset-1 rounded-full bg-violet-500/25 blur-md opacity-0 group-hover:opacity-80 transition-opacity duration-300 animate-pulse pointer-events-none" />
           
           <img
             src="/assets/pyrow-icon-transparent.png"
             alt="Pyrow Icon"
             draggable={false}
-            className={`${sizeMap.icon} w-auto object-contain transition-all duration-300 drop-shadow-[0_2px_8px_rgba(255,77,0,0.25)] group-hover:drop-shadow-[0_4px_16px_rgba(0,180,255,0.45)] group-hover:rotate-[-2deg] select-none`}
+            className={`${sizeMap.icon} w-auto object-contain transition-all duration-300 drop-shadow-[0_2px_8px_rgba(139,92,246,0.35)] group-hover:drop-shadow-[0_4px_16px_rgba(168,85,247,0.55)] group-hover:rotate-[-2deg] select-none`}
             style={{ imageRendering: 'auto' }}
           />
         </div>
       )}
 
-      {/* 2. Official Authentic Pyrow Typography Wordmark */}
+      {/* 2. Official Authentic Pyrow 3D Violet Typography Wordmark */}
       {(variant === 'full' || variant === 'wordmark') && (
         <div className="relative flex items-center">
           <img

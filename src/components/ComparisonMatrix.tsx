@@ -46,7 +46,7 @@ export const ComparisonMatrix: React.FC = () => {
     <section id="comparison" className="relative py-16 sm:py-20 lg:py-24 bg-transparent transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-14">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-ember-500/10 border border-ember-500/25 text-xs font-mono text-ember-600 dark:text-ember-400 mb-3 font-semibold">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/25 text-xs font-mono text-violet-600 dark:text-purple-400 mb-3 font-semibold">
             <Shield className="w-3.5 h-3.5" />
             <span>Competitive Matrix</span>
           </div>
@@ -61,7 +61,7 @@ export const ComparisonMatrix: React.FC = () => {
         {/* Mobile Swipe Hint */}
         <div className="flex sm:hidden items-center justify-end gap-1.5 text-[11px] font-mono text-slate-400 dark:text-zinc-500 mb-2 px-2">
           <span>Swipe horizontally</span>
-          <ArrowRight className="w-3 h-3 text-ember-500 animate-pulse" />
+          <ArrowRight className="w-3 h-3 text-violet-600 animate-pulse" />
         </div>
 
         {/* Comparison Table */}
@@ -72,9 +72,9 @@ export const ComparisonMatrix: React.FC = () => {
                 <th className="py-3.5 sm:py-5 px-4 sm:px-6 text-xs sm:text-sm font-semibold text-slate-900 dark:text-white w-1/3">
                   Evaluation Dimension
                 </th>
-                <th className="py-3.5 sm:py-5 px-4 sm:px-6 text-xs sm:text-sm font-bold text-ember-600 dark:text-ember-400 bg-ember-500/10 dark:bg-ember-500/15 border-x-2 border-ember-500/40 w-1/3">
+                <th className="py-3.5 sm:py-5 px-4 sm:px-6 text-xs sm:text-sm font-bold text-violet-600 dark:text-purple-400 bg-violet-500/10 dark:bg-violet-500/15 border-x-2 border-violet-500/40 w-1/3">
                   <div className="flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-ember-500" />
+                    <Sparkles className="w-4 h-4 text-violet-600" />
                     <span>The Pyrow Model</span>
                   </div>
                 </th>
@@ -92,7 +92,7 @@ export const ComparisonMatrix: React.FC = () => {
                   <td className="py-3.5 sm:py-5 px-4 sm:px-6 font-semibold text-slate-900 dark:text-white">
                     {row.feature}
                   </td>
-                  <td className="py-3.5 sm:py-5 px-4 sm:px-6 font-semibold text-slate-900 dark:text-white bg-ember-500/5 dark:bg-ember-500/10 border-x-2 border-ember-500/40">
+                  <td className="py-3.5 sm:py-5 px-4 sm:px-6 font-semibold text-slate-900 dark:text-white bg-violet-500/5 dark:bg-violet-500/10 border-x-2 border-violet-500/40">
                     <div className="flex items-start gap-2">
                       <Check className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5 stroke-[3]" />
                       <span>{row.pyrow}</span>
@@ -106,7 +106,7 @@ export const ComparisonMatrix: React.FC = () => {
                   </td>
                   <td className="py-4 sm:py-5 px-6 text-slate-500 dark:text-zinc-400 hidden md:table-cell">
                     <div className="flex items-start gap-2">
-                      <X className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
+                      <X className="w-4 h-4 text-slate-400 dark:text-zinc-500 flex-shrink-0 mt-0.5" />
                       <span>{row.inHouse}</span>
                     </div>
                   </td>

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  Flame,
   ShieldCheck,
   ArrowRight,
   Mail,
@@ -46,7 +45,7 @@ export const Footer: React.FC<FooterProps> = ({
       {/* High-Impact Animated Call-To-Action Marquee Banner */}
       <div
         onClick={onOpenStrategyCall}
-        className="group relative cursor-pointer py-6 sm:py-8 bg-gradient-to-r from-ember-600 via-ember-500 to-flare-amber text-white overflow-hidden select-none transition-all duration-300 hover:brightness-105"
+        className="group relative cursor-pointer py-6 sm:py-8 bg-gradient-to-r from-violet-700 via-purple-600 to-indigo-600 text-white overflow-hidden select-none transition-all duration-300 hover:brightness-105"
       >
         <div className="flex items-center gap-6 animate-marquee whitespace-nowrap text-xl sm:text-3xl lg:text-4xl font-black font-display tracking-tight">
           {[...Array(6)].map((_, i) => (
@@ -75,7 +74,7 @@ export const Footer: React.FC<FooterProps> = ({
             {/* Compliance Trust Badges */}
             <div className="pt-2 flex flex-wrap gap-2">
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 dark:bg-obsidian-850 border border-slate-200 dark:border-white/10 text-[10px] font-mono text-slate-700 dark:text-zinc-300 font-semibold">
-                <Lock className="w-3 h-3 text-ember-500" />
+                <Lock className="w-3 h-3 text-violet-600 dark:text-purple-400" />
                 SOC2 Type II Ready
               </span>
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 dark:bg-obsidian-850 border border-slate-200 dark:border-white/10 text-[10px] font-mono text-slate-700 dark:text-zinc-300 font-semibold">
@@ -83,7 +82,7 @@ export const Footer: React.FC<FooterProps> = ({
                 ISO 27001 Certified
               </span>
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 dark:bg-obsidian-850 border border-slate-200 dark:border-white/10 text-[10px] font-mono text-slate-700 dark:text-zinc-300 font-semibold">
-                <Globe className="w-3 h-3 text-flare-amber" />
+                <Globe className="w-3 h-3 text-purple-500" />
                 GDPR & HIPAA Compliant
               </span>
             </div>
@@ -128,7 +127,7 @@ export const Footer: React.FC<FooterProps> = ({
               <li>
                 <button
                   onClick={() => scrollTo('services')}
-                  className="hover:text-ember-600 dark:hover:text-ember-400 transition-colors"
+                  className="hover:text-violet-600 dark:hover:text-purple-400 transition-colors"
                 >
                   Web Development & Bespoke UI/UX
                 </button>
@@ -136,7 +135,7 @@ export const Footer: React.FC<FooterProps> = ({
               <li>
                 <button
                   onClick={() => scrollTo('services')}
-                  className="hover:text-ember-600 dark:hover:text-ember-400 transition-colors"
+                  className="hover:text-violet-600 dark:hover:text-purple-400 transition-colors"
                 >
                   Headless E-Commerce & Shopify Plus
                 </button>
@@ -144,7 +143,7 @@ export const Footer: React.FC<FooterProps> = ({
               <li>
                 <button
                   onClick={() => scrollTo('services')}
-                  className="hover:text-ember-600 dark:hover:text-ember-400 transition-colors"
+                  className="hover:text-violet-600 dark:hover:text-purple-400 transition-colors"
                 >
                   24/7 Cloud DevOps & AWS Management
                 </button>
@@ -152,7 +151,7 @@ export const Footer: React.FC<FooterProps> = ({
               <li>
                 <button
                   onClick={() => scrollTo('services')}
-                  className="hover:text-ember-600 dark:hover:text-ember-400 transition-colors"
+                  className="hover:text-violet-600 dark:hover:text-purple-400 transition-colors"
                 >
                   Website Revamp & Speed (95+ PageSpeed)
                 </button>
@@ -160,7 +159,7 @@ export const Footer: React.FC<FooterProps> = ({
               <li>
                 <button
                   onClick={() => scrollTo('services')}
-                  className="hover:text-ember-600 dark:hover:text-ember-400 transition-colors"
+                  className="hover:text-violet-600 dark:hover:text-purple-400 transition-colors"
                 >
                   Custom Software & Microservices
                 </button>
@@ -168,7 +167,7 @@ export const Footer: React.FC<FooterProps> = ({
               <li>
                 <button
                   onClick={() => scrollTo('services')}
-                  className="hover:text-ember-600 dark:hover:text-ember-400 transition-colors"
+                  className="hover:text-violet-600 dark:hover:text-purple-400 transition-colors"
                 >
                   iOS, Android & Flutter Engineering
                 </button>
@@ -270,7 +269,7 @@ export const Footer: React.FC<FooterProps> = ({
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter corporate email..."
-                    className="w-full bg-slate-50 dark:bg-obsidian-850 border border-slate-200 dark:border-white/10 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:outline-none focus:border-ember-500"
+                    className="w-full bg-slate-50 dark:bg-obsidian-850 border border-slate-200 dark:border-white/10 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:outline-none focus:border-violet-500"
                   />
                 </div>
                 <MagneticButton

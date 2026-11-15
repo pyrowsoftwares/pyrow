@@ -26,13 +26,13 @@ export const AboutPyrow: React.FC<AboutPyrowProps> = ({ onOpenStrategyCall }) =>
         {/* Story Section */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center mb-16 sm:mb-20">
           <div className="lg:col-span-7">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-ember-500/10 border border-ember-500/30 text-xs font-mono text-ember-600 dark:text-ember-400 mb-3 font-semibold">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/30 text-xs font-mono text-violet-600 dark:text-purple-400 mb-3 font-semibold">
               <Sparkles className="w-3.5 h-3.5" />
               <span>Our Story & Mission</span>
             </div>
             <h2 className="text-3xl sm:text-5xl font-black font-display text-slate-900 dark:text-white tracking-tight">
               Combining World-Class Engineering with{' '}
-              <span className="bg-gradient-to-r from-ember-500 via-flare-amber to-flare-gold bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-violet-600 via-purple-500 to-fuchsia-500 bg-clip-text text-transparent">
                 High-Converting Marketing.
               </span>
             </h2>
@@ -41,7 +41,7 @@ export const AboutPyrow: React.FC<AboutPyrowProps> = ({ onOpenStrategyCall }) =>
                 Most businesses struggle because their agencies are divided. Software companies write code without caring about sales or lead funnels. Marketing agencies run ads on slow, clunky websites that lose visitors before they can buy.
               </p>
               <p className="text-slate-900 dark:text-white font-bold">
-                <span className="text-ember-600 dark:text-ember-400">Pyrow</span> was built to solve this exact problem.
+                <span className="text-violet-600 dark:text-purple-400">Pyrow</span> was built to solve this exact problem.
                 We bring high-speed software development and high-return digital marketing together into one dependable partner.
               </p>
               <p className="text-slate-500 dark:text-zinc-400 text-sm">
@@ -51,7 +51,7 @@ export const AboutPyrow: React.FC<AboutPyrowProps> = ({ onOpenStrategyCall }) =>
 
             <div className="mt-8 flex flex-wrap gap-4 pt-4 border-t border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-2 text-xs font-mono text-slate-700 dark:text-zinc-300 font-semibold">
-                <CheckCircle2 className="w-4 h-4 text-ember-500" />
+                <CheckCircle2 className="w-4 h-4 text-violet-600" />
                 <span>100% In-House Team (Zero Outsourcing)</span>
               </div>
               <div className="flex items-center gap-2 text-xs font-mono text-slate-700 dark:text-zinc-300 font-semibold">
@@ -59,7 +59,7 @@ export const AboutPyrow: React.FC<AboutPyrowProps> = ({ onOpenStrategyCall }) =>
                 <span>Bank-Grade Security & Encryption</span>
               </div>
               <div className="flex items-center gap-2 text-xs font-mono text-slate-700 dark:text-zinc-300 font-semibold">
-                <CheckCircle2 className="w-4 h-4 text-flare-amber" />
+                <CheckCircle2 className="w-4 h-4 text-purple-500" />
                 <span>Weekly Live Test Demos</span>
               </div>
             </div>
@@ -68,7 +68,7 @@ export const AboutPyrow: React.FC<AboutPyrowProps> = ({ onOpenStrategyCall }) =>
           {/* Philosophy Card */}
           <div className="lg:col-span-5">
             <div className="p-8 rounded-3xl bg-slate-900 text-white shadow-2xl relative border border-slate-800">
-              <div className="text-xs font-mono text-ember-400 uppercase tracking-widest mb-3 font-semibold">
+              <div className="text-xs font-mono text-purple-400 uppercase tracking-widest mb-3 font-semibold">
                 // THE PYROW STANDARD
               </div>
               <h3 className="text-2xl font-bold font-display text-white">
@@ -84,7 +84,7 @@ export const AboutPyrow: React.FC<AboutPyrowProps> = ({ onOpenStrategyCall }) =>
                   <div className="text-[11px] text-zinc-400 mt-0.5">Average P95 Latency</div>
                 </div>
                 <div className="p-3.5 rounded-xl bg-slate-950 border border-white/5">
-                  <div className="text-2xl font-bold font-mono text-ember-400">99.98%</div>
+                  <div className="text-2xl font-bold font-mono text-purple-400">99.98%</div>
                   <div className="text-[11px] text-zinc-400 mt-0.5">Availability Uptime</div>
                 </div>
               </div>
@@ -95,7 +95,7 @@ export const AboutPyrow: React.FC<AboutPyrowProps> = ({ onOpenStrategyCall }) =>
         {/* The Pyrow Standard (3 Pillars) */}
         <div id="standard" className="mb-16 sm:mb-20">
           <div className="text-center max-w-2xl mx-auto mb-12">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-flare-amber/10 border border-flare-amber/30 text-xs font-mono text-flare-amber mb-3 font-semibold">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-xs font-mono text-purple-600 dark:text-purple-400 mb-3 font-semibold">
               <Award className="w-3.5 h-3.5" />
               <span>Strict Engineering Doctrine</span>
             </div>
@@ -111,9 +111,9 @@ export const AboutPyrow: React.FC<AboutPyrowProps> = ({ onOpenStrategyCall }) =>
             {pyrowPillars.map((pillar) => (
               <div
                 key={pillar.number}
-                className="p-7 rounded-3xl bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800/90 hover:border-ember-500/40 dark:hover:border-ember-500/50 transition-all duration-300 relative group shadow-sm hover:shadow-md dark:shadow-none"
+                className="p-7 rounded-3xl bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800/90 hover:border-violet-500/40 dark:hover:border-violet-500/50 transition-all duration-300 relative group shadow-sm hover:shadow-md dark:shadow-none"
               >
-                <div className="text-3xl font-black font-mono bg-gradient-to-r from-ember-500 to-flare-gold bg-clip-text text-transparent mb-4">
+                <div className="text-3xl font-black font-mono bg-gradient-to-r from-violet-600 to-purple-400 bg-clip-text text-transparent mb-4">
                   {pillar.number}
                 </div>
                 <h4 className="text-xl font-bold text-slate-900 dark:text-white font-display mb-2">
@@ -127,7 +127,10 @@ export const AboutPyrow: React.FC<AboutPyrowProps> = ({ onOpenStrategyCall }) =>
           </div>
         </div>
 
-        {/* Leadership & Founder Spotlight */}
+        {/* ========================================================
+            LEADERSHIP & FOUNDER SPOTLIGHT (COMMENTED OUT AS REQUESTED)
+            ======================================================== */}
+        {false && (
         <div id="leadership" className="mb-16 sm:mb-20">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">
             <div>
@@ -150,7 +153,7 @@ export const AboutPyrow: React.FC<AboutPyrowProps> = ({ onOpenStrategyCall }) =>
                 key={leader.name}
                 className={`p-6 sm:p-7 rounded-3xl bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border transition-all duration-300 hover:scale-[1.01] shadow-sm dark:shadow-none ${
                   idx === 0
-                    ? 'border-ember-500/60 dark:border-ember-500/80 hover:border-ember-500'
+                    ? 'border-violet-500/60 dark:border-violet-500/80 hover:border-violet-500'
                     : 'border-cyber-blue/60 dark:border-cyber-blue/80 hover:border-cyber-blue'
                 }`}
               >
@@ -164,7 +167,7 @@ export const AboutPyrow: React.FC<AboutPyrowProps> = ({ onOpenStrategyCall }) =>
                     />
                     <span
                       className={`absolute -bottom-1 -right-1 p-1 rounded-full text-white ${
-                        idx === 0 ? 'bg-ember-500' : 'bg-cyber-blue'
+                        idx === 0 ? 'bg-violet-600' : 'bg-cyber-blue'
                       }`}
                     >
                       <Sparkles className="w-3 h-3 fill-white" />
@@ -175,7 +178,7 @@ export const AboutPyrow: React.FC<AboutPyrowProps> = ({ onOpenStrategyCall }) =>
                     <h4 className="text-lg font-bold text-slate-900 dark:text-white font-display">{leader.name}</h4>
                     <div
                       className={`text-xs font-bold ${
-                        idx === 0 ? 'text-ember-600 dark:text-ember-400' : 'text-cyber-blue dark:text-cyber-blue'
+                        idx === 0 ? 'text-violet-600 dark:text-purple-400' : 'text-cyber-blue dark:text-cyber-blue'
                       }`}
                     >
                       {leader.role}
@@ -191,7 +194,7 @@ export const AboutPyrow: React.FC<AboutPyrowProps> = ({ onOpenStrategyCall }) =>
 
                 {/* Founder Quote */}
                 <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-obsidian-950 border border-slate-200/80 dark:border-white/5 mb-5 relative">
-                  <Quote className="w-4 h-4 text-ember-500/30 absolute top-2 right-2" />
+                  <Quote className="w-4 h-4 text-violet-600/30 absolute top-2 right-2" />
                   <p className="text-xs italic text-slate-700 dark:text-zinc-300 font-sans leading-relaxed">
                     "{leader.quote}"
                   </p>
@@ -248,6 +251,7 @@ export const AboutPyrow: React.FC<AboutPyrowProps> = ({ onOpenStrategyCall }) =>
             ))}
           </div>
         </div>
+        )}
 
         {/* Client Testimonials */}
         <div>
@@ -267,9 +271,9 @@ export const AboutPyrow: React.FC<AboutPyrowProps> = ({ onOpenStrategyCall }) =>
                 className="p-6 rounded-3xl bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800/90 flex flex-col justify-between shadow-sm dark:shadow-none"
               >
                 <div>
-                  <div className="flex items-center gap-1 text-amber-500 mb-3">
+                  <div className="flex items-center gap-1 text-purple-500 mb-3">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-3.5 h-3.5 fill-amber-500" />
+                      <Star key={i} className="w-3.5 h-3.5 fill-purple-500" />
                     ))}
                   </div>
                   <p className="text-xs sm:text-sm text-slate-700 dark:text-zinc-300 leading-relaxed italic">
@@ -289,7 +293,7 @@ export const AboutPyrow: React.FC<AboutPyrowProps> = ({ onOpenStrategyCall }) =>
                       <div className="text-[11px] text-slate-500 dark:text-zinc-500">{t.role}, {t.company}</div>
                     </div>
                   </div>
-                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-ember-500/15 text-ember-600 dark:text-ember-400 border border-ember-500/30">
+                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-violet-500/15 text-violet-600 dark:text-purple-400 border border-violet-500/30">
                     {t.stat}
                   </span>
                 </div>

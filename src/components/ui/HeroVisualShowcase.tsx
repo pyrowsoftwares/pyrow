@@ -59,7 +59,7 @@ export const HeroVisualShowcase: React.FC = () => {
   return (
     <div className="relative w-full max-w-5xl mx-auto px-0 sm:px-2 mt-4 sm:mt-12">
       {/* Radiant Subtle Dual-Glow Background halo */}
-      <div className="absolute -inset-1 rounded-2xl sm:rounded-3xl bg-gradient-to-r from-ember-500 via-amber-400 to-cyan-500 opacity-20 dark:opacity-8 blur-lg pointer-events-none -z-10" />
+      <div className="absolute -inset-1 rounded-2xl sm:rounded-3xl bg-gradient-to-r from-violet-600 via-purple-500 to-indigo-500 opacity-25 dark:opacity-10 blur-lg pointer-events-none -z-10" />
 
       {/* Main Glassmorphic Showcase Card with 3D Depth */}
       <div
@@ -119,7 +119,7 @@ export const HeroVisualShowcase: React.FC = () => {
                   {isActive && (
                     <motion.div
                       layoutId="activeHeroTabPill"
-                      className="absolute inset-0 bg-ember-500 rounded-lg shadow-sm"
+                      className="absolute inset-0 bg-violet-600 rounded-lg shadow-md shadow-violet-500/25"
                       transition={{ type: 'spring', stiffness: 450, damping: 32 }}
                     />
                   )}
@@ -171,7 +171,7 @@ export const HeroVisualShowcase: React.FC = () => {
                     <div className="p-4 rounded-2xl bg-slate-50 dark:bg-obsidian-850 border border-slate-200/80 dark:border-white/10 dark:shadow-sm flex flex-col justify-between">
                       <div className="flex items-center justify-between text-xs text-slate-500 dark:text-zinc-400">
                         <span>Mobile Speed</span>
-                        <Zap className="w-4 h-4 text-ember-500" />
+                        <Zap className="w-4 h-4 text-violet-600" />
                       </div>
                       <div className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mt-2">
                         0.6s <span className="text-xs text-emerald-500 font-semibold">Load</span>
@@ -193,10 +193,10 @@ export const HeroVisualShowcase: React.FC = () => {
                     <div className="p-4 rounded-2xl bg-slate-50 dark:bg-obsidian-850 border border-slate-200/80 dark:border-white/10 dark:shadow-sm flex flex-col justify-between">
                       <div className="flex items-center justify-between text-xs text-slate-500 dark:text-zinc-400">
                         <span>Google Search</span>
-                        <Globe className="w-4 h-4 text-amber-500" />
+                        <Globe className="w-4 h-4 text-purple-500" />
                       </div>
                       <div className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mt-2">
-                        Rank #1 <span className="text-xs text-amber-500 font-semibold">SEO</span>
+                        Rank #1 <span className="text-xs text-purple-500 font-semibold">SEO</span>
                       </div>
                       <p className="text-[11px] text-slate-600 dark:text-zinc-400 mt-1">Ranked high on Google for your target area</p>
                     </div>
@@ -221,8 +221,8 @@ export const HeroVisualShowcase: React.FC = () => {
                           <span className="w-2.5 h-2.5 rounded-full bg-cyan-400" />
                           Website Visitors
                         </span>
-                        <span className="flex items-center gap-1.5 text-ember-400 font-semibold">
-                          <span className="w-2.5 h-2.5 rounded-full bg-ember-500" />
+                        <span className="flex items-center gap-1.5 text-purple-400 font-semibold">
+                          <span className="w-2.5 h-2.5 rounded-full bg-violet-600" />
                           Inquiries & Calls
                         </span>
                       </div>
@@ -233,12 +233,12 @@ export const HeroVisualShowcase: React.FC = () => {
                       <svg viewBox="0 0 800 110" className="w-full h-full overflow-visible">
                         <defs>
                           <linearGradient id="grad-blue" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stopColor="#00E5FF" stopOpacity="0.35" />
-                            <stop offset="100%" stopColor="#00E5FF" stopOpacity="0" />
+                            <stop offset="0%" stopColor="#818CF8" stopOpacity="0.35" />
+                            <stop offset="100%" stopColor="#818CF8" stopOpacity="0" />
                           </linearGradient>
-                          <linearGradient id="grad-orange" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stopColor="#FF4D00" stopOpacity="0.4" />
-                            <stop offset="100%" stopColor="#FF4D00" stopOpacity="0" />
+                          <linearGradient id="grad-purple" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stopColor="#7C3AED" stopOpacity="0.4" />
+                            <stop offset="100%" stopColor="#7C3AED" stopOpacity="0" />
                           </linearGradient>
                         </defs>
 
@@ -249,18 +249,18 @@ export const HeroVisualShowcase: React.FC = () => {
                         <path
                           d="M0,75 Q100,55 200,65 T400,35 T600,40 T800,15"
                           fill="none"
-                          stroke="#00E5FF"
+                          stroke="#818CF8"
                           strokeWidth="2.5"
                         />
 
                         <path
                           d="M0,90 Q100,75 200,80 T400,50 T600,35 T800,12 L800,110 L0,110 Z"
-                          fill="url(#grad-orange)"
+                          fill="url(#grad-purple)"
                         />
                         <path
                           d="M0,90 Q100,75 200,80 T400,50 T600,35 T800,12"
                           fill="none"
-                          stroke="#FF4D00"
+                          stroke="#7C3AED"
                           strokeWidth="2.5"
                         />
                       </svg>
@@ -281,14 +281,14 @@ export const HeroVisualShowcase: React.FC = () => {
                         Tailored around your exact business workflow. Replace messy Excel sheets with one reliable dashboard.
                       </p>
                     </div>
-                    <span className="text-xs font-semibold px-3 py-1 rounded-full bg-ember-500/15 text-ember-600 dark:text-ember-400 border border-ember-500/30 w-fit">
+                    <span className="text-xs font-semibold px-3 py-1 rounded-full bg-violet-500/15 text-violet-600 dark:text-purple-400 border border-violet-500/30 w-fit">
                       GST Invoicing Included
                     </span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div className="p-4 rounded-2xl bg-slate-50 dark:bg-obsidian-850 border border-slate-200/80 dark:border-white/10 dark:shadow-sm">
-                      <div className="flex items-center gap-2 text-ember-500 font-bold text-sm">
+                      <div className="flex items-center gap-2 text-violet-600 font-bold text-sm">
                         <FileText className="w-4 h-4" />
                         <span>Instant Billing & POS</span>
                       </div>
@@ -310,7 +310,7 @@ export const HeroVisualShowcase: React.FC = () => {
                     </div>
 
                     <div className="p-4 rounded-2xl bg-slate-50 dark:bg-obsidian-850 border border-slate-200/80 dark:border-white/10 dark:shadow-sm">
-                      <div className="flex items-center gap-2 text-amber-500 font-bold text-sm">
+                      <div className="flex items-center gap-2 text-purple-500 font-bold text-sm">
                         <Users className="w-4 h-4" />
                         <span>Staff & Attendance</span>
                       </div>
@@ -342,7 +342,7 @@ export const HeroVisualShowcase: React.FC = () => {
 
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div className="p-4 rounded-2xl bg-slate-50 dark:bg-obsidian-850 border border-slate-200/80 dark:border-white/10 dark:shadow-sm">
-                      <div className="flex items-center gap-2 text-ember-500 font-bold text-sm">
+                      <div className="flex items-center gap-2 text-violet-600 font-bold text-sm">
                         <Smartphone className="w-4 h-4" />
                         <span>Single App for Both Platforms</span>
                       </div>
@@ -364,7 +364,7 @@ export const HeroVisualShowcase: React.FC = () => {
                     </div>
 
                     <div className="p-4 rounded-2xl bg-slate-50 dark:bg-obsidian-850 border border-slate-200/80 dark:border-white/10 dark:shadow-sm">
-                      <div className="flex items-center gap-2 text-amber-500 font-bold text-sm">
+                      <div className="flex items-center gap-2 text-indigo-500 font-bold text-sm">
                         <ShieldCheck className="w-4 h-4" />
                         <span>Biometric Login & Security</span>
                       </div>
@@ -389,14 +389,14 @@ export const HeroVisualShowcase: React.FC = () => {
                         Targeted online marketing that delivers daily customer inquiries, WhatsApp messages, and phone calls.
                       </p>
                     </div>
-                    <span className="text-xs font-semibold px-3 py-1 rounded-full bg-ember-500/15 text-ember-600 dark:text-ember-400 border border-ember-500/30 w-fit">
+                    <span className="text-xs font-semibold px-3 py-1 rounded-full bg-violet-500/15 text-violet-600 dark:text-purple-400 border border-violet-500/30 w-fit">
                       Verified Inquiries Only
                     </span>
                   </div>
 
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 text-center">
                     <div className="p-4 rounded-2xl bg-slate-50 dark:bg-obsidian-850 border border-slate-200/80 dark:border-white/10 dark:shadow-sm flex flex-col justify-between">
-                      <div className="flex items-center justify-center text-ember-500 mb-1">
+                      <div className="flex items-center justify-center text-violet-600 mb-1">
                         <MessageSquare className="w-5 h-5" />
                       </div>
                       <div className="text-lg sm:text-xl font-black text-slate-900 dark:text-white">&lt; 15 Secs</div>
@@ -412,7 +412,7 @@ export const HeroVisualShowcase: React.FC = () => {
                     </div>
 
                     <div className="p-4 rounded-2xl bg-slate-50 dark:bg-obsidian-850 border border-slate-200/80 dark:border-white/10 dark:shadow-sm flex flex-col justify-between">
-                      <div className="flex items-center justify-center text-amber-500 mb-1">
+                      <div className="flex items-center justify-center text-purple-500 mb-1">
                         <TrendingUp className="w-5 h-5" />
                       </div>
                       <div className="text-lg sm:text-xl font-black text-slate-900 dark:text-white">Targeted Ads</div>

@@ -38,7 +38,7 @@ export const DemoRequestModal: React.FC<DemoRequestModalProps> = ({
 
       <div className="relative w-full max-w-xl bg-white dark:bg-obsidian-900 border border-slate-200 dark:border-white/10 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden z-10 flex flex-col max-h-[94vh]">
         {/* Glow Bar */}
-        <div className="h-1.5 bg-gradient-to-r from-cyber-blue via-ember-500 to-flare-gold" />
+        <div className="h-1.5 bg-gradient-to-r from-indigo-500 via-violet-600 to-fuchsia-500" />
 
         {/* Modal Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-white/10">
@@ -49,7 +49,7 @@ export const DemoRequestModal: React.FC<DemoRequestModalProps> = ({
             <div>
               <h3 className="text-lg font-bold text-slate-900 dark:text-white font-display">Request Interactive Demo Sandbox</h3>
               <p className="text-xs text-slate-500 dark:text-zinc-400">
-                Experience <span className="text-ember-600 dark:text-ember-400 font-bold">{softwareName}</span> in real time
+                Experience <span className="text-violet-600 dark:text-purple-400 font-bold">{softwareName}</span> in real time
               </p>
             </div>
           </div>
@@ -87,7 +87,7 @@ export const DemoRequestModal: React.FC<DemoRequestModalProps> = ({
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="e.g. Rachel Adams"
-                    className="w-full bg-slate-50 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-ember-500"
+                    className="w-full bg-slate-50 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-violet-500"
                   />
                 </div>
                 <div>
@@ -98,7 +98,7 @@ export const DemoRequestModal: React.FC<DemoRequestModalProps> = ({
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     placeholder="rachel@acme.com"
-                    className="w-full bg-slate-50 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-ember-500"
+                    className="w-full bg-slate-50 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-violet-500"
                   />
                 </div>
               </div>
@@ -112,7 +112,7 @@ export const DemoRequestModal: React.FC<DemoRequestModalProps> = ({
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     placeholder="+91 98765 43210"
-                    className="w-full bg-slate-50 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-ember-500"
+                    className="w-full bg-slate-50 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-violet-500"
                   />
                 </div>
                 <div>
@@ -122,7 +122,7 @@ export const DemoRequestModal: React.FC<DemoRequestModalProps> = ({
                     value={formData.company}
                     onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                     placeholder="Apex Logistics (3 Branches)"
-                    className="w-full bg-slate-50 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-ember-500"
+                    className="w-full bg-slate-50 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-violet-500"
                   />
                 </div>
               </div>
@@ -159,7 +159,7 @@ export const DemoRequestModal: React.FC<DemoRequestModalProps> = ({
                   type="checkbox"
                   checked={formData.sandboxMode}
                   onChange={(e) => setFormData({ ...formData, sandboxMode: e.target.checked })}
-                  className="w-4 h-4 accent-ember-500 rounded cursor-pointer"
+                  className="w-4 h-4 accent-violet-600 rounded cursor-pointer"
                 />
               </div>
 
@@ -183,7 +183,7 @@ export const DemoRequestModal: React.FC<DemoRequestModalProps> = ({
               <h4 className="text-2xl font-bold text-slate-900 dark:text-white font-display">Sandbox Environment Provisioned!</h4>
               <p className="text-sm text-slate-600 dark:text-zinc-300 max-w-md mx-auto">
                 Temporary credentials and guided interactive walkthrough for{' '}
-                <span className="text-ember-600 dark:text-ember-400 font-bold">{softwareName}</span> have been sent to{' '}
+                <span className="text-violet-600 dark:text-purple-400 font-bold">{softwareName}</span> have been sent to{' '}
                 <span className="text-slate-900 dark:text-white font-bold">{formData.email}</span>.
               </p>
 

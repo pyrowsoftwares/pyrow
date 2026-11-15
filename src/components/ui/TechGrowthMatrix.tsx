@@ -66,13 +66,13 @@ export const TechGrowthMatrix: React.FC = () => {
 
     if (heroSection) io.observe(heroSection);
 
-    // Floating Radiant Star Embers (Adaptive Count: 16 on mobile, 30 on PC)
-    const emberCount = window.innerWidth < 640 ? 16 : 30;
-    const embers: Particle[] = [];
-    const colors = ['#FF4D00', '#FF7A00', '#FFB703', '#0284C7', '#8B5CF6'];
+    // Floating Radiant Star Sparks (Adaptive Count: 16 on mobile, 30 on PC)
+    const sparkCount = window.innerWidth < 640 ? 16 : 30;
+    const sparks: Particle[] = [];
+    const colors = ['#7C3AED', '#8B5CF6', '#A855F7', '#C084FC', '#6366F1'];
 
-    for (let i = 0; i < emberCount; i++) {
-      embers.push({
+    for (let i = 0; i < sparkCount; i++) {
+      sparks.push({
         x: Math.random() * (width || window.innerWidth),
         y: Math.random() * (height || window.innerHeight),
         vx: (Math.random() - 0.5) * 0.35,
@@ -101,11 +101,11 @@ export const TechGrowthMatrix: React.FC = () => {
       const centerX = width * 0.5;
       const centerY = height * 0.44;
 
-      // 1. Concentric orbital rings
+      // 1. Concentric orbital rings (Ultra Violet & Electric Purple Identity)
       const rings = [
-        { radius: Math.min(width * 0.22, 280), speed: 0.18, dashes: [10, 16], color: '#FF4D00', alpha: isDark ? 0.22 : 0.28, width: 1.6 },
-        { radius: Math.min(width * 0.32, 420), speed: -0.14, dashes: [6, 20], color: '#0284C7', alpha: isDark ? 0.18 : 0.24, width: 1.4 },
-        { radius: Math.min(width * 0.42, 580), speed: 0.10, dashes: [14, 28], color: '#FFB703', alpha: isDark ? 0.16 : 0.20, width: 1.2 },
+        { radius: Math.min(width * 0.22, 280), speed: 0.18, dashes: [10, 16], color: '#7C3AED', alpha: isDark ? 0.28 : 0.32, width: 1.6 },
+        { radius: Math.min(width * 0.32, 420), speed: -0.14, dashes: [6, 20], color: '#8B5CF6', alpha: isDark ? 0.22 : 0.26, width: 1.4 },
+        { radius: Math.min(width * 0.42, 580), speed: 0.10, dashes: [14, 28], color: '#C084FC', alpha: isDark ? 0.18 : 0.22, width: 1.2 },
       ];
 
       rings.forEach((ring) => {
@@ -134,9 +134,9 @@ export const TechGrowthMatrix: React.FC = () => {
         ctx.restore();
       });
 
-      // 2. Ambient Stardust Embers
-      for (let i = 0; i < embers.length; i++) {
-        const p = embers[i];
+      // 2. Ambient Stardust Sparks
+      for (let i = 0; i < sparks.length; i++) {
+        const p = sparks[i];
         p.x += p.vx;
         p.y += p.vy;
         p.pulse += p.pulseSpeed;
@@ -177,17 +177,17 @@ export const TechGrowthMatrix: React.FC = () => {
 
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden select-none z-0">
-      {/* High-End Ambient Volumetric Radial Glows (Optimized CSS Radial Gradients without costly blur filters) */}
+      {/* High-End Ambient Volumetric Radial Glows */}
       <div 
-        className="absolute -top-24 left-1/2 -translate-x-1/2 w-[750px] sm:w-[1000px] h-[500px] pointer-events-none opacity-40 dark:opacity-20"
+        className="absolute -top-24 left-1/2 -translate-x-1/2 w-[750px] sm:w-[1000px] h-[500px] pointer-events-none opacity-45 dark:opacity-25"
         style={{
-          background: 'radial-gradient(ellipse at center, rgba(255, 77, 0, 0.18) 0%, rgba(245, 158, 11, 0.08) 40%, transparent 70%)',
+          background: 'radial-gradient(ellipse at center, rgba(124, 58, 237, 0.22) 0%, rgba(168, 85, 247, 0.10) 40%, transparent 70%)',
         }}
       />
       <div 
-        className="absolute top-1/4 left-5 w-[500px] h-[400px] pointer-events-none opacity-30 dark:opacity-15"
+        className="absolute top-1/4 left-5 w-[500px] h-[400px] pointer-events-none opacity-35 dark:opacity-20"
         style={{
-          background: 'radial-gradient(circle at center, rgba(2, 132, 199, 0.15) 0%, transparent 65%)',
+          background: 'radial-gradient(circle at center, rgba(99, 102, 241, 0.18) 0%, transparent 65%)',
         }}
       />
 

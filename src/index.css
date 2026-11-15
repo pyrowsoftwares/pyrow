@@ -5,17 +5,17 @@
 
 @layer base {
   :root {
-    --color-ember: #FF4D00;
-    --color-flare: #FFB703;
-    --color-cyber: #0070F3;
+    --color-ember: #7C3AED;
+    --color-flare: #A855F7;
+    --color-cyber: #6366F1;
     --background: oklch(1 0 0);
     --foreground: oklch(0.145 0 0);
     --card: oklch(1 0 0);
     --card-foreground: oklch(0.145 0 0);
     --popover: oklch(1 0 0);
     --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
+    --primary: #7C3AED;
+    --primary-foreground: #FFFFFF;
     --secondary: oklch(0.97 0 0);
     --secondary-foreground: oklch(0.205 0 0);
     --muted: oklch(0.97 0 0);
@@ -25,7 +25,7 @@
     --destructive: oklch(0.577 0.245 27.325);
     --border: oklch(0.922 0 0);
     --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
+    --ring: #7C3AED;
     --chart-1: oklch(0.87 0 0);
     --chart-2: oklch(0.556 0 0);
     --chart-3: oklch(0.439 0 0);
@@ -34,12 +34,12 @@
     --radius: 0.625rem;
     --sidebar: oklch(0.985 0 0);
     --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-primary: #7C3AED;
+    --sidebar-primary-foreground: #FFFFFF;
     --sidebar-accent: oklch(0.97 0 0);
     --sidebar-accent-foreground: oklch(0.205 0 0);
     --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.708 0 0);
+    --sidebar-ring: #7C3AED;
   }
 
   html {
@@ -48,37 +48,47 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  ::selection {
+    background-color: #7C3AED !important;
+    color: #FFFFFF !important;
+  }
+
+  ::-moz-selection {
+    background-color: #7C3AED !important;
+    color: #FFFFFF !important;
+  }
+
   a, button, [role="button"], input, select, textarea {
     touch-action: manipulation;
   }
 
-  /* Default light theme: Rich, luminous multi-stop portal gradient */
+  /* Default light theme: Rich, luminous multi-stop portal gradient matching violet identity */
   html:not(.dark) body {
     background: linear-gradient(180deg, 
-      #FFF6EE 0%, 
-      #FAF7F3 12%, 
-      #F0F7FF 28%, 
-      #F6F2FF 44%, 
-      #FFF3F2 60%, 
-      #FEF9EC 75%, 
-      #F1F8F6 88%, 
-      #FFF6EE 100%
+      #FAF8FF 0%, 
+      #F5F3FF 12%, 
+      #F8FAFC 28%, 
+      #F3E8FF 44%, 
+      #FAF5FF 60%, 
+      #F8FAFC 75%, 
+      #F5F3FF 88%, 
+      #FAF8FF 100%
     );
     color: #0F172A;
     min-height: 100vh;
   }
 
-  /* Dark mode: Rich, elegant midnight slate portal gradient (No pure black, no harsh glare) */
+  /* Dark mode: Rich, elegant obsidian-violet portal gradient */
   html.dark body {
     background: linear-gradient(180deg, 
-      #0B0F19 0%, 
-      #0E1424 12%, 
-      #0B1120 28%, 
-      #110E22 44%, 
-      #140E1B 60%, 
-      #111116 75%, 
-      #0B121A 88%, 
-      #0B0F19 100%
+      #0B0816 0%, 
+      #0E0C22 12%, 
+      #120E2E 28%, 
+      #160F35 44%, 
+      #110D27 60%, 
+      #0C0A1A 75%, 
+      #0E0C20 88%, 
+      #0B0816 100%
     );
     color: #F8FAFC;
     min-height: 100vh;
@@ -105,7 +115,7 @@
     background: #1D263B;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #FF4D00;
+    background: #7C3AED;
   }
 
   .theme {
@@ -153,11 +163,12 @@
 }
 
 @layer utilities {
-  .text-glow-ember {
-    text-shadow: 0 0 20px rgba(255, 77, 0, 0.5);
+  .text-glow-ember,
+  .text-glow-violet {
+    text-shadow: 0 0 20px rgba(124, 58, 237, 0.55);
   }
   .text-glow-cyan {
-    text-shadow: 0 0 20px rgba(0, 112, 243, 0.5);
+    text-shadow: 0 0 20px rgba(168, 85, 247, 0.55);
   }
 
   /* Adaptive Grid Pattern */
@@ -198,7 +209,7 @@
 }
 
 .glass-panel:hover {
-  border-color: rgba(255, 77, 0, 0.4);
+  border-color: rgba(124, 58, 237, 0.45);
 }
 
 /* Shimmer animation */

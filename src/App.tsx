@@ -109,7 +109,7 @@ export default function App() {
 
   return (
     <TooltipProvider>
-      <div className="relative min-h-screen bg-transparent text-slate-900 dark:text-zinc-100 selection:bg-ember-500 selection:text-white font-sans overflow-x-hidden transition-colors duration-300">
+      <div className="relative min-h-screen bg-transparent text-slate-900 dark:text-zinc-100 selection:bg-violet-600 selection:text-white font-sans overflow-x-hidden transition-colors duration-300">
         {/* Animated Global Atmospheric Cyber Matrix & Floating Starfield */}
         <AnimatedGlobalBackground />
 
@@ -210,16 +210,16 @@ export default function App() {
             }}
             className="hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-full bg-slate-900 dark:bg-white text-white dark:text-obsidian font-bold text-xs shadow-xl hover:scale-105 transition-all"
           >
-            <PhoneCall className="w-3.5 h-3.5 text-ember-500" />
+            <PhoneCall className="w-3.5 h-3.5 text-violet-600 dark:text-purple-400" />
             <span>Book a Call</span>
           </button>
 
           <button
             onClick={scrollToTop}
-            className="p-3 rounded-full bg-white dark:bg-obsidian-850 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-white shadow-xl hover:scale-110 hover:border-ember-500 transition-all"
+            className="p-3 rounded-full bg-white dark:bg-obsidian-850 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-white shadow-xl hover:scale-110 hover:border-violet-500 transition-all"
             aria-label="Scroll to top"
           >
-            <ArrowUp className="w-4 h-4 text-ember-500" />
+            <ArrowUp className="w-4 h-4 text-violet-600 dark:text-purple-400" />
           </button>
         </div>
       )}
