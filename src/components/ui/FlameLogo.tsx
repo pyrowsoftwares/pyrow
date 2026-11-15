@@ -13,10 +13,10 @@ export const FlameLogo: React.FC<FlameLogoProps> = ({
 }) => {
   // Balanced retina sizing for pixel-perfect clarity
   const sizeMap = {
-    sm: { icon: 'h-7 sm:h-8', wordmark: 'h-5 sm:h-6' },
-    md: { icon: 'h-9 sm:h-10', wordmark: 'h-6 sm:h-7' },
-    lg: { icon: 'h-11 sm:h-12', wordmark: 'h-8 sm:h-9' },
-    xl: { icon: 'h-14 sm:h-16', wordmark: 'h-10 sm:h-12' },
+    sm: { icon: 'h-6 sm:h-7', wordmark: 'h-5 sm:h-6' },
+    md: { icon: 'h-8 sm:h-9', wordmark: 'h-[25px] sm:h-[29px]' },
+    lg: { icon: 'h-10 sm:h-11', wordmark: 'h-[32px] sm:h-[36px]' },
+    xl: { icon: 'h-12 sm:h-14', wordmark: 'h-[40px] sm:h-[46px]' },
   }[size];
 
   return (
