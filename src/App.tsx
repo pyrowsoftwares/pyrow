@@ -19,6 +19,9 @@ import { KineticCursorGlow } from './components/ui/KineticCursorGlow';
 import { CustomCursor } from './components/ui/CustomCursor';
 import { AnimatedGlobalBackground } from './components/ui/AnimatedGlobalBackground';
 import { TooltipProvider } from './components/ui/tooltip';
+import { StackingProcessCards } from './components/ui/StackingProcessCards';
+import { EssentialMolecules } from './components/ui/EssentialMolecules';
+import { SpectrumSlider } from './components/ui/SpectrumSlider';
 import { ArrowUp, PhoneCall, Sparkles } from 'lucide-react';
 import { soundFX } from './components/ui/sound-effects';
 
@@ -109,7 +112,7 @@ export default function App() {
 
   return (
     <TooltipProvider>
-      <div className="relative min-h-screen bg-transparent text-slate-900 dark:text-zinc-100 selection:bg-violet-600 selection:text-white font-sans overflow-x-hidden transition-colors duration-300">
+      <div className="relative min-h-screen bg-transparent text-slate-900 dark:text-zinc-100 selection:bg-violet-600 selection:text-white font-sans transition-colors duration-300">
         {/* Animated Global Atmospheric Cyber Matrix & Floating Starfield */}
         <AnimatedGlobalBackground />
 
@@ -129,20 +132,29 @@ export default function App() {
       />
 
       {/* Main Content Sections: Premium continuous scroll-reactive flow */}
-      <main className="relative z-10 w-full overflow-x-hidden">
-        {/* Section 1: Hero */}
+      <main className="relative z-10 w-full">
+        {/* Section 1: Hero with Signature Untangling Filament Thread */}
         <Hero
           onOpenStrategyCall={() => handleOpenStrategyCall()}
         />
 
-        {/* Section 2: Services */}
+        {/* Section 2: Services Matrix */}
         <QuantumSnapSection id="services-section">
           <Services
             onOpenStrategyCall={handleOpenStrategyCall}
           />
         </QuantumSnapSection>
 
-        {/* Section 3: How We Work (4 Simple Steps) */}
+        {/* Section 4: Sticky Stacking Approach Cards (codebuilders.in style) */}
+        <StackingProcessCards />
+
+        {/* Section 5: Essential Architecture Molecules (codebuilders.in style) */}
+        <EssentialMolecules />
+
+        {/* Section 6: Future-Ready Engineering Spectrum Carousel (codebuilders.in style) */}
+        <SpectrumSlider />
+
+        {/* Section 7: How We Work (4 Simple Steps) */}
         <QuantumSnapSection id="how-it-works-section">
           <HowItWorks
             onOpenStrategyCall={() => handleOpenStrategyCall()}

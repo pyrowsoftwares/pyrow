@@ -1,10 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles, ArrowDown, Shield, TrendingUp, Clock, CheckCircle2 } from 'lucide-react';
-import { TechGrowthMatrix } from './ui/TechGrowthMatrix';
 import { MagneticButton } from './ui/MagneticButton';
 import { MetricCounter } from './ui/MetricCounter';
 import { HeroVisualShowcase } from './ui/HeroVisualShowcase';
+import { HeroUntanglingThread } from './ui/HeroUntanglingThread';
 import { soundFX } from './ui/sound-effects';
 
 interface HeroProps {
@@ -13,202 +13,210 @@ interface HeroProps {
 
 export const Hero: React.FC<HeroProps> = ({ onOpenStrategyCall }) => {
   const techLogos = [
-    { name: 'React', category: 'Frontend' },
-    { name: 'Next.js', category: 'Full-Stack' },
+    { name: 'React 19', category: 'Frontend' },
+    { name: 'Next.js 15', category: 'Full-Stack' },
     { name: 'TypeScript', category: 'Architecture' },
     { name: 'Node.js', category: 'Distributed' },
-    { name: 'Flutter', category: 'Cross-Platform' },
     { name: 'Python & AI', category: 'Pipelines' },
     { name: 'AWS Cloud', category: 'DevOps' },
-    { name: 'Meta Ads', category: 'Performance' },
-    { name: 'Google Ads', category: 'SEM' },
     { name: 'PostgreSQL', category: 'Data Layer' },
-    { name: 'WhatsApp API', category: 'Automation' },
+    { name: 'Docker & K8s', category: 'Cloud' },
+    { name: 'Redis', category: 'Cache' },
+    { name: 'Google Ads', category: 'Growth' },
+    { name: 'Meta Ads', category: 'Acquisition' },
   ];
 
   const scrollToServices = () => {
     soundFX.playClick();
-    const el = document.getElementById('services');
+    const el = document.getElementById('services-section') || document.getElementById('services');
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
-    <section id="hero" className="relative w-full min-h-[90vh] flex flex-col justify-between pt-20 sm:pt-28 pb-0 overflow-hidden">
-      {/* High-End Dynamic Orbitals & Harmonic Wave Engine */}
-      <TechGrowthMatrix />
+    <div id="hero" className="relative w-full bg-transparent">
+      {/* 1. Signature Untangling Thread Intro Banner (Exact codebuilders.in style) */}
+      <HeroUntanglingThread />
 
-      {/* Main Hero Content */}
-      <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10 my-4 sm:my-auto flex flex-col items-center">
-        {/* Eyebrow Tag with Live High-Tech Status */}
-        <motion.div
-          initial={{ opacity: 0, y: -16, scale: 0.96 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="inline-flex items-center justify-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-white/90 dark:bg-obsidian-850/90 border border-slate-200/90 dark:border-white/10 text-xs tracking-tight text-slate-800 dark:text-zinc-300 shadow-sm mb-4 sm:mb-5 backdrop-blur-md max-w-full"
-        >
-          <span className="relative flex h-2 w-2 flex-shrink-0">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-          </span>
-
-          {/* Desktop full text */}
-          <span className="hidden sm:inline text-zinc-700 dark:text-zinc-300 font-medium truncate">
-            Digital Agency & Software Partner <span className="text-slate-300 dark:text-white/20 mx-1.5">•</span>
-            <span className="text-violet-600 dark:text-purple-400 font-semibold">Websites • Custom Software • Mobile Apps • Google & Meta Ads</span>
-          </span>
-
-          {/* Mobile concise centered text */}
-          <span className="sm:hidden text-zinc-700 dark:text-zinc-300 font-medium text-[11px] truncate">
-            Digital Agency & Software Partner <span className="text-violet-600 dark:text-purple-400 font-semibold">• High-Growth</span>
-          </span>
-
-          <span className="hidden sm:inline-flex items-center gap-1 pl-2 border-l border-slate-200 dark:border-white/10 text-[10px] font-mono font-bold text-emerald-600 dark:text-emerald-400">
-            <CheckCircle2 className="w-3 h-3 text-emerald-500" /> 100% Client Ownership
-          </span>
-        </motion.div>
-
-        {/* Primary Headline with Monochromatic Base & Clean Violet Accent */}
-        <motion.h1
-          initial={{ opacity: 0, y: 26 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full text-2xl sm:text-5xl md:text-6xl lg:text-7xl font-black font-display tracking-tight text-slate-900 dark:text-zinc-50 max-w-5xl mx-auto leading-tight sm:leading-[1.08] text-center px-1"
-        >
-          We Build Websites & Software That Work.{' '}
-          <br className="hidden sm:inline" />
-          <span className="bg-gradient-to-r from-violet-600 via-purple-500 to-fuchsia-500 bg-clip-text text-transparent">
-            We Run Marketing That Grows Your Business.
-          </span>
-        </motion.h1>
-
-        {/* Sub-headline */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.22, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full mt-3 sm:mt-4 text-sm sm:text-lg text-slate-600 dark:text-zinc-300 max-w-3xl mx-auto leading-relaxed text-center px-2 sm:px-0"
-        >
-          Pyrow is India's dedicated technology and digital growth partner. We build lightning-fast websites, custom billing & management software, mobile apps, and high-converting ad campaigns — with 100% complete intellectual property ownership from Day 1.
-        </motion.p>
-
-        {/* Action Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full mt-6 sm:mt-7 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 max-w-xs sm:max-w-none mx-auto px-2"
-        >
-          <MagneticButton
-            variant="primary"
-            size="lg"
-            onClick={onOpenStrategyCall}
-            icon={<Sparkles className="w-5 h-5" />}
-            className="w-full sm:w-auto justify-center"
-          >
-            Schedule Strategy Call
-          </MagneticButton>
-
-          <MagneticButton
-            variant="secondary"
-            size="lg"
-            onClick={scrollToServices}
-            icon={<ArrowDown className="w-4 h-4 text-slate-500 dark:text-zinc-400 group-hover:translate-y-1 transition-transform" />}
-            className="w-full sm:w-auto justify-center"
-          >
-            Explore What We Do
-          </MagneticButton>
-        </motion.div>
-
-        {/* Tech Stack Floating Marquee */}
-        <motion.div
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.42, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full max-w-5xl mx-auto overflow-hidden relative mt-8 sm:mt-9"
-        >
-          <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-r from-light-bg dark:from-obsidian to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-l from-light-bg dark:from-obsidian to-transparent z-10 pointer-events-none" />
-
-          <div className="flex items-center gap-3 animate-marquee whitespace-nowrap">
-            {[...techLogos, ...techLogos].map((tech, idx) => (
-              <div
-                key={`${tech.name}-${idx}`}
-                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/80 dark:bg-obsidian-850/80 backdrop-blur-sm border border-slate-200/90 dark:border-white/[0.08] hover:border-violet-500/40 text-xs font-mono text-slate-700 dark:text-zinc-400 hover:text-violet-600 dark:hover:text-white transition-all shadow-sm cursor-default"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-violet-600" />
-                <span className="font-semibold text-slate-800 dark:text-zinc-200">{tech.name}</span>
-                <span className="text-[10px] text-slate-400 dark:text-zinc-500">• {tech.category}</span>
-              </div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Hero Interactive Visual Showcase */}
-        <motion.div
-          initial={{ opacity: 0, y: 30, scale: 0.97 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.9, delay: 0.52, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full max-w-5xl mx-auto mt-6 sm:mt-8"
-        >
-          <HeroVisualShowcase />
-        </motion.div>
-      </div>
-
-      {/* KPI Trust Bar */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.65, ease: [0.16, 1, 0.3, 1] }}
-        className="relative z-10 mt-10 border-t border-b border-slate-200/90 dark:border-slate-800 bg-slate-50/90 dark:bg-[#141D30] backdrop-blur-md py-6 sm:py-7"
+      {/* 2. Full Pyrow Hero Page (Directly below untangling with seamless 0-gap connection) */}
+      <section
+        id="hero-main"
+        className="relative w-full pt-16 sm:pt-24 pb-16 overflow-hidden bg-transparent scroll-mt-20"
+        aria-label="Pyrow Software Engineering & Digital Growth"
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 text-center">
-            {/* Metric 1 */}
-            <div className="flex flex-col items-center">
-              <div className="text-2xl sm:text-4xl font-black font-display text-slate-900 dark:text-white flex items-center gap-1">
-                <MetricCounter end={150} suffix="+" />
-              </div>
-              <span className="text-xs sm:text-sm font-medium text-slate-600 dark:text-zinc-400 mt-1 flex items-center gap-1">
-                <Sparkles className="w-3.5 h-3.5 text-purple-500" />
-                Projects Delivered in India
-              </span>
-            </div>
+        {/* Subtle Ambient Radial Glow */}
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(80%_60%_at_50%_15%,rgba(124,58,237,0.12)_0%,transparent_70%)] dark:bg-[radial-gradient(80%_60%_at_50%_15%,rgba(124,58,237,0.22)_0%,transparent_70%)] transition-opacity duration-300" />
 
-            {/* Metric 2 */}
-            <div className="flex flex-col items-center">
-              <div className="text-2xl sm:text-4xl font-black font-display text-slate-900 dark:text-white flex items-center gap-1">
-                <MetricCounter end={99} suffix=".98%" />
-              </div>
-              <span className="text-xs sm:text-sm font-medium text-slate-600 dark:text-zinc-400 mt-1 flex items-center gap-1">
-                <Shield className="w-3.5 h-3.5 text-emerald-500" />
-                Software Uptime SLA
-              </span>
-            </div>
+        <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10 flex flex-col items-center">
+          {/* Eyebrow Badge */}
+          <motion.div
+            initial={{ opacity: 0, y: -16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="inline-flex items-center justify-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-white/90 dark:bg-slate-900/90 border border-violet-500/25 dark:border-violet-500/30 text-xs text-slate-700 dark:text-zinc-300 shadow-sm mb-5 backdrop-blur-md transition-colors"
+          >
+            <span className="relative flex h-2 w-2 flex-shrink-0">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+            </span>
+            <span className="text-slate-700 dark:text-zinc-200 font-medium text-[11px] sm:text-xs">
+              Enterprise Digital Agency & Engineering Partner <span className="text-slate-400 dark:text-white/20 mx-1.5">•</span>
+              <span className="text-violet-600 dark:text-violet-400 font-semibold">Web • Custom ERP • Mobile • AI</span>
+            </span>
+            <span className="hidden sm:inline-flex items-center gap-1 pl-2 border-l border-slate-300 dark:border-white/10 text-[10px] font-mono font-bold text-emerald-600 dark:text-emerald-400">
+              <CheckCircle2 className="w-3 h-3 text-emerald-600 dark:text-emerald-400" /> 100% Client Ownership
+            </span>
+          </motion.div>
 
-            {/* Metric 3 */}
-            <div className="flex flex-col items-center">
-              <div className="text-2xl sm:text-4xl font-black font-display text-slate-900 dark:text-white flex items-center gap-1">
-                <MetricCounter end={4} suffix=".2x" />
-              </div>
-              <span className="text-xs sm:text-sm font-medium text-slate-600 dark:text-zinc-400 mt-1 flex items-center gap-1">
-                <TrendingUp className="w-3.5 h-3.5 text-purple-500" />
-                Average Client Ad ROAS
-              </span>
-            </div>
+          {/* Primary Headline */}
+          <motion.h1
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+            className="w-full text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black font-display tracking-tight text-slate-900 dark:text-white max-w-5xl mx-auto leading-tight sm:leading-[1.08] text-center transition-colors"
+          >
+            We Build Websites & Software That Work.{' '}
+            <br className="hidden sm:inline" />
+            <span className="bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 dark:from-violet-400 dark:via-purple-300 dark:to-fuchsia-400 bg-clip-text text-transparent">
+              Scalable Systems & High-Impact Digital Growth.
+            </span>
+          </motion.h1>
 
-            {/* Metric 4 */}
-            <div className="flex flex-col items-center">
-              <div className="text-2xl sm:text-4xl font-black font-display text-slate-900 dark:text-white flex items-center gap-1">
-                <MetricCounter end={14} suffix=" Days" />
+          {/* Subtitle */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="mt-4 sm:mt-5 text-sm sm:text-lg md:text-xl text-slate-600 dark:text-zinc-300 max-w-3xl mx-auto leading-relaxed text-center font-normal transition-colors"
+          >
+            Pyrow is India's dedicated technology and digital growth partner. We engineer lightning-fast websites, custom enterprise platforms, mobile apps, and high-return digital acquisition engines — with 100% complete intellectual property ownership.
+          </motion.p>
+
+          {/* Action Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.3 }}
+            className="w-full mt-7 sm:mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 max-w-xs sm:max-w-none mx-auto"
+          >
+            <MagneticButton
+              variant="primary"
+              size="lg"
+              onClick={onOpenStrategyCall}
+              icon={<Sparkles className="w-5 h-5" />}
+              className="w-full sm:w-auto justify-center"
+            >
+              Schedule Strategy Call
+            </MagneticButton>
+
+            <MagneticButton
+              variant="secondary"
+              size="lg"
+              onClick={scrollToServices}
+              icon={<ArrowDown className="w-4 h-4 text-slate-600 dark:text-zinc-400 group-hover:translate-y-1 transition-transform" />}
+              className="w-full sm:w-auto justify-center bg-slate-100 hover:bg-slate-200 text-slate-800 border-slate-300 dark:bg-white/10 dark:hover:bg-white/15 dark:text-white dark:border-white/20 transition-colors"
+            >
+              Explore Solutions
+            </MagneticButton>
+          </motion.div>
+
+          {/* Tech Molecules Marquee */}
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.4 }}
+            className="w-full max-w-4xl mx-auto overflow-hidden relative mt-8 sm:mt-10"
+          >
+            <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[#FAF8FF] dark:from-[#0B0F19] to-transparent z-10 pointer-events-none transition-colors" />
+            <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[#FAF8FF] dark:from-[#0B0F19] to-transparent z-10 pointer-events-none transition-colors" />
+
+            <div className="flex items-center gap-2.5 animate-marquee whitespace-nowrap">
+              {[...techLogos, ...techLogos].map((tech, idx) => (
+                <div
+                  key={`${tech.name}-${idx}`}
+                  className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-xs font-mono text-slate-700 dark:text-zinc-300 shadow-sm transition-colors"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-violet-500 dark:bg-violet-400" />
+                  <span className="font-semibold text-slate-900 dark:text-white">{tech.name}</span>
+                  <span className="text-[10px] text-slate-500 dark:text-zinc-500">• {tech.category}</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Hero Visual Showcase */}
+          <motion.div
+            initial={{ opacity: 0, y: 30, scale: 0.98 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full max-w-5xl mx-auto mt-12 sm:mt-16"
+          >
+            <HeroVisualShowcase />
+          </motion.div>
+        </div>
+
+        {/* KPI Trust Bar */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="relative z-10 mt-14 border-t border-b border-slate-200/90 dark:border-white/10 bg-white/85 dark:bg-[#141D30]/90 backdrop-blur-md py-6 sm:py-7 transition-colors duration-300"
+        >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 text-center">
+              {/* Metric 1 */}
+              <div className="flex flex-col items-center">
+                <div className="text-2xl sm:text-4xl font-black font-display text-slate-900 dark:text-white flex items-center gap-1 transition-colors">
+                  <MetricCounter end={150} suffix="+" />
+                </div>
+                <span className="text-xs sm:text-sm font-medium text-slate-600 dark:text-zinc-400 mt-1 flex items-center gap-1 transition-colors">
+                  <Sparkles className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
+                  Projects Delivered in India
+                </span>
               </div>
-              <span className="text-xs sm:text-sm font-medium text-slate-600 dark:text-zinc-400 mt-1 flex items-center gap-1">
-                <Clock className="w-3.5 h-3.5 text-violet-500" />
-                Sprint Delivery Time
-              </span>
+
+              {/* Metric 2 */}
+              <div className="flex flex-col items-center">
+                <div className="text-2xl sm:text-4xl font-black font-display text-slate-900 dark:text-white flex items-center gap-1 transition-colors">
+                  <MetricCounter end={99} suffix=".98%" />
+                </div>
+                <span className="text-xs sm:text-sm font-medium text-slate-600 dark:text-zinc-400 mt-1 flex items-center gap-1 transition-colors">
+                  <Shield className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                  Software Uptime SLA
+                </span>
+              </div>
+
+              {/* Metric 3 */}
+              <div className="flex flex-col items-center">
+                <div className="text-2xl sm:text-4xl font-black font-display text-slate-900 dark:text-white flex items-center gap-1 transition-colors">
+                  <MetricCounter end={4} suffix=".2x" />
+                </div>
+                <span className="text-xs sm:text-sm font-medium text-slate-600 dark:text-zinc-400 mt-1 flex items-center gap-1 transition-colors">
+                  <TrendingUp className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
+                  Average Client Ad ROAS
+                </span>
+              </div>
+
+              {/* Metric 4 */}
+              <div className="flex flex-col items-center">
+                <div className="text-2xl sm:text-4xl font-black font-display text-slate-900 dark:text-white flex items-center gap-1 transition-colors">
+                  <MetricCounter end={14} suffix=" Days" />
+                </div>
+                <span className="text-xs sm:text-sm font-medium text-slate-600 dark:text-zinc-400 mt-1 flex items-center gap-1 transition-colors">
+                  <Clock className="w-3.5 h-3.5 text-violet-600 dark:text-violet-400" />
+                  Sprint Delivery Time
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-      </motion.div>
-    </section>
+        </motion.div>
+      </section>
+    </div>
   );
 };

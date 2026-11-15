@@ -108,12 +108,12 @@ export const AnimatedGlobalBackground: React.FC = () => {
         className="absolute inset-0 transition-opacity duration-700 opacity-100 dark:opacity-0"
         style={{
           background: `
-            radial-gradient(ellipse 90% 60% at 15% 10%, rgba(124, 58, 237, 0.14) 0%, transparent 55%),
-            radial-gradient(ellipse 80% 50% at 85% 18%, rgba(99, 102, 241, 0.14) 0%, transparent 55%),
-            radial-gradient(circle at 50% 45%, rgba(168, 85, 247, 0.10) 0%, transparent 50%),
-            radial-gradient(ellipse 90% 60% at 10% 75%, rgba(139, 92, 246, 0.12) 0%, transparent 60%),
-            radial-gradient(ellipse 80% 50% at 90% 85%, rgba(192, 132, 252, 0.12) 0%, transparent 55%),
-            radial-gradient(circle at 50% 95%, rgba(124, 58, 237, 0.12) 0%, transparent 50%),
+            radial-gradient(ellipse 90% 60% at 15% 10%, rgba(124, 58, 237, 0.18) 0%, transparent 55%),
+            radial-gradient(ellipse 80% 50% at 85% 18%, rgba(99, 102, 241, 0.18) 0%, transparent 55%),
+            radial-gradient(circle at 50% 45%, rgba(168, 85, 247, 0.14) 0%, transparent 50%),
+            radial-gradient(ellipse 90% 60% at 10% 75%, rgba(139, 92, 246, 0.16) 0%, transparent 60%),
+            radial-gradient(ellipse 80% 50% at 90% 85%, rgba(192, 132, 252, 0.16) 0%, transparent 55%),
+            radial-gradient(circle at 50% 95%, rgba(124, 58, 237, 0.16) 0%, transparent 50%),
             linear-gradient(145deg, #FAF8FF 0%, #F5F3FF 18%, #EEF2FF 38%, #F3E8FF 58%, #FAF5FF 78%, #F5F3FF 100%)
           `,
         }}
@@ -124,12 +124,12 @@ export const AnimatedGlobalBackground: React.FC = () => {
         className="absolute inset-0 transition-opacity duration-700 opacity-0 dark:opacity-100"
         style={{
           background: `
-            radial-gradient(ellipse 90% 60% at 15% 10%, rgba(124, 58, 237, 0.09) 0%, transparent 60%),
-            radial-gradient(ellipse 80% 50% at 85% 18%, rgba(99, 102, 241, 0.08) 0%, transparent 60%),
-            radial-gradient(circle at 50% 45%, rgba(168, 85, 247, 0.07) 0%, transparent 55%),
-            radial-gradient(ellipse 90% 60% at 10% 75%, rgba(139, 92, 246, 0.08) 0%, transparent 65%),
-            radial-gradient(ellipse 80% 50% at 90% 85%, rgba(217, 70, 239, 0.06) 0%, transparent 60%),
-            radial-gradient(circle at 50% 95%, rgba(124, 58, 237, 0.08) 0%, transparent 55%),
+            radial-gradient(ellipse 90% 60% at 15% 10%, rgba(124, 58, 237, 0.20) 0%, transparent 60%),
+            radial-gradient(ellipse 80% 50% at 85% 18%, rgba(99, 102, 241, 0.18) 0%, transparent 60%),
+            radial-gradient(circle at 50% 45%, rgba(168, 85, 247, 0.16) 0%, transparent 55%),
+            radial-gradient(ellipse 90% 60% at 10% 75%, rgba(139, 92, 246, 0.18) 0%, transparent 65%),
+            radial-gradient(ellipse 80% 50% at 90% 85%, rgba(217, 70, 239, 0.14) 0%, transparent 60%),
+            radial-gradient(circle at 50% 95%, rgba(124, 58, 237, 0.18) 0%, transparent 55%),
             linear-gradient(145deg, #090615 0%, #0D0A20 20%, #0A081C 40%, #100C28 60%, #120A24 80%, #090615 100%)
           `,
         }}
@@ -137,7 +137,7 @@ export const AnimatedGlobalBackground: React.FC = () => {
 
       {/* 2. Precision Geometric Architectural Grid Overlay */}
       <div
-        className="absolute inset-0 opacity-[0.045] dark:opacity-[0.035]"
+        className="absolute inset-0 opacity-[0.06] dark:opacity-[0.045]"
         style={{
           backgroundImage: `
             linear-gradient(to right, rgba(15, 23, 42, 0.8) 1px, transparent 1px),
@@ -149,16 +149,16 @@ export const AnimatedGlobalBackground: React.FC = () => {
 
       {/* 3. Floating Animated Glowing Auroras */}
       {/* Top Left: Ultra Violet Glow */}
-      <div className="absolute -top-32 -left-32 w-[650px] sm:w-[950px] h-[650px] sm:h-[950px] rounded-full bg-gradient-to-br from-violet-600/22 via-purple-500/15 to-transparent dark:from-violet-600/10 dark:via-purple-500/5 blur-[130px] animate-[pulse_9s_ease-in-out_infinite]" />
+      <div className="absolute -top-32 -left-32 w-[650px] sm:w-[950px] h-[650px] sm:h-[950px] rounded-full bg-gradient-to-br from-violet-600/30 via-purple-500/20 to-transparent dark:from-violet-600/22 dark:via-purple-500/14 blur-[130px] animate-[pulse_9s_ease-in-out_infinite]" />
 
       {/* Top Right: Electric Indigo & Cyber Blue Glow */}
-      <div className="absolute top-1/4 -right-40 w-[600px] sm:w-[900px] h-[600px] sm:h-[900px] rounded-full bg-gradient-to-bl from-indigo-500/20 via-violet-400/14 to-transparent dark:from-indigo-600/8 dark:via-violet-600/5 blur-[135px] animate-[pulse_11s_ease-in-out_infinite]" />
+      <div className="absolute top-1/4 -right-40 w-[600px] sm:w-[900px] h-[600px] sm:h-[900px] rounded-full bg-gradient-to-bl from-indigo-500/26 via-violet-400/18 to-transparent dark:from-indigo-600/18 dark:via-violet-600/12 blur-[135px] animate-[pulse_11s_ease-in-out_infinite]" />
 
       {/* Lower Mid: Soft Lavender & Neon Fuchsia Glow */}
-      <div className="absolute top-2/3 -left-32 w-[650px] sm:w-[950px] h-[650px] sm:h-[950px] rounded-full bg-gradient-to-tr from-purple-500/18 via-fuchsia-400/14 to-transparent dark:from-purple-600/8 dark:via-violet-500/5 blur-[145px] animate-[pulse_13s_ease-in-out_infinite]" />
+      <div className="absolute top-2/3 -left-32 w-[650px] sm:w-[950px] h-[650px] sm:h-[950px] rounded-full bg-gradient-to-tr from-purple-500/24 via-fuchsia-400/18 to-transparent dark:from-purple-600/18 dark:via-violet-500/12 blur-[145px] animate-[pulse_13s_ease-in-out_infinite]" />
 
       {/* Bottom Right: Vivid Violet & Deep Purple Glow */}
-      <div className="absolute -bottom-40 right-10 w-[550px] sm:w-[850px] h-[550px] sm:h-[850px] rounded-full bg-gradient-to-tl from-violet-500/20 via-indigo-400/14 to-transparent dark:from-violet-600/8 dark:via-purple-500/5 blur-[130px] animate-[pulse_10s_ease-in-out_infinite]" />
+      <div className="absolute -bottom-40 right-10 w-[550px] sm:w-[850px] h-[550px] sm:h-[850px] rounded-full bg-gradient-to-tl from-violet-500/26 via-indigo-400/18 to-transparent dark:from-violet-600/18 dark:via-purple-500/12 blur-[130px] animate-[pulse_10s_ease-in-out_infinite]" />
 
       {/* 4. Active Animated Stardust & Constellation Canvas */}
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full block" />
