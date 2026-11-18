@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { motion, useScroll } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useRouter } from '../context/RouterContext';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from './ui/sheet';
 import {
   ChevronDown,
@@ -9,17 +10,22 @@ import {
   TrendingUp,
   Cpu,
   Smartphone,
-  Database,
   Users,
-  Shield,
   Layers,
   Award,
   PhoneCall,
   Menu,
-  X,
   ArrowRight,
   Sun,
   Moon,
+  Building2,
+  Compass,
+  Lightbulb,
+  UserCheck,
+  Target,
+  Briefcase,
+  HelpCircle,
+  Clock,
 } from 'lucide-react';
 import { FlameLogo } from './ui/FlameLogo';
 import { MagneticButton } from './ui/MagneticButton';
@@ -40,10 +46,11 @@ export const Navigation: React.FC<NavigationProps> = ({
   theme,
   onToggleTheme,
 }) => {
+  const { navigate } = useRouter();
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [openMobileAccordion, setOpenMobileAccordion] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
-  const { scrollYProgress } = useScroll();
 
   useEffect(() => {
     let lastScrolled = window.scrollY > 20;
@@ -55,25 +62,35 @@ export const Navigation: React.FC<NavigationProps> = ({
         lastScrolled = isScrolled;
         setScrolled(isScrolled);
       }
+      if (activeMenu) {
+        setActiveMenu(null);
+      }
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [activeMenu]);
 
-  const scrollTo = (id: string) => {
+  const handleNav = (path: string, scrollToId?: string) => {
+    soundFX.playClick();
     setActiveMenu(null);
     setMobileMenuOpen(false);
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    navigate(path, scrollToId);
+  };
+
+  const scrollTo = (id: string) => {
+    handleNav('/', id);
+  };
+
+  const toggleMobileAccordion = (key: string) => {
+    soundFX.playClick();
+    setOpenMobileAccordion(openMobileAccordion === key ? null : key);
   };
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-40 px-3 sm:px-6 transition-all duration-300">
+      <header className="fixed top-0 left-0 right-0 z-40 px-3 sm:px-6 transition-all duration-300 pointer-events-none">
         <div
-          className={`mx-auto max-w-7xl rounded-full transition-all duration-300 ${
+          className={`mx-auto max-w-7xl rounded-full transition-all duration-300 pointer-events-auto ${
             scrolled
               ? 'backdrop-blur-xl bg-white/90 dark:bg-obsidian-950/85 border border-slate-200/90 dark:border-white/10 shadow-lg dark:shadow-2xl dark:shadow-black/80 my-2 px-4 sm:px-6 py-2.5'
               : 'backdrop-blur-lg bg-white/75 dark:bg-obsidian-900/60 border border-slate-200/80 dark:border-white/10 my-3 sm:my-4 px-4 sm:px-6 py-3 shadow-sm'
@@ -81,234 +98,320 @@ export const Navigation: React.FC<NavigationProps> = ({
         >
           <div className="flex items-center justify-between">
             {/* Brand Logo with Sizing & Glow */}
-            <div className="flex items-center gap-3">
+            <div
+              className="flex items-center gap-3 cursor-pointer"
+              onClick={() => handleNav('/')}
+            >
               <FlameLogo variant="full" size="md" />
             </div>
 
-            {/* Desktop Navigation Links */}
+            {/* Desktop Navigation Links — Z3Connect Architectural Blueprint */}
             <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
-              {/* Services Dropdown */}
+              {/* Home */}
+              <button
+                onClick={() => handleNav('/')}
+                className="px-3.5 py-2 text-sm font-semibold text-slate-700 dark:text-zinc-300 hover:text-violet-600 dark:hover:text-white rounded-full transition-colors cursor-pointer"
+              >
+                Home
+              </button>
+
+              {/* Company Dropdown */}
               <div
                 className="relative"
-                onMouseEnter={() => {
-                  setActiveMenu('services');
-                  soundFX.playHover();
-                }}
+                onMouseEnter={() => setActiveMenu('company')}
                 onMouseLeave={() => setActiveMenu(null)}
               >
                 <button
-                  onClick={() => scrollTo('services')}
-                  className={`flex items-center gap-1.5 px-3.5 py-2 text-sm font-semibold rounded-full transition-colors ${
-                    activeMenu === 'services'
-                      ? 'text-violet-600 bg-slate-100 dark:bg-white/5'
-                      : 'text-slate-700 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5'
+                  onClick={() => setActiveMenu(activeMenu === 'company' ? null : 'company')}
+                  className={`px-3.5 py-2 text-sm font-semibold rounded-full transition-colors flex items-center gap-1.5 cursor-pointer ${
+                    activeMenu === 'company'
+                      ? 'text-violet-600 dark:text-violet-400 bg-violet-50/80 dark:bg-white/5'
+                      : 'text-slate-700 dark:text-zinc-300 hover:text-violet-600 dark:hover:text-white'
                   }`}
                 >
-                  Services
+                  <span>Company</span>
                   <ChevronDown
-                    className={`w-4 h-4 transition-transform duration-200 ${
-                      activeMenu === 'services' ? 'rotate-180 text-violet-600' : 'text-slate-400 dark:text-zinc-400'
+                    className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                      activeMenu === 'company' ? 'rotate-180 text-violet-600 dark:text-violet-400' : 'text-slate-400 dark:text-zinc-500'
                     }`}
                   />
                 </button>
 
-                {/* Mega-Menu: Services (4 Columns) */}
-                {activeMenu === 'services' && (
-                  <div className="absolute top-full -left-28 pt-3 w-[780px] xl:w-[860px] animate-in fade-in zoom-in-95 duration-150">
-                    <div className="glass-panel p-6 rounded-2xl bg-white/95 dark:bg-obsidian-900/95 border border-slate-200 dark:border-white/10 shadow-2xl">
-                      <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-200 dark:border-white/10">
-                        <div className="flex items-center gap-2 text-xs font-mono text-slate-500 dark:text-zinc-400 uppercase tracking-wider font-semibold">
-                          <Sparkles className="w-3.5 h-3.5 text-violet-600" />
-                          Engineering & Hyper-Growth Matrix
+                <AnimatePresence>
+                  {activeMenu === 'company' && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8, scale: 0.97 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 8, scale: 0.97 }}
+                      transition={{ duration: 0.18, ease: 'easeOut' }}
+                      className="absolute top-full left-0 mt-1.5 w-72 rounded-2xl bg-white/95 dark:bg-obsidian-950/95 backdrop-blur-2xl border border-slate-200/90 dark:border-white/10 shadow-2xl p-2 z-50"
+                    >
+                      <button
+                        onClick={() => handleNav('/about')}
+                        className="w-full text-left p-2.5 rounded-xl hover:bg-slate-100/80 dark:hover:bg-white/5 flex items-start gap-3 transition-colors group cursor-pointer"
+                      >
+                        <div className="p-2 rounded-lg bg-violet-50 dark:bg-white/5 text-violet-600 dark:text-violet-400 group-hover:bg-violet-600 group-hover:text-white transition-colors">
+                          <Users className="w-4 h-4" />
                         </div>
-                        <span className="text-[11px] font-mono text-violet-600 font-bold">Next-Gen Delivery SLA</span>
-                      </div>
-
-                      <div className="grid grid-cols-4 gap-4">
-                        {/* Web Development */}
-                        <div
-                          onClick={() => scrollTo('services')}
-                          className="group p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 border border-transparent hover:border-violet-500/30 cursor-pointer transition-all"
-                        >
-                          <div className="flex items-center justify-between mb-2">
-                            <div className="p-2 rounded-lg bg-cyber-blue/10 text-cyber-blue group-hover:scale-110 transition-transform">
-                              <Laptop className="w-4 h-4" />
-                            </div>
-                            <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-cyber-blue/15 text-cyber-blue">
-                              Sub-0.6s
-                            </span>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors">
+                            About us
                           </div>
-                          <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-violet-600 transition-colors">
-                            Web Dev & E-Com
-                          </h4>
-                          <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1 line-clamp-3">
-                            Bespoke UI/UX, Shopify Plus, Headless Next.js, and 95+ PageSpeed revamps.
-                          </p>
-                        </div>
-
-                        {/* Digital Marketing */}
-                        <div
-                          onClick={() => scrollTo('services')}
-                          className="group p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 border border-transparent hover:border-violet-500/30 cursor-pointer transition-all"
-                        >
-                          <div className="flex items-center justify-between mb-2">
-                            <div className="p-2 rounded-lg bg-violet-500/10 text-violet-600 group-hover:scale-110 transition-transform">
-                              <TrendingUp className="w-4 h-4" />
-                            </div>
-                            <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-violet-500/15 text-violet-600">
-                              High ROAS
-                            </span>
+                          <div className="text-[11px] text-slate-500 dark:text-zinc-400 truncate">
+                            Who we are and what drives us
                           </div>
-                          <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-violet-600 transition-colors">
-                            Digital Marketing
-                          </h4>
-                          <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1 line-clamp-3">
-                            Meta & Google Ads, SEO dominance, CXO branding, and AI conversational ads.
-                          </p>
                         </div>
+                      </button>
 
-                        {/* Custom Software */}
-                        <div
-                          onClick={() => scrollTo('services')}
-                          className="group p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 border border-transparent hover:border-violet-500/30 cursor-pointer transition-all"
-                        >
-                          <div className="flex items-center justify-between mb-2">
-                            <div className="p-2 rounded-lg bg-purple-500/10 text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform">
-                              <Cpu className="w-4 h-4" />
-                            </div>
-                            <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-purple-500/15 text-purple-600 dark:text-purple-400">
-                              Cloud-Native
-                            </span>
-                          </div>
-                          <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-violet-600 transition-colors">
-                            Custom Software
-                          </h4>
-                          <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1 line-clamp-3">
-                            Enterprise distributed backends, microservices, APIs, and desktop Tauri apps.
-                          </p>
+                      <button
+                        onClick={() => handleNav('/founder')}
+                        className="w-full text-left p-2.5 rounded-xl hover:bg-slate-100/80 dark:hover:bg-white/5 flex items-start gap-3 transition-colors group cursor-pointer"
+                      >
+                        <div className="p-2 rounded-lg bg-violet-50 dark:bg-white/5 text-violet-600 dark:text-violet-400 group-hover:bg-violet-600 group-hover:text-white transition-colors">
+                          <Lightbulb className="w-4 h-4" />
                         </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors">
+                            Founder
+                          </div>
+                          <div className="text-[11px] text-slate-500 dark:text-zinc-400 truncate">
+                            The mind behind Pyrow
+                          </div>
+                        </div>
+                      </button>
 
-                        {/* Mobile Apps */}
-                        <div
-                          onClick={() => scrollTo('services')}
-                          className="group p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 border border-transparent hover:border-violet-500/30 cursor-pointer transition-all"
-                        >
-                          <div className="flex items-center justify-between mb-2">
-                            <div className="p-2 rounded-lg bg-purple-500/10 text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform">
-                              <Smartphone className="w-4 h-4" />
-                            </div>
-                            <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-purple-500/15 text-purple-600 dark:text-purple-400">
-                              60fps Native
-                            </span>
-                          </div>
-                          <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-violet-600 transition-colors">
-                            Mobile Engineering
-                          </h4>
-                          <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1 line-clamp-3">
-                            Native Swift & Kotlin, cross-platform Flutter, and ASO lifecycle growth.
-                          </p>
+                      <button
+                        onClick={() => handleNav('/philosophy')}
+                        className="w-full text-left p-2.5 rounded-xl hover:bg-slate-100/80 dark:hover:bg-white/5 flex items-start gap-3 transition-colors group cursor-pointer"
+                      >
+                        <div className="p-2 rounded-lg bg-violet-50 dark:bg-white/5 text-violet-600 dark:text-violet-400 group-hover:bg-violet-600 group-hover:text-white transition-colors">
+                          <Compass className="w-4 h-4" />
                         </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
+                        <div className="flex-1 min-w-0">
+                          <div className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors">
+                            Philosophy
+                          </div>
+                          <div className="text-[11px] text-slate-500 dark:text-zinc-400 truncate">
+                            How we think and build
+                          </div>
+                        </div>
+                      </button>
+
+                      <button
+                        onClick={() => handleNav('/team')}
+                        className="w-full text-left p-2.5 rounded-xl hover:bg-slate-100/80 dark:hover:bg-white/5 flex items-start gap-3 transition-colors group cursor-pointer"
+                      >
+                        <div className="p-2 rounded-lg bg-violet-50 dark:bg-white/5 text-violet-600 dark:text-violet-400 group-hover:bg-violet-600 group-hover:text-white transition-colors">
+                          <UserCheck className="w-4 h-4" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors">
+                            Team
+                          </div>
+                          <div className="text-[11px] text-slate-500 dark:text-zinc-400 truncate">
+                            Engineers building the future
+                          </div>
+                        </div>
+                      </button>
+
+                      <button
+                        onClick={() => handleNav('/why-we-exist')}
+                        className="w-full text-left p-2.5 rounded-xl hover:bg-slate-100/80 dark:hover:bg-white/5 flex items-start gap-3 transition-colors group cursor-pointer"
+                      >
+                        <div className="p-2 rounded-lg bg-violet-50 dark:bg-white/5 text-violet-600 dark:text-violet-400 group-hover:bg-violet-600 group-hover:text-white transition-colors">
+                          <Target className="w-4 h-4" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors">
+                            Why we exist
+                          </div>
+                          <div className="text-[11px] text-slate-500 dark:text-zinc-400 truncate">
+                            Our purpose & competitive matrix
+                          </div>
+                        </div>
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
-              {/* Industries Dropdown */}
+              {/* Products Dropdown */}
               <div
                 className="relative"
-                onMouseEnter={() => {
-                  setActiveMenu('industries');
-                  soundFX.playHover();
-                }}
+                onMouseEnter={() => setActiveMenu('products')}
                 onMouseLeave={() => setActiveMenu(null)}
               >
                 <button
-                  onClick={() => scrollTo('industries')}
-                  className={`flex items-center gap-1.5 px-3.5 py-2 text-sm font-semibold rounded-full transition-colors ${
-                    activeMenu === 'industries'
-                      ? 'text-violet-600 bg-slate-100 dark:bg-white/5'
-                      : 'text-slate-700 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5'
+                  onClick={() => setActiveMenu(activeMenu === 'products' ? null : 'products')}
+                  className={`px-3.5 py-2 text-sm font-semibold rounded-full transition-colors flex items-center gap-1.5 cursor-pointer ${
+                    activeMenu === 'products'
+                      ? 'text-violet-600 dark:text-violet-400 bg-violet-50/80 dark:bg-white/5'
+                      : 'text-slate-700 dark:text-zinc-300 hover:text-violet-600 dark:hover:text-white'
                   }`}
                 >
-                  Industries
+                  <span>Products</span>
                   <ChevronDown
-                    className={`w-4 h-4 transition-transform duration-200 ${
-                      activeMenu === 'industries' ? 'rotate-180 text-violet-600' : 'text-slate-400 dark:text-zinc-400'
+                    className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                      activeMenu === 'products' ? 'rotate-180 text-violet-600 dark:text-violet-400' : 'text-slate-400 dark:text-zinc-500'
                     }`}
                   />
                 </button>
 
-                {/* Mega-Menu: Industries */}
-                {activeMenu === 'industries' && (
-                  <div className="absolute top-full -left-48 pt-3 w-[680px] animate-in fade-in zoom-in-95 duration-150">
-                    <div className="glass-panel p-5 rounded-2xl bg-white/95 dark:bg-obsidian-900/95 border border-slate-200 dark:border-white/10 shadow-2xl">
-                      <div className="flex items-center justify-between pb-2 mb-3 border-b border-slate-200 dark:border-white/10">
-                        <div className="text-xs font-mono text-slate-500 dark:text-zinc-400 uppercase tracking-wider flex items-center gap-1.5 font-semibold">
-                          <Database className="w-3.5 h-3.5 text-cyber-blue" />
-                          11 Specialized Enterprise Management Suites
+                <AnimatePresence>
+                  {activeMenu === 'products' && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8, scale: 0.97 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 8, scale: 0.97 }}
+                      transition={{ duration: 0.18, ease: 'easeOut' }}
+                      className="absolute top-full left-0 mt-1.5 w-80 rounded-2xl bg-white/95 dark:bg-obsidian-950/95 backdrop-blur-2xl border border-slate-200/90 dark:border-white/10 shadow-2xl p-2 z-50"
+                    >
+                      <button
+                        onClick={() => handleNav('/products')}
+                        className="w-full text-left p-2.5 rounded-xl hover:bg-slate-100/80 dark:hover:bg-white/5 flex items-start gap-3 transition-colors group cursor-pointer"
+                      >
+                        <div className="p-2 rounded-lg bg-violet-50 dark:bg-white/5 text-violet-600 dark:text-violet-400 group-hover:bg-violet-600 group-hover:text-white transition-colors">
+                          <Sparkles className="w-4 h-4" />
                         </div>
-                        <span className="text-[10px] font-mono text-slate-400 dark:text-zinc-400">Click to preview demo</span>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-2 text-xs">
-                        {[
-                          { title: 'ERP Software Suite', sub: 'Unified supply chain & multi-branch finance' },
-                          { title: 'CRM & Pipeline Intelligence', sub: 'Predictive deal health & omnichannel sync' },
-                          { title: 'Inventory & Stock Engine', sub: 'Multi-warehouse & predictive restock' },
-                          { title: 'Sub-Second Billing & POS', sub: 'Offline-sync & instant tax invoices' },
-                          { title: 'WhatsApp Business API Bot', sub: 'Official Meta Green Tick conversational AI' },
-                          { title: 'School & Campus ERP', sub: 'RFID attendance & parent mobile portal' },
-                          { title: 'Zero-Leakage LMS', sub: 'Sub-second lead capture & auto-calls' },
-                          { title: 'Hospital & Healthcare EMR', sub: 'HIPAA/NABH-ready doctor OPD & lab POS' },
-                          { title: 'Gym & Fitness Management', sub: 'Biometric gate lock & recurring MRR' },
-                          { title: 'Luxury Salon & Spa Booking', sub: 'Chair allocation & stylist commission' },
-                        ].map((ind) => (
-                          <div
-                            key={ind.title}
-                            onClick={() => {
-                              scrollTo('industries');
-                              onOpenDemoRequest(ind.title);
-                            }}
-                            className="p-2.5 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 border border-transparent hover:border-violet-500/20 cursor-pointer flex items-start gap-2.5 transition-colors group"
-                          >
-                            <div className="w-1.5 h-1.5 rounded-full bg-violet-600 mt-1.5 group-hover:scale-150 transition-transform" />
-                            <div>
-                              <div className="font-semibold text-slate-800 dark:text-zinc-200 group-hover:text-violet-600 dark:group-hover:text-white transition-colors">
-                                {ind.title}
-                              </div>
-                              <div className="text-[11px] text-slate-500 dark:text-zinc-400 line-clamp-1">{ind.sub}</div>
-                            </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors">
+                            All products
                           </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                )}
+                          <div className="text-[11px] text-slate-500 dark:text-zinc-400 truncate">
+                            Our complete product suite
+                          </div>
+                        </div>
+                      </button>
+
+                      <button
+                        onClick={() => handleNav('/solutions')}
+                        className="w-full text-left p-2.5 rounded-xl hover:bg-slate-100/80 dark:hover:bg-white/5 flex items-start gap-3 transition-colors group cursor-pointer"
+                      >
+                        <div className="p-2 rounded-lg bg-violet-50 dark:bg-white/5 text-violet-600 dark:text-violet-400 group-hover:bg-violet-600 group-hover:text-white transition-colors">
+                          <Building2 className="w-4 h-4" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors">
+                            Solutions
+                          </div>
+                          <div className="text-[11px] text-slate-500 dark:text-zinc-400 truncate">
+                            Industry-specific software
+                          </div>
+                        </div>
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
-              {/* How It Works Link */}
-              <button
-                onClick={() => scrollTo('how-it-works')}
-                className="px-3.5 py-2 text-sm font-semibold text-slate-700 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white rounded-full transition-colors"
+              {/* Work Dropdown */}
+              <div
+                className="relative"
+                onMouseEnter={() => setActiveMenu('work')}
+                onMouseLeave={() => setActiveMenu(null)}
               >
-                How It Works
+                <button
+                  onClick={() => setActiveMenu(activeMenu === 'work' ? null : 'work')}
+                  className={`px-3.5 py-2 text-sm font-semibold rounded-full transition-colors flex items-center gap-1.5 cursor-pointer ${
+                    activeMenu === 'work'
+                      ? 'text-violet-600 dark:text-violet-400 bg-violet-50/80 dark:bg-white/5'
+                      : 'text-slate-700 dark:text-zinc-300 hover:text-violet-600 dark:hover:text-white'
+                  }`}
+                >
+                  <span>Work</span>
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                      activeMenu === 'work' ? 'rotate-180 text-violet-600 dark:text-violet-400' : 'text-slate-400 dark:text-zinc-500'
+                    }`}
+                  />
+                </button>
+
+                <AnimatePresence>
+                  {activeMenu === 'work' && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8, scale: 0.97 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 8, scale: 0.97 }}
+                      transition={{ duration: 0.18, ease: 'easeOut' }}
+                      className="absolute top-full left-0 mt-1.5 w-80 rounded-2xl bg-white/95 dark:bg-obsidian-950/95 backdrop-blur-2xl border border-slate-200/90 dark:border-white/10 shadow-2xl p-2 z-50"
+                    >
+                      <button
+                        onClick={() => handleNav('/portfolio')}
+                        className="w-full text-left p-2.5 rounded-xl hover:bg-slate-100/80 dark:hover:bg-white/5 flex items-start gap-3 transition-colors group cursor-pointer"
+                      >
+                        <div className="p-2 rounded-lg bg-violet-50 dark:bg-white/5 text-violet-600 dark:text-violet-400 group-hover:bg-violet-600 group-hover:text-white transition-colors">
+                          <Briefcase className="w-4 h-4" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors">
+                            Clients & Work
+                          </div>
+                          <div className="text-[11px] text-slate-500 dark:text-zinc-400 truncate">
+                            100+ businesses, filter by ERP, SaaS, POS
+                          </div>
+                        </div>
+                      </button>
+
+                      <button
+                        onClick={() => handleNav('/case-studies')}
+                        className="w-full text-left p-2.5 rounded-xl hover:bg-slate-100/80 dark:hover:bg-white/5 flex items-start gap-3 transition-colors group cursor-pointer"
+                      >
+                        <div className="p-2 rounded-lg bg-violet-50 dark:bg-white/5 text-violet-600 dark:text-violet-400 group-hover:bg-violet-600 group-hover:text-white transition-colors">
+                          <Award className="w-4 h-4" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors">
+                            Case studies
+                          </div>
+                          <div className="text-[11px] text-slate-500 dark:text-zinc-400 truncate">
+                            Real results, real impact
+                          </div>
+                        </div>
+                      </button>
+
+                      <button
+                        onClick={() => handleNav('/portfolio')}
+                        className="w-full text-left p-2.5 rounded-xl hover:bg-slate-100/80 dark:hover:bg-white/5 flex items-start gap-3 transition-colors group cursor-pointer"
+                      >
+                        <div className="p-2 rounded-lg bg-violet-50 dark:bg-white/5 text-violet-600 dark:text-violet-400 group-hover:bg-violet-600 group-hover:text-white transition-colors">
+                          <Layers className="w-4 h-4" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors">
+                            Portfolio
+                          </div>
+                          <div className="text-[11px] text-slate-500 dark:text-zinc-400 truncate">
+                            Live demos & deployed products
+                          </div>
+                        </div>
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Blogs */}
+              <button
+                onClick={() => handleNav('/blogs')}
+                className="px-3.5 py-2 text-sm font-semibold text-slate-700 dark:text-zinc-300 hover:text-violet-600 dark:hover:text-white rounded-full transition-colors cursor-pointer"
+              >
+                Blogs
               </button>
 
-              {/* Case Studies Link */}
+              {/* Contact */}
               <button
-                onClick={() => scrollTo('case-studies')}
-                className="px-3.5 py-2 text-sm font-semibold text-slate-700 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white rounded-full transition-colors"
-              >
-                Case Studies
-              </button>
-
-              {/* Contact Link */}
-              <button
-                onClick={() => scrollTo('estimator')}
-                className="px-3.5 py-2 text-sm font-semibold text-slate-700 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white rounded-full transition-colors"
+                onClick={() => handleNav('/contact')}
+                className="px-3.5 py-2 text-sm font-semibold text-slate-700 dark:text-zinc-300 hover:text-violet-600 dark:hover:text-white rounded-full transition-colors cursor-pointer"
               >
                 Contact
+              </button>
+
+              {/* Careers */}
+              <button
+                onClick={() => handleNav('/careers')}
+                className="px-3.5 py-2 text-sm font-semibold text-slate-700 dark:text-zinc-300 hover:text-violet-600 dark:hover:text-white rounded-full transition-colors cursor-pointer"
+              >
+                Careers
               </button>
             </nav>
 
@@ -320,7 +423,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                   soundFX.playClick();
                   onToggleTheme();
                 }}
-                className="p-2 rounded-full bg-slate-100 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-zinc-300 hover:text-purple-500 dark:hover:text-purple-400 transition-all hover:scale-105"
+                className="p-2 rounded-full bg-slate-100 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-zinc-300 hover:text-purple-500 dark:hover:text-purple-400 transition-all hover:scale-105 cursor-pointer"
                 title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
                 aria-label="Toggle Theme"
               >
@@ -337,7 +440,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                   soundFX.playClick();
                   onOpenCommandPalette();
                 }}
-                className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 text-slate-500 dark:text-zinc-400 hover:text-slate-800 dark:hover:text-zinc-200 text-xs transition-colors"
+                className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 text-slate-500 dark:text-zinc-400 hover:text-slate-800 dark:hover:text-zinc-200 text-xs transition-colors cursor-pointer"
                 title="Open Command Menu (Ctrl+K or ⌘K)"
               >
                 <Search className="w-3.5 h-3.5" />
@@ -347,7 +450,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                 </kbd>
               </button>
 
-              {/* CTA 1: Schedule Strategy Call (Desktop & Tablet) */}
+              {/* CTA 1: Schedule Strategy Call / Get a Quote */}
               <MagneticButton
                 variant="primary"
                 size="sm"
@@ -355,7 +458,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                 icon={<Sparkles className="w-3.5 h-3.5" />}
                 className="hidden sm:inline-flex"
               >
-                Schedule Call
+                Get quote
               </MagneticButton>
 
               {/* Mobile Drawer Navigation with shadcn Sheet */}
@@ -366,50 +469,167 @@ export const Navigation: React.FC<NavigationProps> = ({
                 >
                   <Menu className="w-5 h-5" />
                 </SheetTrigger>
-                <SheetContent side="right" className="w-[320px] sm:w-[380px] p-6 bg-white dark:bg-obsidian-900 border-l border-slate-200 dark:border-white/10 z-50">
-                  <SheetHeader className="mb-6">
+                <SheetContent side="right" className="w-[320px] sm:w-[380px] p-6 bg-white dark:bg-obsidian-900 border-l border-slate-200 dark:border-white/10 z-50 overflow-y-auto">
+                  <SheetHeader className="mb-4">
                     <SheetTitle className="flex items-center text-left">
                       <FlameLogo />
                     </SheetTitle>
                   </SheetHeader>
-                  <div className="flex flex-col space-y-3">
+                  <div className="flex flex-col space-y-2">
+                    {/* Mobile Home */}
                     <button
-                      onClick={() => scrollTo('services')}
+                      onClick={() => handleNav('/')}
                       className="text-left text-sm font-semibold text-slate-900 dark:text-white py-2.5 border-b border-slate-100 dark:border-white/5 flex items-center justify-between cursor-pointer hover:text-violet-600 transition-colors"
                     >
-                      <span>Services Matrix</span>
-                      <ArrowRight className="w-4 h-4 text-violet-600" />
-                    </button>
-                    <button
-                      onClick={() => scrollTo('industries')}
-                      className="text-left text-sm font-semibold text-slate-900 dark:text-white py-2.5 border-b border-slate-100 dark:border-white/5 flex items-center justify-between cursor-pointer hover:text-cyber-blue transition-colors"
-                    >
-                      <span>11 Industry Solutions</span>
-                      <ArrowRight className="w-4 h-4 text-cyber-blue" />
-                    </button>
-                    <button
-                      onClick={() => scrollTo('how-it-works')}
-                      className="text-left text-sm font-semibold text-slate-900 dark:text-white py-2.5 border-b border-slate-100 dark:border-white/5 flex items-center justify-between cursor-pointer hover:text-emerald-500 transition-colors"
-                    >
-                      <span>How We Partner (4 Steps)</span>
-                      <ArrowRight className="w-4 h-4 text-emerald-500" />
-                    </button>
-                    <button
-                      onClick={() => scrollTo('case-studies')}
-                      className="text-left text-sm font-semibold text-slate-900 dark:text-white py-2.5 border-b border-slate-100 dark:border-white/5 flex items-center justify-between cursor-pointer hover:text-purple-500 transition-colors"
-                    >
-                      <span>Case Studies</span>
-                      <ArrowRight className="w-4 h-4 text-purple-500" />
-                    </button>
-                    <button
-                      onClick={() => scrollTo('estimator')}
-                      className="text-left text-sm font-semibold text-slate-900 dark:text-white py-2.5 border-b border-slate-100 dark:border-white/5 flex items-center justify-between cursor-pointer hover:text-violet-600 transition-colors"
-                    >
-                      <span>Project Enquiry Desk</span>
+                      <span>Home</span>
                       <ArrowRight className="w-4 h-4 text-violet-600" />
                     </button>
 
-                    <div className="pt-6 flex flex-col gap-2.5">
+                    {/* Mobile Company Accordion */}
+                    <div className="border-b border-slate-100 dark:border-white/5 pb-1">
+                      <button
+                        onClick={() => toggleMobileAccordion('company')}
+                        className="w-full text-left text-sm font-semibold text-slate-900 dark:text-white py-2.5 flex items-center justify-between cursor-pointer hover:text-violet-600 transition-colors"
+                      >
+                        <span>Company</span>
+                        <ChevronDown
+                          className={`w-4 h-4 transition-transform duration-200 text-slate-400 ${
+                            openMobileAccordion === 'company' ? 'rotate-180 text-violet-600' : ''
+                          }`}
+                        />
+                      </button>
+                      {openMobileAccordion === 'company' && (
+                        <div className="pl-3 pb-2 space-y-2 border-l-2 border-violet-500/20 my-1">
+                          <button
+                            onClick={() => handleNav('/about')}
+                            className="block text-xs text-slate-600 dark:text-zinc-400 hover:text-violet-600 dark:hover:text-white py-1 cursor-pointer"
+                          >
+                            About us
+                          </button>
+                          <button
+                            onClick={() => handleNav('/founder')}
+                            className="block text-xs text-slate-600 dark:text-zinc-400 hover:text-violet-600 dark:hover:text-white py-1 cursor-pointer"
+                          >
+                            Founder
+                          </button>
+                          <button
+                            onClick={() => handleNav('/philosophy')}
+                            className="block text-xs text-slate-600 dark:text-zinc-400 hover:text-violet-600 dark:hover:text-white py-1 cursor-pointer"
+                          >
+                            Philosophy
+                          </button>
+                          <button
+                            onClick={() => handleNav('/team')}
+                            className="block text-xs text-slate-600 dark:text-zinc-400 hover:text-violet-600 dark:hover:text-white py-1 cursor-pointer"
+                          >
+                            Team
+                          </button>
+                          <button
+                            onClick={() => handleNav('/why-we-exist')}
+                            className="block text-xs text-slate-600 dark:text-zinc-400 hover:text-violet-600 dark:hover:text-white py-1 cursor-pointer"
+                          >
+                            Why we exist
+                          </button>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Mobile Products Accordion */}
+                    <div className="border-b border-slate-100 dark:border-white/5 pb-1">
+                      <button
+                        onClick={() => toggleMobileAccordion('products')}
+                        className="w-full text-left text-sm font-semibold text-slate-900 dark:text-white py-2.5 flex items-center justify-between cursor-pointer hover:text-violet-600 transition-colors"
+                      >
+                        <span>Products</span>
+                        <ChevronDown
+                          className={`w-4 h-4 transition-transform duration-200 text-slate-400 ${
+                            openMobileAccordion === 'products' ? 'rotate-180 text-violet-600' : ''
+                          }`}
+                        />
+                      </button>
+                      {openMobileAccordion === 'products' && (
+                        <div className="pl-3 pb-2 space-y-2 border-l-2 border-violet-500/20 my-1">
+                          <button
+                            onClick={() => handleNav('/products')}
+                            className="block text-xs text-slate-600 dark:text-zinc-400 hover:text-violet-600 dark:hover:text-white py-1 cursor-pointer"
+                          >
+                            All products
+                          </button>
+                          <button
+                            onClick={() => handleNav('/solutions')}
+                            className="block text-xs text-slate-600 dark:text-zinc-400 hover:text-violet-600 dark:hover:text-white py-1 cursor-pointer"
+                          >
+                            Solutions
+                          </button>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Mobile Work Accordion */}
+                    <div className="border-b border-slate-100 dark:border-white/5 pb-1">
+                      <button
+                        onClick={() => toggleMobileAccordion('work')}
+                        className="w-full text-left text-sm font-semibold text-slate-900 dark:text-white py-2.5 flex items-center justify-between cursor-pointer hover:text-violet-600 transition-colors"
+                      >
+                        <span>Work</span>
+                        <ChevronDown
+                          className={`w-4 h-4 transition-transform duration-200 text-slate-400 ${
+                            openMobileAccordion === 'work' ? 'rotate-180 text-violet-600' : ''
+                          }`}
+                        />
+                      </button>
+                      {openMobileAccordion === 'work' && (
+                        <div className="pl-3 pb-2 space-y-2 border-l-2 border-violet-500/20 my-1">
+                          <button
+                            onClick={() => handleNav('/portfolio')}
+                            className="block text-xs text-slate-600 dark:text-zinc-400 hover:text-violet-600 dark:hover:text-white py-1 cursor-pointer"
+                          >
+                            Clients & Work
+                          </button>
+                          <button
+                            onClick={() => handleNav('/case-studies')}
+                            className="block text-xs text-slate-600 dark:text-zinc-400 hover:text-violet-600 dark:hover:text-white py-1 cursor-pointer"
+                          >
+                            Case studies
+                          </button>
+                          <button
+                            onClick={() => handleNav('/portfolio')}
+                            className="block text-xs text-slate-600 dark:text-zinc-400 hover:text-violet-600 dark:hover:text-white py-1 cursor-pointer"
+                          >
+                            Portfolio
+                          </button>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Mobile Blogs */}
+                    <button
+                      onClick={() => handleNav('/blogs')}
+                      className="text-left text-sm font-semibold text-slate-900 dark:text-white py-2.5 border-b border-slate-100 dark:border-white/5 flex items-center justify-between cursor-pointer hover:text-violet-600 transition-colors"
+                    >
+                      <span>Blogs</span>
+                      <ArrowRight className="w-4 h-4 text-violet-600" />
+                    </button>
+
+                    {/* Mobile Contact */}
+                    <button
+                      onClick={() => handleNav('/contact')}
+                      className="text-left text-sm font-semibold text-slate-900 dark:text-white py-2.5 border-b border-slate-100 dark:border-white/5 flex items-center justify-between cursor-pointer hover:text-violet-600 transition-colors"
+                    >
+                      <span>Contact</span>
+                      <ArrowRight className="w-4 h-4 text-violet-600" />
+                    </button>
+
+                    {/* Mobile Careers */}
+                    <button
+                      onClick={() => handleNav('/careers')}
+                      className="text-left text-sm font-semibold text-slate-900 dark:text-white py-2.5 border-b border-slate-100 dark:border-white/5 flex items-center justify-between cursor-pointer hover:text-violet-600 transition-colors"
+                    >
+                      <span>Careers</span>
+                      <ArrowRight className="w-4 h-4 text-violet-600" />
+                    </button>
+
+                    <div className="pt-4 flex flex-col gap-2.5">
                       <MagneticButton
                         variant="primary"
                         size="md"
@@ -419,7 +639,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                         }}
                         className="w-full justify-center"
                       >
-                        Schedule Strategy Call
+                        Get quote
                       </MagneticButton>
                       <MagneticButton
                         variant="secondary"
@@ -430,7 +650,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                         }}
                         className="w-full justify-center"
                       >
-                        Project Enquiry Desk
+                        Project Estimator Desk
                       </MagneticButton>
                     </div>
                   </div>

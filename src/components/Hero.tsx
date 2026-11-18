@@ -1,17 +1,19 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles, ArrowDown, Shield, TrendingUp, Clock, CheckCircle2 } from 'lucide-react';
+import { Sparkles, ArrowRight, Shield, TrendingUp, Clock, CheckCircle2 } from 'lucide-react';
 import { MagneticButton } from './ui/MagneticButton';
 import { MetricCounter } from './ui/MetricCounter';
-import { HeroVisualShowcase } from './ui/HeroVisualShowcase';
 import { HeroUntanglingThread } from './ui/HeroUntanglingThread';
 import { soundFX } from './ui/sound-effects';
+import { useRouter } from '../context/RouterContext';
 
 interface HeroProps {
   onOpenStrategyCall: () => void;
 }
 
 export const Hero: React.FC<HeroProps> = ({ onOpenStrategyCall }) => {
+  const { navigate } = useRouter();
+
   const techLogos = [
     { name: 'React 19', category: 'Frontend' },
     { name: 'Next.js 15', category: 'Full-Stack' },
@@ -76,10 +78,10 @@ export const Hero: React.FC<HeroProps> = ({ onOpenStrategyCall }) => {
             transition={{ duration: 0.7, delay: 0.1 }}
             className="w-full text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black font-display tracking-tight text-slate-900 dark:text-white max-w-5xl mx-auto leading-tight sm:leading-[1.08] text-center transition-colors"
           >
-            We Build Websites & Software That Work.{' '}
+            We Build Software Products{' '}
             <br className="hidden sm:inline" />
             <span className="bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 dark:from-violet-400 dark:via-purple-300 dark:to-fuchsia-400 bg-clip-text text-transparent">
-              Scalable Systems & High-Impact Digital Growth.
+              and Grow Them with Digital Marketing
             </span>
           </motion.h1>
 
@@ -89,9 +91,9 @@ export const Hero: React.FC<HeroProps> = ({ onOpenStrategyCall }) => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="mt-4 sm:mt-5 text-sm sm:text-lg md:text-xl text-slate-600 dark:text-zinc-300 max-w-3xl mx-auto leading-relaxed text-center font-normal transition-colors"
+            className="mt-4 sm:mt-5 text-base sm:text-xl md:text-2xl text-slate-600 dark:text-zinc-300 max-w-3xl mx-auto leading-relaxed text-center font-normal transition-colors"
           >
-            Pyrow is India's dedicated technology and digital growth partner. We engineer lightning-fast websites, custom enterprise platforms, mobile apps, and high-return digital acquisition engines — with 100% complete intellectual property ownership.
+            From raw idea to launch to customers, all under one roof
           </motion.p>
 
           {/* Action Buttons */}
@@ -109,18 +111,42 @@ export const Hero: React.FC<HeroProps> = ({ onOpenStrategyCall }) => {
               icon={<Sparkles className="w-5 h-5" />}
               className="w-full sm:w-auto justify-center"
             >
-              Schedule Strategy Call
+              Get a Quote
             </MagneticButton>
 
             <MagneticButton
               variant="secondary"
               size="lg"
-              onClick={scrollToServices}
-              icon={<ArrowDown className="w-4 h-4 text-slate-600 dark:text-zinc-400 group-hover:translate-y-1 transition-transform" />}
+              onClick={() => {
+                soundFX.playClick();
+                navigate('/portfolio');
+              }}
+              icon={<ArrowRight className="w-4 h-4 text-slate-600 dark:text-zinc-400 group-hover:translate-x-1 transition-transform" />}
               className="w-full sm:w-auto justify-center bg-slate-100 hover:bg-slate-200 text-slate-800 border-slate-300 dark:bg-white/10 dark:hover:bg-white/15 dark:text-white dark:border-white/20 transition-colors"
             >
-              Explore Solutions
+              View Our Portfolio & Results
             </MagneticButton>
+          </motion.div>
+
+          {/* Quick Metrics Trust Pill (Z3Connect Section 1) */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.35 }}
+            className="mt-6 inline-flex items-center gap-4 sm:gap-6 px-5 py-2 rounded-full bg-white/80 dark:bg-white/5 border border-slate-200/80 dark:border-white/10 text-xs font-mono font-medium text-slate-700 dark:text-zinc-300 shadow-sm"
+          >
+            <div>
+              <span className="font-bold text-violet-600 dark:text-violet-400">100+</span> Clients
+            </div>
+            <span className="text-slate-300 dark:text-white/20">•</span>
+            <div>
+              <span className="font-bold text-fuchsia-600 dark:text-fuchsia-400">120+</span> Projects Shipped
+            </div>
+            <span className="text-slate-300 dark:text-white/20">•</span>
+            <div>
+              <span className="font-bold text-emerald-600 dark:text-emerald-400">15+</span> Commercial Industries
+            </div>
           </motion.div>
 
           {/* Tech Molecules Marquee */}
@@ -146,17 +172,6 @@ export const Hero: React.FC<HeroProps> = ({ onOpenStrategyCall }) => {
                 </div>
               ))}
             </div>
-          </motion.div>
-
-          {/* Hero Visual Showcase */}
-          <motion.div
-            initial={{ opacity: 0, y: 30, scale: 0.98 }}
-            whileInView={{ opacity: 1, y: 0, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="w-full max-w-5xl mx-auto mt-12 sm:mt-16"
-          >
-            <HeroVisualShowcase />
           </motion.div>
         </div>
 

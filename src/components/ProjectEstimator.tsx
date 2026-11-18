@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import {
   MessageSquare,
   PhoneCall,
@@ -84,14 +85,20 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
     const message = encodeURIComponent(
       `Hello Pyrow! I would like to consult with your engineering and marketing team regarding a new technology deployment.`
     );
-    window.open(`https://wa.me/919876543210?text=${message}`, '_blank');
+    window.open(`https://wa.me/916383582980?text=${message}`, '_blank');
   };
 
   return (
-    <section id="estimator" className="relative pt-12 sm:pt-16 pb-6 sm:pb-10 bg-transparent transition-colors duration-300">
+    <section id="contact" className="relative pt-12 sm:pt-16 pb-6 sm:pb-10 bg-transparent transition-colors duration-300 scroll-mt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-9">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{ duration: 0.5 }}
+          className="text-center max-w-3xl mx-auto mb-8 sm:mb-9"
+        >
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/30 text-xs font-mono text-violet-600 dark:text-purple-400 mb-2.5 font-semibold">
             <Zap className="w-3.5 h-3.5" />
             <span>Project Consultation & Scope</span>
@@ -105,11 +112,17 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
           <p className="mt-3 text-base sm:text-lg text-slate-600 dark:text-zinc-400">
             Select your requirements below to receive a custom architecture roadmap and strategic consultation with our lead technical architect.
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Left Column: Interactive Estimator Form (lg:col-span-7) */}
-          <div className="lg:col-span-7">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.08 }}
+            transition={{ duration: 0.5, delay: 0.05 }}
+            className="lg:col-span-7"
+          >
             <div className="p-6 sm:p-8 rounded-3xl bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 shadow-sm dark:shadow-none">
               {!submitted ? (
                 <form onSubmit={handleFormSubmit} className="space-y-6">
@@ -127,17 +140,15 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                             key={d}
                             onClick={() => toggleDiscipline(d)}
                             aria-pressed={isSelected}
-                            className={`p-3.5 rounded-2xl border text-xs font-bold cursor-pointer flex items-center justify-between transition-all focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none ${
-                              isSelected
+                            className={`p-3.5 rounded-2xl border text-xs font-bold cursor-pointer flex items-center justify-between transition-all focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none ${isSelected
                                 ? 'bg-violet-500/10 border-violet-500 text-violet-600 dark:text-white shadow-sm'
                                 : 'bg-slate-50 dark:bg-obsidian-800 text-slate-600 dark:text-zinc-400 border-slate-200/80 dark:border-white/5 hover:border-slate-300'
-                            }`}
+                              }`}
                           >
                             <span>{d}</span>
                             <div
-                              className={`w-4 h-4 rounded-full border flex items-center justify-center ${
-                                isSelected ? 'bg-violet-600 border-violet-400 text-white' : 'border-slate-300 dark:border-zinc-600'
-                              }`}
+                              className={`w-4 h-4 rounded-full border flex items-center justify-center ${isSelected ? 'bg-violet-600 border-violet-400 text-white' : 'border-slate-300 dark:border-zinc-600'
+                                }`}
                             >
                               {isSelected && <CheckCircle className="w-3 h-3 stroke-[3]" />}
                             </div>
@@ -163,11 +174,10 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                               soundFX.playClick();
                               setSelectedTimeline(time);
                             }}
-                            className={`py-2 px-2 text-xs font-semibold rounded-xl border text-center transition-all cursor-pointer ${
-                              isSelected
+                            className={`py-2 px-2 text-xs font-semibold rounded-xl border text-center transition-all cursor-pointer ${isSelected
                                 ? 'bg-purple-600 text-white font-bold border-purple-600 shadow-sm'
                                 : 'bg-slate-50 dark:bg-obsidian-800 text-slate-600 dark:text-zinc-400 border-slate-200/80 dark:border-white/5 hover:text-slate-900'
-                            }`}
+                              }`}
                           >
                             {time}
                           </button>
@@ -192,11 +202,10 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                               soundFX.playClick();
                               setSelectedBudget(b);
                             }}
-                            className={`py-2.5 px-3 text-xs font-mono rounded-xl border text-center transition-all cursor-pointer ${
-                              isSelected
+                            className={`py-2.5 px-3 text-xs font-mono rounded-xl border text-center transition-all cursor-pointer ${isSelected
                                 ? 'bg-violet-600 text-white font-bold border-violet-600 shadow-sm'
                                 : 'bg-slate-50 dark:bg-obsidian-800 text-slate-600 dark:text-zinc-400 border-slate-200/80 dark:border-white/5 hover:text-slate-900'
-                            }`}
+                              }`}
                           >
                             {b}
                           </button>
@@ -304,10 +313,16 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                 </div>
               )}
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Column: Direct Contact & Office Details (lg:col-span-5) */}
-          <div className="lg:col-span-5 space-y-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.08 }}
+            transition={{ duration: 0.5, delay: 0.15 }}
+            className="lg:col-span-5 space-y-6"
+          >
             {/* Instant WhatsApp Gateway */}
             <div className="glass-panel p-6 sm:p-7 rounded-3xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-500/20 shadow-lg">
               <div className="flex items-center gap-3 mb-3">
@@ -341,8 +356,12 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
 
               <div className="space-y-3 text-xs">
                 <div className="flex items-center gap-3 text-slate-700 dark:text-zinc-300">
-                  <PhoneCall className="w-4 h-4 text-violet-600 dark:text-purple-400" />
-                  <a href="tel:+919876543210" className="hover:text-violet-600 dark:hover:text-purple-400 font-mono font-semibold">+91 98765 43210</a>
+                  <PhoneCall className="w-4 h-4 text-violet-600 dark:text-purple-400 shrink-0" />
+                  <div className="flex flex-wrap items-center gap-x-2 font-mono font-semibold">
+                    <a href="tel:+916383582980" className="hover:text-violet-600 dark:hover:text-purple-400">+91 63835 82980</a>
+                    <span className="text-slate-400">/</span>
+                    <a href="tel:+917867009044" className="hover:text-violet-600 dark:hover:text-purple-400">+91 78670 09044</a>
+                  </div>
                 </div>
                 <div className="flex items-center gap-3 text-slate-700 dark:text-zinc-300">
                   <Clock className="w-4 h-4 text-cyber-blue" />
@@ -392,7 +411,7 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

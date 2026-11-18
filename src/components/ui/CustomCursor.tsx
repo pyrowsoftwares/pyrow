@@ -189,7 +189,23 @@ export const CustomCursor: React.FC<CustomCursorProps> = ({ theme }) => {
       animId = requestAnimationFrame(render);
     };
 
+    const handleScroll = () => {
+      if (mouseX >= 0 && mouseY >= 0) {
+        const el = document.elementFromPoint(mouseX, mouseY) as HTMLElement | null;
+        if (el) {
+          const isInteractive = Boolean(
+            el.closest('a, button, [role="button"], input, textarea, select, .cursor-pointer, [data-cursor="pointer"]')
+          );
+          if (isInteractive !== lastHovering) {
+            lastHovering = isInteractive;
+            setIsHovering(isInteractive);
+          }
+        }
+      }
+    };
+
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('mousedown', handleMouseDown);
     window.addEventListener('mouseup', handleMouseUp);
     document.addEventListener('mouseleave', handleMouseLeave);
@@ -202,12 +218,13 @@ export const CustomCursor: React.FC<CustomCursorProps> = ({ theme }) => {
       document.documentElement.classList.remove('has-custom-cursor');
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mouseup', handleMouseUp);
       document.removeEventListener('mouseleave', handleMouseLeave);
       document.removeEventListener('mouseenter', handleMouseEnter);
     };
-  }, [isVisible]);
+  }, []);
 
   if (isTouchDevice) return null;
 

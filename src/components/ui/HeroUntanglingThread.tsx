@@ -366,9 +366,9 @@ export const HeroUntanglingThread: React.FC = () => {
         >
           <h1
             className="w-full flex flex-col items-center justify-center tracking-tight text-center leading-tight select-none font-display"
-            aria-label="We Turn Raw Ideas into Meaningful Digital Software Solutions"
+            aria-label="We Transform Raw Ideas into Meaningful Digital Solutions"
           >
-            <span className="sr-only">We Turn Raw Ideas into Meaningful Digital Software Solutions</span>
+            <span className="sr-only">We Transform Raw Ideas into Meaningful Digital Solutions</span>
 
             {/* Line 1 */}
             <span
@@ -383,7 +383,7 @@ export const HeroUntanglingThread: React.FC = () => {
                 willChange: 'transform, opacity, filter',
               }}
             >
-              We Turn Raw Ideas into
+              We Transform Raw Ideas into
             </span>
 
             {/* Line 2 */}
@@ -399,7 +399,7 @@ export const HeroUntanglingThread: React.FC = () => {
                 willChange: 'transform, opacity, filter',
               }}
             >
-              Meaningful Digital Software
+              Meaningful Digital
             </span>
 
             {/* Line 3 — Fly-Through Zoom Portal Word */}

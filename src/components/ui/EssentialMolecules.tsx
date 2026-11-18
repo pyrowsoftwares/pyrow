@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import {
   Zap,
   ShieldCheck,
@@ -88,7 +89,13 @@ export const EssentialMolecules: React.FC = () => {
     <section className="relative w-full py-16 sm:py-24 bg-transparent text-slate-900 dark:text-white overflow-hidden transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="max-w-3xl mb-12 sm:mb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{ duration: 0.5 }}
+          className="max-w-3xl mb-12 sm:mb-16"
+        >
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/25 dark:border-violet-500/30 text-xs font-mono text-violet-700 dark:text-violet-300 mb-3 font-semibold shadow-sm backdrop-blur-sm transition-colors">
             <Sparkles className="w-3.5 h-3.5 text-violet-600 dark:text-violet-400" />
             <span>Architecture Standards</span>
@@ -102,13 +109,18 @@ export const EssentialMolecules: React.FC = () => {
           <p className="mt-3 text-base sm:text-lg text-slate-600 dark:text-zinc-400 transition-colors">
             Every platform we build is engineered according to these 6 uncompromised technical principles.
           </p>
-        </div>
+        </motion.div>
 
         {/* Molecules Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
-          {molecules.map((m) => (
-            <div
+          {molecules.map((m, idx) => (
+            <motion.div
               key={m.id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.08 }}
+              transition={{ duration: 0.45, delay: idx * 0.06 }}
+              whileHover={{ y: -4 }}
               onMouseEnter={() => soundFX.playHover()}
               className="group p-6 sm:p-7 rounded-3xl bg-white/90 dark:bg-[#130723]/90 hover:bg-white dark:hover:bg-[#190B2E] border border-slate-200/90 dark:border-violet-500/20 hover:border-violet-500/60 shadow-lg hover:shadow-[0_15px_40px_-10px_rgba(124,58,237,0.2)] dark:hover:shadow-[0_15px_40px_-10px_rgba(124,58,237,0.35)] transition-all duration-300 flex flex-col justify-between"
             >
@@ -147,7 +159,7 @@ export const EssentialMolecules: React.FC = () => {
                   </div>
                 ))}
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

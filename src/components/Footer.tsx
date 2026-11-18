@@ -10,10 +10,13 @@ import {
   Lock,
   Globe,
   Sparkles,
+  Phone,
+  MessageSquare,
 } from 'lucide-react';
 import { FlameLogo } from './ui/FlameLogo';
 import { MagneticButton } from './ui/MagneticButton';
 import { soundFX } from './ui/sound-effects';
+import { useRouter } from '../context/RouterContext';
 
 interface FooterProps {
   onOpenStrategyCall: () => void;
@@ -24,6 +27,7 @@ export const Footer: React.FC<FooterProps> = ({
   onOpenStrategyCall,
   onOpenDemoRequest,
 }) => {
+  const { navigate } = useRouter();
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
 
@@ -34,10 +38,9 @@ export const Footer: React.FC<FooterProps> = ({
     setSubscribed(true);
   };
 
-  const scrollTo = (id: string) => {
+  const handleLink = (path: string, scrollToId?: string) => {
     soundFX.playClick();
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    navigate(path, scrollToId);
   };
 
   return (
@@ -66,19 +69,53 @@ export const Footer: React.FC<FooterProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 pb-16 border-b border-slate-200 dark:border-white/10">
           {/* Brand Info (lg:col-span-4) */}
           <div className="lg:col-span-4 space-y-4">
-            <FlameLogo variant="full" size="lg" />
+            <div onClick={() => handleLink('/')} className="cursor-pointer inline-block">
+              <FlameLogo variant="full" size="lg" />
+            </div>
             <p className="text-xs sm:text-sm text-slate-600 dark:text-zinc-400 leading-relaxed max-w-sm mt-3">
-              Pyrow is a leading Indian technology agency. We design and build fast websites, mobile apps, custom company ERP software, and high-return digital marketing campaigns.
+              Pyrow is a global software engineering and digital marketing agency. We design and build fast websites, mobile apps, retail POS suites, custom cloud ERPs, and high-converting marketing campaigns.
             </p>
 
+            {/* Direct Contact Links */}
+            <div className="pt-2 space-y-1.5 text-xs text-slate-600 dark:text-zinc-400">
+              <div className="flex flex-wrap items-center gap-1.5">
+                <MessageSquare className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                <span>WhatsApp:</span>
+                <a
+                  href="https://wa.me/916383582980"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:text-emerald-500 transition-colors font-mono"
+                >
+                  +91 63835 82980
+                </a>
+                <span className="text-slate-400">/</span>
+                <a
+                  href="https://wa.me/917867009044"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:text-emerald-500 transition-colors font-mono"
+                >
+                  +91 78670 09044
+                </a>
+              </div>
+              <a
+                href="mailto:contact@pyrow.in"
+                className="flex items-center gap-2 hover:text-violet-500 transition-colors"
+              >
+                <Mail className="w-3.5 h-3.5 text-violet-500" />
+                <span>Email: contact@pyrow.in</span>
+              </a>
+            </div>
+
             {/* Compliance Trust Badges */}
-            <div className="pt-2 flex flex-wrap gap-2">
+            <div className="pt-3 flex flex-wrap gap-2">
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 dark:bg-obsidian-850 border border-slate-200 dark:border-white/10 text-[10px] font-mono text-slate-700 dark:text-zinc-300 font-semibold">
                 <Lock className="w-3 h-3 text-violet-600 dark:text-purple-400" />
                 SOC2 Type II Ready
               </span>
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 dark:bg-obsidian-850 border border-slate-200 dark:border-white/10 text-[10px] font-mono text-slate-700 dark:text-zinc-300 font-semibold">
-                <ShieldCheck className="w-3 h-3 text-cyber-blue" />
+                <ShieldCheck className="w-3 h-3 text-emerald-500" />
                 ISO 27001 Certified
               </span>
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 dark:bg-obsidian-850 border border-slate-200 dark:border-white/10 text-[10px] font-mono text-slate-700 dark:text-zinc-300 font-semibold">
@@ -87,7 +124,7 @@ export const Footer: React.FC<FooterProps> = ({
               </span>
             </div>
 
-            <div className="flex items-center gap-3 pt-3">
+            <div className="flex items-center gap-3 pt-2">
               <a
                 href="https://linkedin.com"
                 target="_blank"
@@ -118,133 +155,115 @@ export const Footer: React.FC<FooterProps> = ({
             </div>
           </div>
 
-          {/* Column 2: Engineering & Services (lg:col-span-3) */}
+          {/* Column 2: Company & Architecture (lg:col-span-3) */}
           <div className="lg:col-span-3 space-y-3">
             <h4 className="text-xs font-mono font-bold text-slate-900 dark:text-white uppercase tracking-wider">
-              Engineering Disciplines
+              Company & Culture
             </h4>
             <ul className="space-y-2 text-xs text-slate-600 dark:text-zinc-400 font-sans">
               <li>
                 <button
-                  onClick={() => scrollTo('services')}
-                  className="hover:text-violet-600 dark:hover:text-purple-400 transition-colors"
+                  onClick={() => handleLink('/about')}
+                  className="hover:text-violet-600 dark:hover:text-purple-400 transition-colors text-left"
                 >
-                  Web Development & Bespoke UI/UX
+                  About Pyrow
                 </button>
               </li>
               <li>
                 <button
-                  onClick={() => scrollTo('services')}
-                  className="hover:text-violet-600 dark:hover:text-purple-400 transition-colors"
+                  onClick={() => handleLink('/founder')}
+                  className="hover:text-violet-600 dark:hover:text-purple-400 transition-colors text-left"
                 >
-                  Headless E-Commerce & Shopify Plus
+                  Founder & Leadership
                 </button>
               </li>
               <li>
                 <button
-                  onClick={() => scrollTo('services')}
-                  className="hover:text-violet-600 dark:hover:text-purple-400 transition-colors"
+                  onClick={() => handleLink('/philosophy')}
+                  className="hover:text-violet-600 dark:hover:text-purple-400 transition-colors text-left"
                 >
-                  24/7 Cloud DevOps & AWS Management
+                  Philosophy & Core Rules
                 </button>
               </li>
               <li>
                 <button
-                  onClick={() => scrollTo('services')}
-                  className="hover:text-violet-600 dark:hover:text-purple-400 transition-colors"
+                  onClick={() => handleLink('/team')}
+                  className="hover:text-violet-600 dark:hover:text-purple-400 transition-colors text-left"
                 >
-                  Website Revamp & Speed (95+ PageSpeed)
+                  Engineering Squads
                 </button>
               </li>
               <li>
                 <button
-                  onClick={() => scrollTo('services')}
-                  className="hover:text-violet-600 dark:hover:text-purple-400 transition-colors"
+                  onClick={() => handleLink('/why-we-exist')}
+                  className="hover:text-violet-600 dark:hover:text-purple-400 transition-colors text-left"
                 >
-                  Custom Software & Microservices
+                  Why We Exist
                 </button>
               </li>
               <li>
                 <button
-                  onClick={() => scrollTo('services')}
-                  className="hover:text-violet-600 dark:hover:text-purple-400 transition-colors"
+                  onClick={() => handleLink('/careers')}
+                  className="hover:text-violet-600 dark:hover:text-purple-400 transition-colors text-left font-medium text-violet-600 dark:text-violet-400"
                 >
-                  iOS, Android & Flutter Engineering
+                  Careers (We're Hiring)
                 </button>
               </li>
             </ul>
           </div>
 
-          {/* Column 3: Industry Software (lg:col-span-2) */}
+          {/* Column 3: Products & Software (lg:col-span-2) */}
           <div className="lg:col-span-2 space-y-3">
             <h4 className="text-xs font-mono font-bold text-slate-900 dark:text-white uppercase tracking-wider">
-              Software Suites
+              Software & Solutions
             </h4>
             <ul className="space-y-2 text-xs text-slate-600 dark:text-zinc-400 font-sans">
               <li>
                 <button
-                  onClick={() => {
-                    scrollTo('industries');
-                    onOpenDemoRequest('Enterprise ERP');
-                  }}
-                  className="hover:text-cyber-blue transition-colors"
+                  onClick={() => handleLink('/products')}
+                  className="hover:text-violet-600 dark:hover:text-purple-400 transition-colors text-left"
                 >
-                  Enterprise ERP Suite
+                  All Products Suite
                 </button>
               </li>
               <li>
                 <button
-                  onClick={() => {
-                    scrollTo('industries');
-                    onOpenDemoRequest('Predictive CRM');
-                  }}
-                  className="hover:text-cyber-blue transition-colors"
+                  onClick={() => handleLink('/products')}
+                  className="hover:text-violet-600 dark:hover:text-purple-400 transition-colors text-left"
                 >
-                  Predictive CRM Software
+                  Retail POS & Billing
                 </button>
               </li>
               <li>
                 <button
-                  onClick={() => {
-                    scrollTo('industries');
-                    onOpenDemoRequest('Inventory System');
-                  }}
-                  className="hover:text-cyber-blue transition-colors"
+                  onClick={() => handleLink('/products')}
+                  className="hover:text-violet-600 dark:hover:text-purple-400 transition-colors text-left"
                 >
-                  Inventory & Multi-Warehouse
+                  Enterprise Cloud ERP
                 </button>
               </li>
               <li>
                 <button
-                  onClick={() => {
-                    scrollTo('industries');
-                    onOpenDemoRequest('Sub-Second POS');
-                  }}
-                  className="hover:text-cyber-blue transition-colors"
+                  onClick={() => handleLink('/solutions')}
+                  className="hover:text-violet-600 dark:hover:text-purple-400 transition-colors text-left"
                 >
-                  Sub-Second Billing & POS
+                  Industry Verticals
                 </button>
               </li>
               <li>
                 <button
-                  onClick={() => {
-                    scrollTo('industries');
-                    onOpenDemoRequest('WhatsApp Bot API');
-                  }}
-                  className="hover:text-cyber-blue transition-colors"
+                  onClick={() => handleLink('/case-studies')}
+                  className="hover:text-violet-600 dark:hover:text-purple-400 transition-colors text-left"
                 >
-                  WhatsApp Business API Bot
+                  Case Studies & Metrics
                 </button>
               </li>
               <li>
                 <button
-                  onClick={() => {
-                    scrollTo('industries');
-                    onOpenDemoRequest('Hospital EMR');
-                  }}
-                  className="hover:text-cyber-blue transition-colors"
+                  onClick={() => handleLink('/portfolio')}
+                  className="hover:text-violet-600 dark:hover:text-purple-400 transition-colors text-left"
                 >
-                  Hospital & Healthcare EMR
+                  Portfolio & Clients
                 </button>
               </li>
             </ul>
@@ -259,8 +278,23 @@ export const Footer: React.FC<FooterProps> = ({
               Curated breakdowns of modern distributed architectures, performance marketing frameworks, and zero-loss migrations.
             </p>
 
+            <div className="flex flex-wrap gap-2 pt-1">
+              <button
+                onClick={() => handleLink('/blogs')}
+                className="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-obsidian-850 border border-slate-200 dark:border-white/10 text-xs font-medium hover:border-violet-500 transition-colors"
+              >
+                Read Engineering Blog
+              </button>
+              <button
+                onClick={() => handleLink('/contact')}
+                className="px-3 py-1.5 rounded-lg bg-violet-600 text-white text-xs font-medium hover:bg-violet-700 transition-colors"
+              >
+                Direct Inquiry Desk
+              </button>
+            </div>
+
             {!subscribed ? (
-              <form onSubmit={handleSubscribe} className="space-y-2">
+              <form onSubmit={handleSubscribe} className="space-y-2 pt-2">
                 <div className="relative">
                   <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
                   <input
@@ -296,17 +330,26 @@ export const Footer: React.FC<FooterProps> = ({
             © {new Date().getFullYear()} Pyrow Technologies & Systems Inc. All rights reserved.
           </div>
           <div className="flex items-center gap-4">
-            <a href="#" className="hover:text-slate-900 dark:hover:text-white transition-colors">
+            <button
+              onClick={() => handleLink('/privacy-policy')}
+              className="hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
+            >
               Privacy Policy
-            </a>
+            </button>
             <span>•</span>
-            <a href="#" className="hover:text-slate-900 dark:hover:text-white transition-colors">
+            <button
+              onClick={() => handleLink('/terms')}
+              className="hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
+            >
               Terms of Engineering
-            </a>
+            </button>
             <span>•</span>
-            <a href="#" className="hover:text-slate-900 dark:hover:text-white transition-colors">
-              Security Whitepaper
-            </a>
+            <button
+              onClick={() => handleLink('/philosophy')}
+              className="hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
+            >
+              Architecture Standards
+            </button>
           </div>
         </div>
       </div>

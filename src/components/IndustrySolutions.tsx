@@ -120,7 +120,7 @@ export const IndustrySolutions: React.FC<IndustrySolutionsProps> = ({
                   <div className="w-3 h-3 rounded-full bg-amber-500/80" />
                   <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
                   <span className="text-xs font-mono text-slate-500 dark:text-zinc-400 ml-3">
-                    cloud.pyrow.com/{selectedSolution.slug}
+                    cloud.pyrow.in/{selectedSolution.slug}
                   </span>
                 </div>
                 <Badge variant="outline" className="border-emerald-500/30 text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 font-mono text-[11px] gap-1.5">

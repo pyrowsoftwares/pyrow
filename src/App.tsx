@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { RouterProvider, useRouter } from './context/RouterContext';
 import { Navigation } from './components/Navigation';
 import { Hero } from './components/Hero';
 import { Services } from './components/Services';
@@ -11,6 +12,33 @@ import { AboutPyrow } from './components/AboutPyrow';
 import { ProjectEstimator } from './components/ProjectEstimator';
 import { FaqSection } from './components/FaqSection';
 import { Footer } from './components/Footer';
+
+// Reverse-Engineered Home Page Sections (100% Z3Connect Blueprint)
+import { HomeExpertise } from './components/home/HomeExpertise';
+import { HomeFeaturedProducts } from './components/home/HomeFeaturedProducts';
+import { HomeImpactTestimonials } from './components/home/HomeImpactTestimonials';
+import { HomeHowWeWork } from './components/home/HomeHowWeWork';
+import { HomeIndustries } from './components/home/HomeIndustries';
+import { HomeAboutDeepDive } from './components/home/HomeAboutDeepDive';
+import { HomeCtaBanner } from './components/home/HomeCtaBanner';
+
+// Interior Sub-Pages (Z3Connect Full Architecture Recreation)
+import { AboutPage } from './pages/AboutPage';
+import { FounderPage } from './pages/FounderPage';
+import { PhilosophyPage } from './pages/PhilosophyPage';
+import { TeamPage } from './pages/TeamPage';
+import { WhyWeExistPage } from './pages/WhyWeExistPage';
+import { ProductsPage } from './pages/ProductsPage';
+import { SolutionsPage } from './pages/SolutionsPage';
+import { CaseStudiesPage } from './pages/CaseStudiesPage';
+import { PortfolioPage } from './pages/PortfolioPage';
+import { BlogsPage } from './pages/BlogsPage';
+import { ContactPage } from './pages/ContactPage';
+import { CareersPage } from './pages/CareersPage';
+import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage';
+import { TermsPage } from './pages/TermsPage';
+
+// Interactive UI and Modals
 import { StrategyCallModal } from './components/Modals/StrategyCallModal';
 import { DemoRequestModal } from './components/Modals/DemoRequestModal';
 import { CommandPalette } from './components/ui/CommandPalette';
@@ -19,13 +47,13 @@ import { KineticCursorGlow } from './components/ui/KineticCursorGlow';
 import { CustomCursor } from './components/ui/CustomCursor';
 import { AnimatedGlobalBackground } from './components/ui/AnimatedGlobalBackground';
 import { TooltipProvider } from './components/ui/tooltip';
-import { StackingProcessCards } from './components/ui/StackingProcessCards';
 import { EssentialMolecules } from './components/ui/EssentialMolecules';
-import { SpectrumSlider } from './components/ui/SpectrumSlider';
-import { ArrowUp, PhoneCall, Sparkles } from 'lucide-react';
+import { ArrowUp, PhoneCall } from 'lucide-react';
 import { soundFX } from './components/ui/sound-effects';
 
-export default function App() {
+function AppContent() {
+  const { currentPath } = useRouter();
+
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     if (typeof window !== 'undefined') {
       if (!sessionStorage.getItem('pyrow-visited')) {
@@ -36,6 +64,7 @@ export default function App() {
     }
     return 'light';
   });
+
   const [strategyCallModalOpen, setStrategyCallModalOpen] = useState(false);
   const [selectedStrategyTopic, setSelectedStrategyTopic] = useState<string | undefined>();
   const [demoModalOpen, setDemoModalOpen] = useState(false);
@@ -110,6 +139,122 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // Router View Resolver
+  const renderCurrentRoute = () => {
+    // Normalize path (strip trailing slashes if present)
+    const normalized = currentPath.length > 1 && currentPath.endsWith('/')
+      ? currentPath.slice(0, -1)
+      : currentPath;
+
+    switch (normalized) {
+      case '/about':
+        return <AboutPage onOpenStrategyCall={() => handleOpenStrategyCall()} />;
+      case '/founder':
+        return <FounderPage onOpenStrategyCall={() => handleOpenStrategyCall()} />;
+      case '/philosophy':
+        return <PhilosophyPage onOpenStrategyCall={() => handleOpenStrategyCall()} />;
+      case '/team':
+        return <TeamPage onOpenStrategyCall={() => handleOpenStrategyCall()} />;
+      case '/why-we-exist':
+        return <WhyWeExistPage onOpenStrategyCall={() => handleOpenStrategyCall()} />;
+      case '/products':
+        return (
+          <ProductsPage
+            onOpenDemoRequest={handleOpenDemoRequest}
+            onOpenStrategyCall={() => handleOpenStrategyCall()}
+          />
+        );
+      case '/solutions':
+        return (
+          <SolutionsPage
+            onOpenDemoRequest={handleOpenDemoRequest}
+            onOpenStrategyCall={() => handleOpenStrategyCall()}
+          />
+        );
+      case '/case-studies':
+        return <CaseStudiesPage onOpenStrategyCall={() => handleOpenStrategyCall()} />;
+      case '/portfolio':
+      case '/clients':
+        return <PortfolioPage onOpenStrategyCall={() => handleOpenStrategyCall()} />;
+      case '/blogs':
+        return <BlogsPage onOpenStrategyCall={() => handleOpenStrategyCall()} />;
+      case '/contact':
+        return <ContactPage />;
+      case '/careers':
+        return <CareersPage onOpenStrategyCall={() => handleOpenStrategyCall()} />;
+      case '/privacy-policy':
+        return <PrivacyPolicyPage />;
+      case '/terms':
+        return <TermsPage />;
+      case '/':
+      default:
+        return (
+          <>
+            {/* 1. Hero with Filament Untangling & Stats */}
+            <Hero onOpenStrategyCall={() => handleOpenStrategyCall()} />
+
+            {/* 2. Expertise: Software that solves real problems (6 cards) */}
+            <QuantumSnapSection id="services-section">
+              <HomeExpertise />
+            </QuantumSnapSection>
+
+            {/* 3. Featured Products: Tools we've built and shipped (4 flagship cards + link to /products) */}
+            <QuantumSnapSection id="products-section">
+              <HomeFeaturedProducts />
+            </QuantumSnapSection>
+
+            {/* 4. Architecture Standards: Core Molecules Alignment */}
+            <QuantumSnapSection id="architecture-section">
+              <EssentialMolecules />
+            </QuantumSnapSection>
+
+            {/* 5. Impact & Testimonials: Real improvements for real businesses (4 metrics + 8 client testimonials) */}
+            <QuantumSnapSection id="case-studies-section">
+              <HomeImpactTestimonials />
+            </QuantumSnapSection>
+
+            {/* 6. Production Engineering: Built to Scale */}
+            <QuantumSnapSection id="tech-radar-section">
+              <TechRadar />
+            </QuantumSnapSection>
+
+            {/* 7. How We Work: From idea to launch — and beyond */}
+            <QuantumSnapSection id="how-it-works-section">
+              <HomeHowWeWork />
+            </QuantumSnapSection>
+
+            {/* 8. Industries: We've worked across them all */}
+            <QuantumSnapSection id="solutions-section">
+              <HomeIndustries />
+            </QuantumSnapSection>
+
+            {/* 9. Competitive Matrix: Why High-Growth Companies Choose Pyrow */}
+            <QuantumSnapSection id="comparison-section">
+              <ComparisonMatrix />
+            </QuantumSnapSection>
+
+            {/* 10. Our Expertise: What is Pyrow? Deep Dive & Capabilities */}
+            <QuantumSnapSection id="about-section">
+              <HomeAboutDeepDive />
+            </QuantumSnapSection>
+
+            {/* 11. Frequently Asked Questions */}
+            <QuantumSnapSection id="faq-section">
+              <FaqSection />
+            </QuantumSnapSection>
+
+            {/* 12. Final CTA: Ready to automate your business? */}
+            <HomeCtaBanner onOpenStrategyCall={() => handleOpenStrategyCall()} />
+
+            {/* 13. Project Consultation Desk */}
+            <QuantumSnapSection id="estimator-section" className="!mb-0 !my-0">
+              <ProjectEstimator onOpenStrategyCall={() => handleOpenStrategyCall()} />
+            </QuantumSnapSection>
+          </>
+        );
+    }
+  };
+
   return (
     <TooltipProvider>
       <div className="relative min-h-screen bg-transparent text-slate-900 dark:text-zinc-100 selection:bg-violet-600 selection:text-white font-sans transition-colors duration-300">
@@ -122,140 +267,78 @@ export default function App() {
         {/* Unique Pyrow Cyber-Kinetic Cursor */}
         <CustomCursor theme={theme} />
 
-      {/* Global Navigation Bar */}
-      <Navigation
-        onOpenStrategyCall={() => handleOpenStrategyCall()}
-        onOpenDemoRequest={handleOpenDemoRequest}
-        onOpenCommandPalette={() => setCommandPaletteOpen(true)}
-        theme={theme}
-        onToggleTheme={toggleTheme}
-      />
-
-      {/* Main Content Sections: Premium continuous scroll-reactive flow */}
-      <main className="relative z-10 w-full">
-        {/* Section 1: Hero with Signature Untangling Filament Thread */}
-        <Hero
+        {/* Global Navigation Bar */}
+        <Navigation
           onOpenStrategyCall={() => handleOpenStrategyCall()}
+          onOpenDemoRequest={handleOpenDemoRequest}
+          onOpenCommandPalette={() => setCommandPaletteOpen(true)}
+          theme={theme}
+          onToggleTheme={toggleTheme}
         />
 
-        {/* Section 2: Services Matrix */}
-        <QuantumSnapSection id="services-section">
-          <Services
-            onOpenStrategyCall={handleOpenStrategyCall}
-          />
-        </QuantumSnapSection>
+        {/* Active Page View (Unified Stacking Context & Full Accessibility) */}
+        <main className="relative z-10 w-full min-h-screen">
+          {renderCurrentRoute()}
+        </main>
 
-        {/* Section 4: Sticky Stacking Approach Cards (codebuilders.in style) */}
-        <StackingProcessCards />
+        {/* Section 11: Global Footer */}
+        <Footer
+          onOpenStrategyCall={() => handleOpenStrategyCall()}
+          onOpenDemoRequest={handleOpenDemoRequest}
+        />
 
-        {/* Section 5: Essential Architecture Molecules (codebuilders.in style) */}
-        <EssentialMolecules />
+        {/* Floating Scroll-To-Top & Quick Action Pill */}
+        {showScrollTop && (
+          <div className="fixed bottom-6 right-6 z-40 flex items-center gap-2 animate-in fade-in slide-in-from-bottom-4 duration-200">
+            <button
+              onClick={() => {
+                soundFX.playClick();
+                handleOpenStrategyCall();
+              }}
+              className="hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 text-white font-bold text-xs shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 hover:brightness-110 hover:scale-105 active:scale-95 transition-all cursor-pointer"
+            >
+              <PhoneCall className="w-3.5 h-3.5 text-white" />
+              <span>Book a Call</span>
+            </button>
 
-        {/* Section 6: Future-Ready Engineering Spectrum Carousel (codebuilders.in style) */}
-        <SpectrumSlider />
+            <button
+              onClick={scrollToTop}
+              className="p-3 rounded-full bg-white dark:bg-obsidian-850 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-white shadow-xl hover:scale-110 hover:border-violet-500 transition-all"
+              aria-label="Scroll to top"
+            >
+              <ArrowUp className="w-4 h-4 text-violet-600 dark:text-purple-400" />
+            </button>
+          </div>
+        )}
 
-        {/* Section 7: How We Work (4 Simple Steps) */}
-        <QuantumSnapSection id="how-it-works-section">
-          <HowItWorks
-            onOpenStrategyCall={() => handleOpenStrategyCall()}
-          />
-        </QuantumSnapSection>
+        {/* Global Interactive Modals */}
+        <StrategyCallModal
+          isOpen={strategyCallModalOpen}
+          onClose={() => setStrategyCallModalOpen(false)}
+          initialTopic={selectedStrategyTopic}
+        />
 
-        {/* Section 4: Industry-Specific Software Solutions */}
-        <QuantumSnapSection id="solutions-section">
-          <IndustrySolutions
-            onOpenDemoRequest={handleOpenDemoRequest}
-            onOpenStrategyCall={handleOpenStrategyCall}
-          />
-        </QuantumSnapSection>
+        <DemoRequestModal
+          isOpen={demoModalOpen}
+          onClose={() => setDemoModalOpen(false)}
+          softwareName={demoSoftwareName}
+        />
 
-        {/* Section 5: Case Studies (Real Stories & Client Growth) */}
-        <QuantumSnapSection id="case-studies-section">
-          <CaseStudies
-            onOpenStrategyCall={handleOpenStrategyCall}
-          />
-        </QuantumSnapSection>
+        <CommandPalette
+          isOpen={commandPaletteOpen}
+          onClose={() => setCommandPaletteOpen(false)}
+          onOpenStrategyCall={() => handleOpenStrategyCall()}
+          onOpenDemoRequest={handleOpenDemoRequest}
+        />
+      </div>
+    </TooltipProvider>
+  );
+}
 
-        {/* Section 6: Technology Stack */}
-        <QuantumSnapSection id="tech-radar-section">
-          <TechRadar />
-        </QuantumSnapSection>
-
-        {/* Section 7: Why Choose Pyrow (Comparison) */}
-        <QuantumSnapSection id="comparison-section">
-          <ComparisonMatrix />
-        </QuantumSnapSection>
-
-        {/* Section 8: About Pyrow & Leadership */}
-        <QuantumSnapSection id="about-section">
-          <AboutPyrow
-            onOpenStrategyCall={() => handleOpenStrategyCall()}
-          />
-        </QuantumSnapSection>
-
-        {/* Section 9: Frequently Asked Questions (FAQ) */}
-        <QuantumSnapSection id="faq-section">
-          <FaqSection />
-        </QuantumSnapSection>
-
-        {/* Section 10: Project Consultation & Contact */}
-        <QuantumSnapSection id="estimator-section" className="!mb-0 !my-0">
-          <ProjectEstimator
-            onOpenStrategyCall={() => handleOpenStrategyCall()}
-          />
-        </QuantumSnapSection>
-      </main>
-
-      {/* Section 11: Footer */}
-      <Footer
-        onOpenStrategyCall={() => handleOpenStrategyCall()}
-        onOpenDemoRequest={handleOpenDemoRequest}
-      />
-
-      {/* Floating Scroll-To-Top & Quick Action Pill */}
-      {showScrollTop && (
-        <div className="fixed bottom-6 right-6 z-40 flex items-center gap-2 animate-in fade-in slide-in-from-bottom-4 duration-200">
-          <button
-            onClick={() => {
-              soundFX.playClick();
-              handleOpenStrategyCall();
-            }}
-            className="hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-full bg-slate-900 dark:bg-white text-white dark:text-obsidian font-bold text-xs shadow-xl hover:scale-105 transition-all"
-          >
-            <PhoneCall className="w-3.5 h-3.5 text-violet-600 dark:text-purple-400" />
-            <span>Book a Call</span>
-          </button>
-
-          <button
-            onClick={scrollToTop}
-            className="p-3 rounded-full bg-white dark:bg-obsidian-850 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-white shadow-xl hover:scale-110 hover:border-violet-500 transition-all"
-            aria-label="Scroll to top"
-          >
-            <ArrowUp className="w-4 h-4 text-violet-600 dark:text-purple-400" />
-          </button>
-        </div>
-      )}
-
-      {/* Global Interactive Modals */}
-      <StrategyCallModal
-        isOpen={strategyCallModalOpen}
-        onClose={() => setStrategyCallModalOpen(false)}
-        initialTopic={selectedStrategyTopic}
-      />
-
-      <DemoRequestModal
-        isOpen={demoModalOpen}
-        onClose={() => setDemoModalOpen(false)}
-        softwareName={demoSoftwareName}
-      />
-
-      <CommandPalette
-        isOpen={commandPaletteOpen}
-        onClose={() => setCommandPaletteOpen(false)}
-        onOpenStrategyCall={() => handleOpenStrategyCall()}
-        onOpenDemoRequest={handleOpenDemoRequest}
-      />
-    </div>
-  </TooltipProvider>
+export default function App() {
+  return (
+    <RouterProvider>
+      <AppContent />
+    </RouterProvider>
   );
 }

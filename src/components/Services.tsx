@@ -27,25 +27,19 @@ export const Services: React.FC<ServicesProps> = ({
   const tabs = [
     {
       id: 'all',
-      label: 'All Services',
+      label: 'All Solutions',
       count: servicesData.length,
       icon: <Sparkles className="w-3.5 h-3.5" />,
     },
     {
       id: 'web',
-      label: 'Web Dev',
+      label: 'Web Dev & E-Com',
       count: servicesData.filter((s) => s.category === 'web').length,
       icon: <Laptop className="w-3.5 h-3.5" />,
     },
     {
-      id: 'marketing',
-      label: 'Marketing',
-      count: servicesData.filter((s) => s.category === 'marketing').length,
-      icon: <TrendingUp className="w-3.5 h-3.5" />,
-    },
-    {
       id: 'software',
-      label: 'Software',
+      label: 'Custom Software & ERP',
       count: servicesData.filter((s) => s.category === 'software').length,
       icon: <Cpu className="w-3.5 h-3.5" />,
     },
@@ -54,6 +48,12 @@ export const Services: React.FC<ServicesProps> = ({
       label: 'Mobile Apps',
       count: servicesData.filter((s) => s.category === 'mobile').length,
       icon: <Smartphone className="w-3.5 h-3.5" />,
+    },
+    {
+      id: 'marketing',
+      label: 'Digital Marketing & Growth',
+      count: servicesData.filter((s) => s.category === 'marketing').length,
+      icon: <TrendingUp className="w-3.5 h-3.5" />,
     },
   ] as const;
 

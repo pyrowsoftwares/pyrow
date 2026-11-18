@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Cpu, CheckCircle2 } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { soundFX } from './ui/sound-effects';
@@ -125,7 +126,13 @@ export const TechRadar: React.FC = () => {
   return (
     <section id="tech-radar" className="relative py-16 sm:py-20 lg:py-24 bg-transparent transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mb-10 sm:mb-12">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{ duration: 0.5 }}
+          className="max-w-3xl mb-10 sm:mb-12"
+        >
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/25 text-xs font-mono text-violet-600 dark:text-purple-400 mb-3 font-semibold">
             <Cpu className="w-3.5 h-3.5" />
             <span>Modern Technology Stack</span>
@@ -139,10 +146,16 @@ export const TechRadar: React.FC = () => {
           <p className="mt-3 text-base sm:text-lg text-slate-600 dark:text-zinc-400">
             We build with the same high-performance tools used by leading global technology companies — ensuring your software runs fast, stays secure, and never crashes.
           </p>
-        </div>
+        </motion.div>
 
         {/* Category Filter Pills */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-3 mb-8 scrollbar-none">
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.08 }}
+          transition={{ duration: 0.4, delay: 0.1 }}
+          className="flex items-center gap-2 overflow-x-auto pb-3 mb-8 scrollbar-none"
+        >
           {categories.map((c) => (
             <button
               key={c.id}
@@ -159,16 +172,21 @@ export const TechRadar: React.FC = () => {
               {c.label}
             </button>
           ))}
-        </div>
+        </motion.div>
 
         {/* Technologies Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-          {filtered.map((tech) => (
-            <div
+          {filtered.map((tech, idx) => (
+            <motion.div
               key={tech.name}
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.05 }}
+              transition={{ duration: 0.4, delay: (idx % 4) * 0.05 }}
+              whileHover={{ y: -4 }}
               onMouseMove={handleCardMouseMove}
               onMouseEnter={() => soundFX.playHover()}
-              className="p-5 sm:p-6 rounded-3xl bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800/90 hover:border-violet-500/40 dark:hover:border-violet-500/50 transition-all duration-300 hover:-translate-y-1 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-[0_12px_36px_rgba(0,0,0,0.5)] flex flex-col justify-between group overflow-hidden"
+              className="p-5 sm:p-6 rounded-3xl bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800/90 hover:border-violet-500/40 dark:hover:border-violet-500/50 transition-all duration-300 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-[0_12px_36px_rgba(0,0,0,0.5)] flex flex-col justify-between group overflow-hidden"
               style={{
                 backgroundImage: `radial-gradient(350px circle at var(--mouse-x, -200px) var(--mouse-y, -200px), rgba(124, 58, 237, 0.12), transparent 70%)`,
               }}
@@ -194,7 +212,7 @@ export const TechRadar: React.FC = () => {
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
                 <span>Production Hardened Standard</span>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
