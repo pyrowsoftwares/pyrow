@@ -201,6 +201,7 @@ export const Footer: React.FC<FooterProps> = ({
                   Why We Exist
                 </button>
               </li>
+              {/* Careers (Hidden as requested)
               <li>
                 <button
                   onClick={() => handleLink('/careers')}
@@ -209,6 +210,7 @@ export const Footer: React.FC<FooterProps> = ({
                   Careers (We're Hiring)
                 </button>
               </li>
+              */}
             </ul>
           </div>
 

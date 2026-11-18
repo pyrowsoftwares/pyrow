@@ -406,13 +406,14 @@ export const Navigation: React.FC<NavigationProps> = ({
                 Contact
               </button>
 
-              {/* Careers */}
+              {/* Careers (Hidden as requested)
               <button
                 onClick={() => handleNav('/careers')}
                 className="px-3.5 py-2 text-sm font-semibold text-slate-700 dark:text-zinc-300 hover:text-violet-600 dark:hover:text-white rounded-full transition-colors cursor-pointer"
               >
                 Careers
               </button>
+              */}
             </nav>
 
             {/* Right Action Controls: Theme Switcher, Search, Sound, CTAs */}
@@ -620,7 +621,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                       <ArrowRight className="w-4 h-4 text-violet-600" />
                     </button>
 
-                    {/* Mobile Careers */}
+                    {/* Mobile Careers (Hidden as requested)
                     <button
                       onClick={() => handleNav('/careers')}
                       className="text-left text-sm font-semibold text-slate-900 dark:text-white py-2.5 border-b border-slate-100 dark:border-white/5 flex items-center justify-between cursor-pointer hover:text-violet-600 transition-colors"
@@ -628,6 +629,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                       <span>Careers</span>
                       <ArrowRight className="w-4 h-4 text-violet-600" />
                     </button>
+                    */}
 
                     <div className="pt-4 flex flex-col gap-2.5">
                       <MagneticButton
