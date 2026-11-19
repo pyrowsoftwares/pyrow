@@ -73,10 +73,10 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenStrategyCall }) => {
       {/* Mission Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.05 }}
-          transition={{ duration: 0.5 }}
+          initial={{ opacity: 0, y: 35, filter: 'blur(6px)' }}
+          whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          viewport={{ once: false, amount: 0.15 }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           className="p-8 sm:p-12 rounded-3xl bg-white dark:bg-obsidian-900/80 border border-slate-200/80 dark:border-white/10 shadow-sm text-center"
         >
           <span className="text-xs font-mono font-bold text-violet-600 dark:text-violet-400 tracking-wider uppercase">
@@ -100,11 +100,11 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenStrategyCall }) => {
           {stats.map((s, idx) => (
             <motion.div
               key={idx}
-              initial={{ opacity: 0, y: 14 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.05 }}
-              transition={{ duration: 0.4, delay: idx * 0.07 }}
-              whileHover={{ y: -3 }}
+              initial={{ opacity: 0, y: 30, scale: 0.96, filter: 'blur(6px)' }}
+              whileInView={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+              viewport={{ once: false, amount: 0.15 }}
+              transition={{ duration: 0.75, delay: (idx % 4) * 0.1, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={{ y: -5 }}
               className="p-6 rounded-2xl bg-white dark:bg-obsidian-900/50 border border-slate-200/80 dark:border-white/5 shadow-sm transition-all"
             >
               <div className="text-3xl sm:text-4xl font-black font-display bg-gradient-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent">
@@ -133,11 +133,11 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenStrategyCall }) => {
           {rules.map((rule, idx) => (
             <motion.div
               key={idx}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.05 }}
-              transition={{ duration: 0.45, delay: idx * 0.08 }}
-              whileHover={{ y: -4 }}
+              initial={{ opacity: 0, y: 50, scale: 0.95, filter: 'blur(8px)' }}
+              whileInView={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+              viewport={{ once: false, amount: 0.15 }}
+              transition={{ duration: 0.8, delay: (idx % 3) * 0.1, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={{ y: -8, scale: 1.02, transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] } }}
               className="p-8 rounded-3xl bg-white dark:bg-obsidian-900/60 border border-slate-200/80 dark:border-white/10 shadow-sm relative group hover:border-violet-500/50 transition-all"
             >
               <div className="flex items-center justify-between mb-6">

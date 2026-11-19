@@ -163,6 +163,8 @@ export const Navigation: React.FC<NavigationProps> = ({
                         </div>
                       </button>
 
+                      {/* Founder (Commented out as requested) */}
+                      {/*
                       <button
                         onClick={() => handleNav('/founder')}
                         className="w-full text-left p-2.5 rounded-xl hover:bg-slate-100/80 dark:hover:bg-white/5 flex items-start gap-3 transition-colors group cursor-pointer"
@@ -179,6 +181,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                           </div>
                         </div>
                       </button>
+                      */}
 
                       <button
                         onClick={() => handleNav('/philosophy')}
@@ -197,6 +200,8 @@ export const Navigation: React.FC<NavigationProps> = ({
                         </div>
                       </button>
 
+                      {/* Team (Commented out as requested) */}
+                      {/*
                       <button
                         onClick={() => handleNav('/team')}
                         className="w-full text-left p-2.5 rounded-xl hover:bg-slate-100/80 dark:hover:bg-white/5 flex items-start gap-3 transition-colors group cursor-pointer"
@@ -213,6 +218,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                           </div>
                         </div>
                       </button>
+                      */}
 
                       <button
                         onClick={() => handleNav('/why-we-exist')}
@@ -226,7 +232,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                             Why we exist
                           </div>
                           <div className="text-[11px] text-slate-500 dark:text-zinc-400 truncate">
-                            Our purpose & competitive matrix
+                            Our purpose & vision
                           </div>
                         </div>
                       </button>
@@ -507,24 +513,30 @@ export const Navigation: React.FC<NavigationProps> = ({
                           >
                             About us
                           </button>
+                          {/* Founder (Commented out as requested) */}
+                          {/*
                           <button
                             onClick={() => handleNav('/founder')}
                             className="block text-xs text-slate-600 dark:text-zinc-400 hover:text-violet-600 dark:hover:text-white py-1 cursor-pointer"
                           >
                             Founder
                           </button>
+                          */}
                           <button
                             onClick={() => handleNav('/philosophy')}
                             className="block text-xs text-slate-600 dark:text-zinc-400 hover:text-violet-600 dark:hover:text-white py-1 cursor-pointer"
                           >
                             Philosophy
                           </button>
+                          {/* Team (Commented out as requested) */}
+                          {/*
                           <button
                             onClick={() => handleNav('/team')}
                             className="block text-xs text-slate-600 dark:text-zinc-400 hover:text-violet-600 dark:hover:text-white py-1 cursor-pointer"
                           >
                             Team
                           </button>
+                          */}
                           <button
                             onClick={() => handleNav('/why-we-exist')}
                             className="block text-xs text-slate-600 dark:text-zinc-400 hover:text-violet-600 dark:hover:text-white py-1 cursor-pointer"

@@ -69,37 +69,43 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
 
       {/* Badge */}
       {badge && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-50 dark:bg-white/5 border border-violet-200 dark:border-white/10 text-xs font-semibold text-violet-700 dark:text-violet-300 mb-6 shadow-sm"
-        >
-          <span className="w-1.5 h-1.5 rounded-full bg-violet-600 dark:bg-violet-400 animate-pulse" />
-          <span>{badge}</span>
-        </motion.div>
+        <div className="w-full flex justify-center mb-6">
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-50 dark:bg-white/5 border border-violet-200 dark:border-white/10 text-xs font-semibold text-violet-700 dark:text-violet-300 shadow-sm"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-violet-600 dark:bg-violet-400 animate-pulse" />
+            <span>{badge}</span>
+          </motion.div>
+        </div>
       )}
 
       {/* Title */}
-      <motion.h1
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.1 }}
-        className="text-4xl sm:text-5xl md:text-6xl font-black font-display tracking-tight text-slate-900 dark:text-white max-w-4xl mx-auto leading-tight"
-      >
-        {title}{' '}
-        {highlightText && (
-          <span className="bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 dark:from-violet-400 dark:via-purple-300 dark:to-fuchsia-400 bg-clip-text text-transparent">
-            {highlightText}
+      <div className="w-full flex justify-center">
+        <motion.h1
+          initial={{ opacity: 0, y: 40, filter: 'blur(8px)' }}
+          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          transition={{ duration: 0.85, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+          className="text-4xl sm:text-5xl md:text-6xl font-black font-display tracking-tight text-slate-900 dark:text-white max-w-4xl mx-auto leading-tight text-center"
+        >
+          <span>
+            {title}{' '}
+            {highlightText && (
+              <span className="bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 dark:from-violet-400 dark:via-purple-300 dark:to-fuchsia-400 bg-clip-text text-transparent">
+                {highlightText}
+              </span>
+            )}
           </span>
-        )}
-      </motion.h1>
+        </motion.h1>
+      </div>
 
       {/* Description */}
       <motion.p
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
+        initial={{ opacity: 0, y: 25, filter: 'blur(6px)' }}
+        animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+        transition={{ duration: 0.8, delay: 0.22, ease: [0.22, 1, 0.36, 1] }}
         className="mt-6 text-base sm:text-lg md:text-xl text-slate-600 dark:text-zinc-400 max-w-2xl mx-auto leading-relaxed"
       >
         {description}

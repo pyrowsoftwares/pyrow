@@ -98,11 +98,11 @@ export const CareersPage: React.FC<CareersPageProps> = ({ onOpenStrategyCall }) 
           {perks.map((perk, idx) => (
             <motion.div
               key={idx}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.05 }}
-              transition={{ duration: 0.4, delay: (idx % 4) * 0.06 }}
-              whileHover={{ y: -4 }}
+              initial={{ opacity: 0, y: 40, scale: 0.95, filter: 'blur(6px)' }}
+              whileInView={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+              viewport={{ once: false, amount: 0.15 }}
+              transition={{ duration: 0.75, delay: (idx % 4) * 0.1, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={{ y: -8, scale: 1.025, transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] } }}
               className="p-6 rounded-3xl bg-white dark:bg-obsidian-850 border border-slate-200 dark:border-white/10 shadow-sm space-y-4 hover:border-violet-500/40 transition-all"
             >
               <div className="w-10 h-10 rounded-2xl bg-slate-100 dark:bg-obsidian-900 flex items-center justify-center">
@@ -137,11 +137,11 @@ export const CareersPage: React.FC<CareersPageProps> = ({ onOpenStrategyCall }) 
           {positions.map((pos, idx) => (
             <motion.div
               key={pos.id}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.05 }}
-              transition={{ duration: 0.45, delay: idx * 0.07 }}
-              whileHover={{ y: -3 }}
+              initial={{ opacity: 0, y: 35, filter: 'blur(6px)' }}
+              whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              viewport={{ once: false, amount: 0.15 }}
+              transition={{ duration: 0.75, delay: idx * 0.1, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={{ y: -5 }}
               className="p-8 rounded-3xl bg-white dark:bg-obsidian-850 border border-slate-200 dark:border-white/10 shadow-sm hover:shadow-xl hover:border-violet-500/40 transition-all flex flex-col md:flex-row md:items-center justify-between gap-6 group"
             >
               <div className="space-y-3 max-w-2xl">

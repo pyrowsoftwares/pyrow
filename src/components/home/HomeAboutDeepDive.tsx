@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Check, ShieldCheck, Zap, Rocket, Building2, Store, Users, ArrowRight } from 'lucide-react';
 import { useRouter } from '../../context/RouterContext';
 import { soundFX } from '../ui/sound-effects';
+import { LuxurySectionHeading } from '../ui/LuxurySectionHeading';
 
 export const HomeAboutDeepDive: React.FC = () => {
   const { navigate } = useRouter();
@@ -79,34 +80,39 @@ export const HomeAboutDeepDive: React.FC = () => {
   return (
     <section className="py-20 sm:py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-200/80 dark:border-white/10">
       {/* What is Pyrow Intro */}
-      <div className="max-w-4xl mx-auto text-center mb-20">
-        <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-600/10 text-violet-600 dark:text-violet-400 text-xs font-mono font-semibold uppercase tracking-widest border border-violet-500/20 mb-3">
-          Our Expertise
-        </span>
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black font-display text-slate-900 dark:text-white tracking-tight mb-6">
-          What is Pyrow?
-        </h2>
-        <p className="text-sm sm:text-base md:text-lg text-slate-600 dark:text-zinc-300 leading-relaxed">
-          <strong className="text-slate-900 dark:text-white">Pyrow</strong> is an engineering-first software development agency specializing in <span className="text-violet-600 dark:text-violet-400 font-semibold">AI-driven SaaS platforms</span>, <span className="text-violet-600 dark:text-violet-400 font-semibold">custom software development</span>, <span className="text-violet-600 dark:text-violet-400 font-semibold">retail POS & billing systems</span>, and <span className="text-violet-600 dark:text-violet-400 font-semibold">high-converting web platforms</span>. Serving a global clientele across India, the US, and APAC, our mission is to empower ambitious businesses to automate repetitive operations and build resilient software designed for extreme scalability.
-        </p>
-      </div>
+      <LuxurySectionHeading
+        badge="Our Expertise"
+        title="What is Pyrow?"
+        subtitle={
+          <>
+            <strong className="text-slate-900 dark:text-white">Pyrow</strong> is an engineering-first software development agency specializing in{' '}
+            <span className="text-violet-600 dark:text-violet-400 font-semibold">AI-driven SaaS platforms</span>,{' '}
+            <span className="text-violet-600 dark:text-violet-400 font-semibold">custom software development</span>,{' '}
+            <span className="text-violet-600 dark:text-violet-400 font-semibold">retail POS & billing systems</span>, and{' '}
+            <span className="text-violet-600 dark:text-violet-400 font-semibold">high-converting web platforms</span>. Serving a global clientele across India, the US, and APAC, our mission is to empower ambitious businesses to automate repetitive operations and build resilient software designed for extreme scalability.
+          </>
+        }
+        className="max-w-4xl mx-auto mb-20"
+      />
 
       {/* Core Services Capability Breakdown */}
       <div className="mb-20">
-        <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight text-center mb-12">
-          Our Core Service Architecture
-        </h3>
+        <LuxurySectionHeading
+          tag="h3"
+          title="Our Core Service Architecture"
+          className="mb-12"
+        />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {coreServices.map((svc, idx) => (
             <motion.div
               key={idx}
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.05 }}
-              transition={{ duration: 0.45, delay: idx * 0.08 }}
-              whileHover={{ y: -4 }}
-              className="p-8 rounded-3xl bg-white dark:bg-obsidian-850 border border-slate-200/80 dark:border-white/10 shadow-sm flex flex-col justify-between hover:border-violet-500/40 hover:shadow-xl transition-all"
+              initial={{ opacity: 0, y: 50, scale: 0.95 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: false, amount: 0.2 }}
+              transition={{ duration: 0.75, delay: (idx % 3) * 0.1, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={{ y: -8, scale: 1.02, transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] } }}
+              className="p-8 rounded-3xl bg-white dark:bg-obsidian-850 border border-slate-200/80 dark:border-white/10 shadow-sm flex flex-col justify-between hover:border-violet-500/50 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.12)] dark:hover:shadow-[0_20px_40px_-15px_rgba(124,58,237,0.25)] transition-all duration-300"
             >
               <div>
                 <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-3">
@@ -135,13 +141,23 @@ export const HomeAboutDeepDive: React.FC = () => {
 
       {/* Why Choose Pyrow */}
       <div className="mb-20 p-8 sm:p-12 rounded-3xl bg-slate-100/70 dark:bg-obsidian-900/60 border border-slate-200/80 dark:border-white/10">
-        <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight text-center mb-12">
-          Why Choose Pyrow for Your Next Platform
-        </h3>
+        <LuxurySectionHeading
+          tag="h3"
+          title="Why Choose Pyrow for Your Next Platform"
+          className="mb-12"
+        />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {whyChooseUs.map((w, idx) => (
-            <div key={idx} className="space-y-3">
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0, y: 50, scale: 0.95 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: false, amount: 0.2 }}
+              transition={{ duration: 0.75, delay: (idx % 3) * 0.1, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={{ y: -8, scale: 1.02, transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] } }}
+              className="space-y-3 p-6 rounded-2xl bg-white/80 dark:bg-obsidian-850/80 border border-slate-200/50 dark:border-white/5 hover:border-violet-500/40 hover:shadow-[0_15px_35px_-10px_rgba(124,58,237,0.2)] transition-all duration-300 shadow-sm"
+            >
               <div className="w-10 h-10 rounded-2xl bg-white dark:bg-obsidian-850 flex items-center justify-center border border-slate-200 dark:border-white/10 shadow-sm">
                 {w.icon}
               </div>
@@ -151,22 +167,29 @@ export const HomeAboutDeepDive: React.FC = () => {
               <p className="text-xs sm:text-sm text-slate-600 dark:text-zinc-400 leading-relaxed">
                 {w.desc}
               </p>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
 
       {/* Primary Use Cases */}
       <div>
-        <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight text-center mb-12">
-          Primary Use Cases
-        </h3>
+        <LuxurySectionHeading
+          tag="h3"
+          title="Primary Use Cases"
+          className="mb-12"
+        />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {useCases.map((u, idx) => (
-            <div
+            <motion.div
               key={idx}
-              className="p-8 rounded-3xl bg-white dark:bg-obsidian-850 border border-slate-200/80 dark:border-white/10 shadow-sm space-y-3"
+              initial={{ opacity: 0, y: 50, scale: 0.95 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: false, amount: 0.2 }}
+              transition={{ duration: 0.75, delay: (idx % 3) * 0.1, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={{ y: -8, scale: 1.02, transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] } }}
+              className="p-8 rounded-3xl bg-white dark:bg-obsidian-850 border border-slate-200/80 dark:border-white/10 shadow-sm space-y-3 hover:border-violet-500/50 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.12)] dark:hover:shadow-[0_20px_40px_-15px_rgba(124,58,237,0.25)] transition-all duration-300"
             >
               <div className="w-10 h-10 rounded-2xl bg-slate-100 dark:bg-white/5 flex items-center justify-center border border-slate-200/60 dark:border-white/5">
                 {u.icon}
@@ -177,7 +200,7 @@ export const HomeAboutDeepDive: React.FC = () => {
               <p className="text-xs sm:text-sm text-slate-600 dark:text-zinc-400 leading-relaxed">
                 {u.desc}
               </p>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

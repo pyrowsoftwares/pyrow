@@ -4,6 +4,7 @@ import { PageHeader } from '../components/common/PageHeader';
 import { PageCtaBanner } from '../components/common/PageCtaBanner';
 import { ArrowUpRight, CheckCircle2, Layers, Sparkles, Building2, ShoppingBag, Stethoscope, Smartphone, Zap } from 'lucide-react';
 import { soundFX } from '../components/ui/sound-effects';
+import { LuxuryScrollCard } from '../components/ui/LuxuryScrollCard';
 
 interface PortfolioPageProps {
   onOpenStrategyCall: () => void;
@@ -161,15 +162,11 @@ export const PortfolioPage: React.FC<PortfolioPageProps> = ({ onOpenStrategyCall
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <AnimatePresence>
             {filteredProjects.map((project, idx) => (
-              <motion.div
+              <LuxuryScrollCard
                 key={project.id}
-                initial={{ opacity: 0, y: 18 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.05 }}
-                exit={{ opacity: 0, scale: 0.96 }}
-                transition={{ duration: 0.4, delay: (idx % 3) * 0.06 }}
-                whileHover={{ y: -4 }}
-                className="group rounded-3xl bg-white dark:bg-obsidian-850 border border-slate-200 dark:border-white/10 overflow-hidden shadow-sm hover:shadow-xl hover:border-violet-500/40 transition-all flex flex-col justify-between"
+                index={idx}
+                columns={3}
+                className="bg-white dark:bg-obsidian-850 border border-slate-200/80 dark:border-white/10 shadow-lg hover:shadow-[0_25px_60px_-15px_rgba(124,58,237,0.3)] dark:hover:shadow-[0_25px_60px_-15px_rgba(139,92,246,0.35)] justify-between"
               >
                 <div>
                   {/* Top Header Card */}
@@ -225,7 +222,7 @@ export const PortfolioPage: React.FC<PortfolioPageProps> = ({ onOpenStrategyCall
                     ))}
                   </div>
                 </div>
-              </motion.div>
+              </LuxuryScrollCard>
             ))}
           </AnimatePresence>
         </div>

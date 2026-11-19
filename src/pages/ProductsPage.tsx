@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PageHeader } from '../components/common/PageHeader';
 import { PageCtaBanner } from '../components/common/PageCtaBanner';
+import { LuxuryScrollCard } from '../components/ui/LuxuryScrollCard';
 import {
   Bot,
   ShoppingBag,
@@ -44,7 +45,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
   const products = [
     {
       id: 'zassist',
-      name: 'Pyrow Assist (ZAssist)',
+      name: 'Pyrow Assist',
       tag: 'Flagship AI Assistant',
       category: 'ai',
       badge: 'Flagship',
@@ -84,7 +85,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
     },
     {
       id: 'zpos',
-      name: 'Pyrow POS (ZPOS)',
+      name: 'Pyrow POS',
       tag: 'Retail & Restaurant POS',
       category: 'pos',
       badge: 'Sub-Second Speed',
@@ -124,7 +125,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
     },
     {
       id: 'zcrm',
-      name: 'Pyrow CRM (ZCRM)',
+      name: 'Pyrow CRM',
       tag: 'Omnichannel Sales CRM',
       category: 'saas',
       badge: 'High Conversion',
@@ -261,15 +262,11 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <AnimatePresence>
             {filtered.map((prod, idx) => (
-              <motion.div
+              <LuxuryScrollCard
                 key={prod.id}
-                initial={{ opacity: 0, y: 18 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.05 }}
-                exit={{ opacity: 0, scale: 0.96 }}
-                transition={{ duration: 0.4, delay: (idx % 3) * 0.06 }}
-                whileHover={{ y: -4 }}
-                className="p-8 rounded-3xl bg-white dark:bg-obsidian-850 border border-slate-200/80 dark:border-white/10 shadow-sm hover:shadow-xl hover:border-violet-500/50 transition-all flex flex-col justify-between group relative overflow-hidden"
+                index={idx}
+                columns={3}
+                className="p-8 rounded-3xl bg-white dark:bg-obsidian-850 border border-slate-200/80 dark:border-white/10 shadow-sm hover:shadow-xl hover:border-violet-500/50 transition-all flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
@@ -336,7 +333,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
                     Get Pricing
                   </button>
                 </div>
-              </motion.div>
+              </LuxuryScrollCard>
             ))}
           </AnimatePresence>
         </div>

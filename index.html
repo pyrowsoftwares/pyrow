@@ -1,48 +1,46 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <!-- Official Authentic Pyrow Icon Favicon -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" type="image/png" href="/assets/pyrow-icon-transparent.png" />
-    <link rel="apple-touch-icon" href="/assets/pyrow-icon-transparent.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pyrow — Architecting Digital Titans | Enterprise Software & Hyper-Growth Engine</title>
-    <meta name="description" content="Pyrow is an industry-leading IT Services, Enterprise Software, Mobile Engineering, and Performance Digital Marketing Powerhouse. Transforming ambitious visions into industry-defining software." />
-    
-    <!-- Instant Synchronous Theme Initialization (Defaults to Light Aesthetic on Every New Visit) -->
-    <script>
-      (function() {
-        try {
-          if (!sessionStorage.getItem('pyrow-visited')) {
-            // Brand-new visit / browser open: ALWAYS default to Light theme
-            sessionStorage.setItem('pyrow-visited', 'true');
-            sessionStorage.setItem('pyrow-theme', 'light');
-            localStorage.setItem('pyrow-theme', 'light');
-            document.documentElement.classList.remove('dark');
-          } else {
-            var savedTheme = sessionStorage.getItem('pyrow-theme') || localStorage.getItem('pyrow-theme');
-            if (savedTheme === 'dark') {
-              document.documentElement.classList.add('dark');
-            } else {
-              document.documentElement.classList.remove('dark');
-            }
-          }
-        } catch (e) {}
-      })();
-    </script>
+<html lang="en" class="dark">
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
-    <!-- Meta theme color -->
-    <meta name="theme-color" content="#7C3AED" />
-  </head>
-  <body class="bg-gradient-to-b from-[#FAF8FF] via-[#F5F3FF] to-[#FAF8FF] dark:bg-gradient-to-b dark:from-[#0B0816] dark:via-[#0E0C22] dark:to-[#0B0816] text-slate-900 dark:text-zinc-100 font-sans selection:bg-violet-600 selection:text-white antialiased transition-colors duration-200">
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <!-- Official Authentic Pyrow Icon Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/png" href="/assets/pyrow-icon-transparent.png" />
+  <link rel="apple-touch-icon" href="/assets/pyrow-icon-transparent.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pyrow — Architecting Digital Titans | Enterprise Software & Hyper-Growth Engine</title>
+  <meta name="description"
+    content="Pyrow is an industry-leading IT Services, Enterprise Software, Mobile Engineering, and Performance Digital Marketing Powerhouse. Transforming ambitious visions into industry-defining software." />
+
+  <!-- Instant Synchronous Theme Initialization (Defaults to Dark Theme; allows user to toggle to Light) -->
+  <script>
+    (function () {
+      try {
+        var savedTheme = localStorage.getItem('pyrow-theme') || sessionStorage.getItem('pyrow-theme');
+        if (savedTheme === 'light') {
+          document.documentElement.classList.remove('dark');
+        } else {
+          document.documentElement.classList.add('dark');
+        }
+      } catch (e) { }
+    })();
+  </script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+
+  <!-- Meta theme color -->
+  <meta name="theme-color" content="#7C3AED" />
+</head>
+
+<body
+  class="bg-gradient-to-b from-[#FAF8FF] via-[#F5F3FF] to-[#FAF8FF] dark:bg-gradient-to-b dark:from-[#0B0816] dark:via-[#0E0C22] dark:to-[#0B0816] text-slate-900 dark:text-zinc-100 font-sans selection:bg-violet-600 selection:text-white antialiased transition-colors duration-200">
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
 </html>
-

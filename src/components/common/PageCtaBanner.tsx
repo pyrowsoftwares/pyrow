@@ -31,10 +31,10 @@ export const PageCtaBanner: React.FC<PageCtaBannerProps> = ({
   return (
     <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.05 }}
-        transition={{ duration: 0.7 }}
+        initial={{ opacity: 0, y: 50, scale: 0.95, filter: 'blur(8px)' }}
+        whileInView={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+        viewport={{ once: false, amount: 0.2 }}
+        transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
         className="relative rounded-3xl p-8 sm:p-12 md:p-16 overflow-hidden bg-gradient-to-br from-slate-900 via-obsidian-950 to-slate-900 text-white border border-white/10 shadow-2xl text-center"
       >
         {/* Glow circles */}

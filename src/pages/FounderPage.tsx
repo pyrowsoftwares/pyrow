@@ -108,11 +108,11 @@ export const FounderPage: React.FC<FounderPageProps> = ({ onOpenStrategyCall }) 
           {storyPoints.map((item, idx) => (
             <motion.div
               key={idx}
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.05 }}
-              transition={{ duration: 0.45, delay: idx * 0.08 }}
-              whileHover={{ y: -3 }}
+              initial={{ opacity: 0, y: 35, filter: 'blur(6px)' }}
+              whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              viewport={{ once: false, amount: 0.15 }}
+              transition={{ duration: 0.75, delay: idx * 0.1, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={{ y: -5 }}
               className="p-8 rounded-3xl bg-white dark:bg-obsidian-900/60 border border-slate-200/80 dark:border-white/10 shadow-sm flex flex-col sm:flex-row items-start gap-6 transition-all hover:border-violet-500/40"
             >
               <div className="p-3.5 rounded-2xl bg-violet-50 dark:bg-white/5 border border-violet-100 dark:border-white/10 shrink-0">

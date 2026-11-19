@@ -75,10 +75,11 @@ export const PhilosophyPage: React.FC<PhilosophyPageProps> = ({ onOpenStrategyCa
           {rules.map((rule, idx) => (
             <motion.div
               key={idx}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.05 }}
-              transition={{ duration: 0.5, delay: idx * 0.1 }}
+              initial={{ opacity: 0, y: 50, scale: 0.95, filter: 'blur(8px)' }}
+              whileInView={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+              viewport={{ once: false, amount: 0.15 }}
+              transition={{ duration: 0.8, delay: (idx % 3) * 0.1, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={{ y: -8, scale: 1.02, transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] } }}
               className="p-8 rounded-3xl bg-white dark:bg-obsidian-900/60 border border-slate-200/80 dark:border-white/10 shadow-sm relative group hover:border-violet-500/50 transition-all flex flex-col justify-between"
             >
               <div>
@@ -118,11 +119,11 @@ export const PhilosophyPage: React.FC<PhilosophyPageProps> = ({ onOpenStrategyCa
             {mindsets.map((item, idx) => (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, y: 14 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.05 }}
-                transition={{ duration: 0.4, delay: idx * 0.07 }}
-                whileHover={{ y: -3 }}
+                initial={{ opacity: 0, y: 30, scale: 0.96, filter: 'blur(6px)' }}
+                whileInView={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+                viewport={{ once: false, amount: 0.15 }}
+                transition={{ duration: 0.75, delay: (idx % 3) * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                whileHover={{ y: -5 }}
                 className="p-6 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5 transition-all"
               >
                 <div className="p-2.5 rounded-xl bg-white dark:bg-white/10 w-fit mb-4">

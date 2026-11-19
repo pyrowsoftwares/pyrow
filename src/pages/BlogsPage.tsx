@@ -4,6 +4,7 @@ import { PageHeader } from '../components/common/PageHeader';
 import { PageCtaBanner } from '../components/common/PageCtaBanner';
 import { Clock, BookOpen, ArrowUpRight, Calendar, User, Tag } from 'lucide-react';
 import { soundFX } from '../components/ui/sound-effects';
+import { LuxuryScrollCard } from '../components/ui/LuxuryScrollCard';
 
 interface BlogsPageProps {
   onOpenStrategyCall: () => void;
@@ -119,14 +120,11 @@ export const BlogsPage: React.FC<BlogsPageProps> = ({ onOpenStrategyCall }) => {
       <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredArticles.map((article, idx) => (
-            <motion.article
+            <LuxuryScrollCard
               key={article.id}
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.05 }}
-              transition={{ duration: 0.4, delay: (idx % 3) * 0.06 }}
-              whileHover={{ y: -4 }}
-              className="group rounded-3xl bg-white dark:bg-obsidian-850 border border-slate-200 dark:border-white/10 overflow-hidden shadow-sm hover:shadow-xl hover:border-violet-500/40 transition-all flex flex-col justify-between"
+              index={idx}
+              columns={3}
+              className="bg-white dark:bg-obsidian-850 border border-slate-200/80 dark:border-white/10 shadow-sm hover:shadow-xl hover:border-violet-500/40 transition-all flex flex-col justify-between"
             >
               <div className="p-7 space-y-4">
                 <div className="flex items-center justify-between text-xs text-slate-500 dark:text-zinc-400">
@@ -158,7 +156,7 @@ export const BlogsPage: React.FC<BlogsPageProps> = ({ onOpenStrategyCall }) => {
                   <ArrowUpRight className="w-4 h-4" />
                 </div>
               </div>
-            </motion.article>
+            </LuxuryScrollCard>
           ))}
         </div>
       </section>

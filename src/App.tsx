@@ -56,13 +56,13 @@ function AppContent() {
 
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     if (typeof window !== 'undefined') {
-      if (!sessionStorage.getItem('pyrow-visited')) {
+      const saved = localStorage.getItem('pyrow-theme') || sessionStorage.getItem('pyrow-theme');
+      if (saved === 'light') {
         return 'light';
       }
-      const saved = sessionStorage.getItem('pyrow-theme') || localStorage.getItem('pyrow-theme');
-      return saved === 'dark' ? 'dark' : 'light';
+      return 'dark'; // Default as Dark theme
     }
-    return 'light';
+    return 'dark';
   });
 
   const [strategyCallModalOpen, setStrategyCallModalOpen] = useState(false);
@@ -84,9 +84,8 @@ function AppContent() {
   const toggleTheme = () => {
     const newTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(newTheme);
-    sessionStorage.setItem('pyrow-visited', 'true');
-    sessionStorage.setItem('pyrow-theme', newTheme);
     localStorage.setItem('pyrow-theme', newTheme);
+    sessionStorage.setItem('pyrow-theme', newTheme);
     if (newTheme === 'dark') {
       document.documentElement.classList.add('dark');
     } else {
@@ -228,10 +227,12 @@ function AppContent() {
               <HomeIndustries />
             </QuantumSnapSection>
 
-            {/* 9. Competitive Matrix: Why High-Growth Companies Choose Pyrow */}
+            {/* 9. Competitive Matrix: Why High-Growth Companies Choose Pyrow (Commented out as requested) */}
+            {/*
             <QuantumSnapSection id="comparison-section">
               <ComparisonMatrix />
             </QuantumSnapSection>
+            */}
 
             {/* 10. Our Expertise: What is Pyrow? Deep Dive & Capabilities */}
             <QuantumSnapSection id="about-section">
@@ -243,13 +244,8 @@ function AppContent() {
               <FaqSection />
             </QuantumSnapSection>
 
-            {/* 12. Final CTA: Ready to automate your business? */}
+            {/* 12. Final CTA: Ready to automate your business? (Matching z3connect bottom section) */}
             <HomeCtaBanner onOpenStrategyCall={() => handleOpenStrategyCall()} />
-
-            {/* 13. Project Consultation Desk */}
-            <QuantumSnapSection id="estimator-section" className="!mb-0 !my-0">
-              <ProjectEstimator onOpenStrategyCall={() => handleOpenStrategyCall()} />
-            </QuantumSnapSection>
           </>
         );
     }

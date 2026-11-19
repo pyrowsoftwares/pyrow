@@ -45,16 +45,13 @@ export const Hero: React.FC<HeroProps> = ({ onOpenStrategyCall }) => {
         className="relative w-full pt-16 sm:pt-24 pb-16 overflow-hidden bg-transparent scroll-mt-20"
         aria-label="Pyrow Software Engineering & Digital Growth"
       >
-        {/* Subtle Ambient Radial Glow */}
-        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(80%_60%_at_50%_15%,rgba(124,58,237,0.12)_0%,transparent_70%)] dark:bg-[radial-gradient(80%_60%_at_50%_15%,rgba(124,58,237,0.22)_0%,transparent_70%)] transition-opacity duration-300" />
-
         <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10 flex flex-col items-center">
           {/* Eyebrow Badge */}
           <motion.div
-            initial={{ opacity: 0, y: -16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            initial={{ opacity: 0, y: -20, filter: 'blur(6px)' }}
+            whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             className="inline-flex items-center justify-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-white/90 dark:bg-slate-900/90 border border-violet-500/25 dark:border-violet-500/30 text-xs text-slate-700 dark:text-zinc-300 shadow-sm mb-5 backdrop-blur-md transition-colors"
           >
             <span className="relative flex h-2 w-2 flex-shrink-0">
@@ -72,25 +69,27 @@ export const Hero: React.FC<HeroProps> = ({ onOpenStrategyCall }) => {
 
           {/* Primary Headline */}
           <motion.h1
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.1 }}
+            initial={{ opacity: 0, y: 40, filter: 'blur(8px)' }}
+            whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 0.85, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
             className="w-full text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black font-display tracking-tight text-slate-900 dark:text-white max-w-5xl mx-auto leading-tight sm:leading-[1.08] text-center transition-colors"
           >
-            We Build Software Products{' '}
-            <br className="hidden sm:inline" />
-            <span className="bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 dark:from-violet-400 dark:via-purple-300 dark:to-fuchsia-400 bg-clip-text text-transparent">
-              and Grow Them with Digital Marketing
+            <span>
+              We Build Software Products{' '}
+              <br className="hidden sm:inline" />
+              <span className="bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 dark:from-violet-400 dark:via-purple-300 dark:to-fuchsia-400 bg-clip-text text-transparent">
+                and Grow Them with Digital Marketing
+              </span>
             </span>
           </motion.h1>
 
           {/* Subtitle */}
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.2 }}
+            initial={{ opacity: 0, y: 25, filter: 'blur(6px)' }}
+            whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 0.8, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
             className="mt-4 sm:mt-5 text-base sm:text-xl md:text-2xl text-slate-600 dark:text-zinc-300 max-w-3xl mx-auto leading-relaxed text-center font-normal transition-colors"
           >
             From raw idea to launch to customers, all under one roof
@@ -98,10 +97,10 @@ export const Hero: React.FC<HeroProps> = ({ onOpenStrategyCall }) => {
 
           {/* Action Buttons */}
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.3 }}
+            initial={{ opacity: 0, y: 25, scale: 0.96 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 0.75, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
             className="w-full mt-7 sm:mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 max-w-xs sm:max-w-none mx-auto"
           >
             <MagneticButton
@@ -130,10 +129,10 @@ export const Hero: React.FC<HeroProps> = ({ onOpenStrategyCall }) => {
 
           {/* Quick Metrics Trust Pill (Z3Connect Section 1) */}
           <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.35 }}
+            initial={{ opacity: 0, y: 20, scale: 0.96 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 0.7, delay: 0.34, ease: [0.22, 1, 0.36, 1] }}
             className="mt-6 inline-flex items-center gap-4 sm:gap-6 px-5 py-2 rounded-full bg-white/80 dark:bg-white/5 border border-slate-200/80 dark:border-white/10 text-xs font-mono font-medium text-slate-700 dark:text-zinc-300 shadow-sm"
           >
             <div>
@@ -151,10 +150,10 @@ export const Hero: React.FC<HeroProps> = ({ onOpenStrategyCall }) => {
 
           {/* Tech Molecules Marquee */}
           <motion.div
-            initial={{ opacity: 0, y: 14 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.4 }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 0.75, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
             className="w-full max-w-4xl mx-auto overflow-hidden relative mt-8 sm:mt-10"
           >
             <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[#FAF8FF] dark:from-[#0B0F19] to-transparent z-10 pointer-events-none transition-colors" />
@@ -177,10 +176,10 @@ export const Hero: React.FC<HeroProps> = ({ onOpenStrategyCall }) => {
 
         {/* KPI Trust Bar */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+          initial={{ opacity: 0, y: 30, filter: 'blur(6px)' }}
+          whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          viewport={{ once: false, amount: 0.2 }}
+          transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
           className="relative z-10 mt-14 border-t border-b border-slate-200/90 dark:border-white/10 bg-white/85 dark:bg-[#141D30]/90 backdrop-blur-md py-6 sm:py-7 transition-colors duration-300"
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

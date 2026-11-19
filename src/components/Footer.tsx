@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import {
   ShieldCheck,
   ArrowRight,
@@ -46,7 +47,11 @@ export const Footer: React.FC<FooterProps> = ({
   return (
     <footer className="relative bg-white/80 dark:bg-[#0B0F19]/80 backdrop-blur-md border-t border-slate-200/70 dark:border-slate-800 overflow-hidden transition-colors duration-300">
       {/* High-Impact Animated Call-To-Action Marquee Banner */}
-      <div
+      <motion.div
+        initial={{ opacity: 0, y: 30, filter: 'blur(6px)' }}
+        whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+        viewport={{ once: false, amount: 0.2 }}
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         onClick={onOpenStrategyCall}
         className="group relative cursor-pointer py-6 sm:py-8 bg-gradient-to-r from-violet-700 via-purple-600 to-indigo-600 text-white overflow-hidden select-none transition-all duration-300 hover:brightness-105"
       >
@@ -62,11 +67,17 @@ export const Footer: React.FC<FooterProps> = ({
             </div>
           ))}
         </div>
-      </div>
+      </motion.div>
 
       {/* Main Footer Directory */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20 pb-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 pb-16 border-b border-slate-200 dark:border-white/10">
+        <motion.div
+          initial={{ opacity: 0, y: 35, filter: 'blur(6px)' }}
+          whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          viewport={{ once: false, amount: 0.15 }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 pb-16 border-b border-slate-200 dark:border-white/10"
+        >
           {/* Brand Info (lg:col-span-4) */}
           <div className="lg:col-span-4 space-y-4">
             <div onClick={() => handleLink('/')} className="cursor-pointer inline-block">
@@ -169,6 +180,8 @@ export const Footer: React.FC<FooterProps> = ({
                   About Pyrow
                 </button>
               </li>
+              {/* Founder & Leadership (Commented out as requested) */}
+              {/*
               <li>
                 <button
                   onClick={() => handleLink('/founder')}
@@ -177,6 +190,7 @@ export const Footer: React.FC<FooterProps> = ({
                   Founder & Leadership
                 </button>
               </li>
+              */}
               <li>
                 <button
                   onClick={() => handleLink('/philosophy')}
@@ -185,6 +199,8 @@ export const Footer: React.FC<FooterProps> = ({
                   Philosophy & Core Rules
                 </button>
               </li>
+              {/* Engineering Squads / Team (Commented out as requested) */}
+              {/*
               <li>
                 <button
                   onClick={() => handleLink('/team')}
@@ -193,6 +209,7 @@ export const Footer: React.FC<FooterProps> = ({
                   Engineering Squads
                 </button>
               </li>
+              */}
               <li>
                 <button
                   onClick={() => handleLink('/why-we-exist')}
@@ -324,10 +341,16 @@ export const Footer: React.FC<FooterProps> = ({
               </div>
             )}
           </div>
-        </div>
+        </motion.div>
 
         {/* Legal & Copyright */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-slate-500 dark:text-zinc-400">
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-slate-500 dark:text-zinc-400"
+        >
           <div>
             © {new Date().getFullYear()} Pyrow Technologies & Systems Inc. All rights reserved.
           </div>
@@ -353,7 +376,7 @@ export const Footer: React.FC<FooterProps> = ({
               Architecture Standards
             </button>
           </div>
-        </div>
+        </motion.div>
       </div>
     </footer>
   );

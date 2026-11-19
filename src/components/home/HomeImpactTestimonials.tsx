@@ -3,6 +3,8 @@ import { motion } from 'framer-motion';
 import { Quote, ArrowRight } from 'lucide-react';
 import { useRouter } from '../../context/RouterContext';
 import { soundFX } from '../ui/sound-effects';
+import { LuxuryScrollCard } from '../ui/LuxuryScrollCard';
+import { LuxurySectionHeading } from '../ui/LuxurySectionHeading';
 
 export const HomeImpactTestimonials: React.FC = () => {
   const { navigate } = useRouter();
@@ -75,26 +77,19 @@ export const HomeImpactTestimonials: React.FC = () => {
 
   return (
     <section className="py-20 sm:py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-200/80 dark:border-white/10">
-      <div className="text-center max-w-3xl mx-auto mb-16">
-        <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-600/10 text-violet-600 dark:text-violet-400 text-xs font-mono font-semibold uppercase tracking-widest border border-violet-500/20 mb-3">
-          Impact & Testimonials
-        </span>
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black font-display text-slate-900 dark:text-white tracking-tight">
-          Real improvements for real businesses.
-        </h2>
-      </div>
+      <LuxurySectionHeading
+        badge="Impact & Testimonials"
+        title="Real improvements for real businesses."
+      />
 
       {/* 4 Metric Callout Blocks */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
         {metrics.map((m, idx) => (
-          <motion.div
+          <LuxuryScrollCard
             key={idx}
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.05 }}
-            transition={{ duration: 0.45, delay: idx * 0.07 }}
-            whileHover={{ y: -4 }}
-            className="p-8 rounded-3xl bg-white dark:bg-obsidian-850 border border-slate-200/80 dark:border-white/10 shadow-sm text-center flex flex-col justify-between transition-all"
+            index={idx}
+            columns={4}
+            className="p-8 rounded-3xl bg-white dark:bg-obsidian-850 border border-slate-200/80 dark:border-white/10 shadow-sm hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.12)] dark:hover:shadow-[0_20px_40px_-15px_rgba(124,58,237,0.25)] text-center flex flex-col justify-between transition-all"
           >
             <div>
               <div className="text-4xl sm:text-5xl font-black font-display bg-gradient-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent mb-2">
@@ -107,21 +102,18 @@ export const HomeImpactTestimonials: React.FC = () => {
             <div className="text-xs text-slate-500 dark:text-zinc-400 font-mono mt-4 pt-4 border-t border-slate-100 dark:border-white/5">
               {m.sub}
             </div>
-          </motion.div>
+          </LuxuryScrollCard>
         ))}
       </div>
 
       {/* Testimonials Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
         {testimonials.map((t, idx) => (
-          <motion.div
+          <LuxuryScrollCard
             key={idx}
-            initial={{ opacity: 0, scale: 0.96 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true, amount: 0.05 }}
-            transition={{ duration: 0.4, delay: idx * 0.05 }}
-            whileHover={{ y: -3 }}
-            className="p-6 rounded-3xl bg-slate-50 dark:bg-obsidian-900/60 border border-slate-200/60 dark:border-white/5 flex flex-col justify-between group hover:border-violet-500/30 transition-all"
+            index={idx}
+            columns={4}
+            className="p-6 rounded-3xl bg-slate-50 dark:bg-obsidian-900/60 border border-slate-200/60 dark:border-white/5 flex flex-col justify-between group hover:border-violet-500/40 hover:shadow-[0_15px_30px_-10px_rgba(124,58,237,0.2)] transition-all"
           >
             <div>
               <Quote className="w-5 h-5 text-violet-500 mb-3 opacity-60" />
@@ -137,7 +129,7 @@ export const HomeImpactTestimonials: React.FC = () => {
                 {t.role}
               </div>
             </div>
-          </motion.div>
+          </LuxuryScrollCard>
         ))}
       </div>
 

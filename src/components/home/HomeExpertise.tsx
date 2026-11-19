@@ -3,6 +3,8 @@ import { motion } from 'framer-motion';
 import { Bot, ShoppingBag, Cloud, Layers, Globe, Cpu, ArrowUpRight } from 'lucide-react';
 import { useRouter } from '../../context/RouterContext';
 import { soundFX } from '../ui/sound-effects';
+import { LuxuryScrollCard } from '../ui/LuxuryScrollCard';
+import { LuxurySectionHeading } from '../ui/LuxurySectionHeading';
 
 export const HomeExpertise: React.FC = () => {
   const { navigate } = useRouter();
@@ -54,40 +56,22 @@ export const HomeExpertise: React.FC = () => {
 
   return (
     <section id="services-section" className="py-20 sm:py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-      <div className="text-center max-w-3xl mx-auto mb-16">
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.05 }}
-          className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-600/10 text-violet-600 dark:text-violet-400 text-xs font-mono font-semibold uppercase tracking-widest border border-violet-500/20 mb-3"
-        >
-          Expertise
-        </motion.div>
-        <motion.h2
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.05 }}
-          transition={{ duration: 0.5 }}
-          className="text-3xl sm:text-4xl md:text-5xl font-black font-display text-slate-900 dark:text-white tracking-tight"
-        >
-          Software that solves real problems.
-        </motion.h2>
-      </div>
+      <LuxurySectionHeading
+        badge="Expertise"
+        title="Software that solves real problems."
+      />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
         {services.map((item, idx) => (
-          <motion.div
+          <LuxuryScrollCard
             key={idx}
-            initial={{ opacity: 0, y: 18 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.05 }}
-            transition={{ duration: 0.45, delay: idx * 0.07 }}
-            whileHover={{ y: -4 }}
+            index={idx}
+            columns={3}
             onClick={() => {
               soundFX.playClick();
               navigate(item.link);
             }}
-            className="group p-8 rounded-3xl bg-white dark:bg-obsidian-850 border border-slate-200/80 dark:border-white/10 hover:border-violet-500/50 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between cursor-pointer"
+            className="p-8 rounded-3xl bg-white dark:bg-obsidian-850 border border-slate-200/80 dark:border-white/10 hover:border-violet-500/50 shadow-md hover:shadow-[0_25px_50px_-15px_rgba(124,58,237,0.25)] dark:hover:shadow-[0_30px_60px_-15px_rgba(139,92,246,0.35)] flex flex-col justify-between cursor-pointer"
           >
             <div>
               <div className="flex items-center justify-between mb-6">
@@ -112,7 +96,7 @@ export const HomeExpertise: React.FC = () => {
               <span>Explore details</span>
               <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             </div>
-          </motion.div>
+          </LuxuryScrollCard>
         ))}
       </div>
     </section>

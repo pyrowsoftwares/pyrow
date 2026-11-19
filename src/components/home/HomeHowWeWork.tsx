@@ -1,6 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Search, Palette, Code2, Rocket, Infinity as InfinityIcon } from 'lucide-react';
+import { LuxuryScrollCard } from '../ui/LuxuryScrollCard';
+import { LuxurySectionHeading } from '../ui/LuxurySectionHeading';
 
 export const HomeHowWeWork: React.FC = () => {
   const steps = [
@@ -32,32 +34,24 @@ export const HomeHowWeWork: React.FC = () => {
 
   return (
     <section className="py-20 sm:py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-200/80 dark:border-white/10">
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-16 gap-6">
-        <div>
-          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-600/10 text-violet-600 dark:text-violet-400 text-xs font-mono font-semibold uppercase tracking-widest border border-violet-500/20 mb-3">
-            How we work
-          </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black font-display text-slate-900 dark:text-white tracking-tight">
-            From idea to launch — and beyond.
-          </h2>
-        </div>
-
-        <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white dark:bg-obsidian-850 border border-slate-200/80 dark:border-white/10 text-xs font-bold text-slate-800 dark:text-zinc-200 shadow-sm self-start sm:self-auto">
-          <InfinityIcon className="w-4 h-4 text-violet-600 dark:text-violet-400" />
-          <span>Continuous Partnership</span>
-        </div>
-      </div>
+      <LuxurySectionHeading
+        badge="How we work"
+        title="From idea to launch — and beyond."
+        rightAction={
+          <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white dark:bg-obsidian-850 border border-slate-200/80 dark:border-white/10 text-xs font-bold text-slate-800 dark:text-zinc-200 shadow-sm">
+            <InfinityIcon className="w-4 h-4 text-violet-600 dark:text-violet-400" />
+            <span>Continuous Partnership</span>
+          </div>
+        }
+      />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {steps.map((step, idx) => (
-          <motion.div
+          <LuxuryScrollCard
             key={idx}
-            initial={{ opacity: 0, y: 18 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.05 }}
-            transition={{ duration: 0.45, delay: idx * 0.08 }}
-            whileHover={{ y: -4 }}
-            className="p-8 rounded-3xl bg-white dark:bg-obsidian-850 border border-slate-200/80 dark:border-white/10 shadow-sm relative overflow-hidden flex flex-col justify-between group hover:border-violet-500/40 transition-all"
+            index={idx}
+            columns={4}
+            className="p-8 rounded-3xl bg-white dark:bg-obsidian-850 border border-slate-200/80 dark:border-white/10 shadow-sm relative overflow-hidden flex flex-col justify-between group hover:border-violet-500/40 hover:shadow-[0_20px_40px_-15px_rgba(124,58,237,0.25)] transition-all"
           >
             <div>
               <div className="flex items-center justify-between mb-6">
@@ -77,7 +71,7 @@ export const HomeHowWeWork: React.FC = () => {
                 {step.desc}
               </p>
             </div>
-          </motion.div>
+          </LuxuryScrollCard>
         ))}
       </div>
     </section>

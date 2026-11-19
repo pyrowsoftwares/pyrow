@@ -3,6 +3,8 @@ import { motion } from 'framer-motion';
 import { PageHeader } from '../components/common/PageHeader';
 import { PageCtaBanner } from '../components/common/PageCtaBanner';
 import { TrendingUp, Clock, CheckCircle2, Shield, Users, ArrowRight } from 'lucide-react';
+import { LuxuryScrollCard } from '../components/ui/LuxuryScrollCard';
+import { LuxurySectionHeading } from '../components/ui/LuxurySectionHeading';
 
 interface CaseStudiesPageProps {
   onOpenStrategyCall: () => void;
@@ -81,13 +83,10 @@ export const CaseStudiesPage: React.FC<CaseStudiesPageProps> = ({ onOpenStrategy
       <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           {metrics.map((m, idx) => (
-            <motion.div
+            <LuxuryScrollCard
               key={idx}
-              initial={{ opacity: 0, y: 14 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.05 }}
-              transition={{ duration: 0.4, delay: idx * 0.07 }}
-              whileHover={{ y: -3 }}
+              index={idx}
+              columns={4}
               className="p-6 rounded-3xl bg-white dark:bg-obsidian-900/60 border border-slate-200/80 dark:border-white/10 shadow-sm transition-all"
             >
               <div className="text-3xl sm:text-4xl font-black font-display bg-gradient-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent">
@@ -99,31 +98,25 @@ export const CaseStudiesPage: React.FC<CaseStudiesPageProps> = ({ onOpenStrategy
               <div className="mt-1 text-[11px] text-slate-500 dark:text-zinc-400">
                 {m.sub}
               </div>
-            </motion.div>
+            </LuxuryScrollCard>
           ))}
         </div>
       </section>
 
       {/* Deep Case Studies Grid */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
-        <div className="text-center mb-12">
-          <span className="text-xs font-mono font-bold text-violet-600 dark:text-violet-400 uppercase tracking-wider">
-            Featured Deployments
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-black font-display text-slate-900 dark:text-white mt-2">
-            Engineering Case Studies
-          </h2>
-        </div>
+        <LuxurySectionHeading
+          badge="Featured Deployments"
+          title="Engineering Case Studies"
+          className="mb-12"
+        />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {caseStudies.map((cs, idx) => (
-            <motion.div
+            <LuxuryScrollCard
               key={idx}
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.05 }}
-              transition={{ duration: 0.45, delay: idx * 0.08 }}
-              whileHover={{ y: -4 }}
+              index={idx}
+              columns={2}
               className="p-8 rounded-3xl bg-white dark:bg-obsidian-900/70 border border-slate-200/80 dark:border-white/10 shadow-sm flex flex-col justify-between group hover:border-violet-500/50 hover:shadow-xl transition-all"
             >
               <div>
@@ -154,26 +147,25 @@ export const CaseStudiesPage: React.FC<CaseStudiesPageProps> = ({ onOpenStrategy
                   </span>
                 ))}
               </div>
-            </motion.div>
+            </LuxuryScrollCard>
           ))}
         </div>
       </section>
 
       {/* Client Testimonials Wall */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
-        <div className="text-center mb-12">
-          <span className="text-xs font-mono font-bold text-violet-600 dark:text-violet-400 uppercase tracking-wider">
-            Client Voices
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-black font-display text-slate-900 dark:text-white mt-2">
-            The Business Impact in Their Words
-          </h2>
-        </div>
+        <LuxurySectionHeading
+          badge="Client Voices"
+          title="The Business Impact in Their Words"
+          className="mb-12"
+        />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {testimonials.map((t, idx) => (
-            <div
+            <LuxuryScrollCard
               key={idx}
+              index={idx}
+              columns={3}
               className="p-7 rounded-3xl bg-white dark:bg-obsidian-900/60 border border-slate-200/80 dark:border-white/10 shadow-sm flex flex-col justify-between"
             >
               <p className="text-sm sm:text-base text-slate-700 dark:text-zinc-300 italic leading-relaxed mb-6">
@@ -187,7 +179,7 @@ export const CaseStudiesPage: React.FC<CaseStudiesPageProps> = ({ onOpenStrategy
                   {t.company}
                 </div>
               </div>
-            </div>
+            </LuxuryScrollCard>
           ))}
         </div>
       </section>

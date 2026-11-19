@@ -18,10 +18,10 @@ export const PrivacyPolicyPage: React.FC = () => {
       />
 
       <motion.article
-        initial={{ opacity: 0, y: 16 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.05 }}
-        transition={{ duration: 0.5 }}
+        initial={{ opacity: 0, y: 30, filter: 'blur(6px)' }}
+        whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+        viewport={{ once: false, amount: 0.1 }}
+        transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
         className="py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto space-y-12"
       >
         <section className="space-y-4">

@@ -93,10 +93,10 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.1 }}
-          transition={{ duration: 0.5 }}
+          initial={{ opacity: 0, y: 35, filter: 'blur(6px)' }}
+          whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          viewport={{ once: false, amount: 0.15 }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           className="text-center max-w-3xl mx-auto mb-8 sm:mb-9"
         >
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/30 text-xs font-mono text-violet-600 dark:text-purple-400 mb-2.5 font-semibold">
@@ -117,10 +117,10 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Left Column: Interactive Estimator Form (lg:col-span-7) */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.08 }}
-            transition={{ duration: 0.5, delay: 0.05 }}
+            initial={{ opacity: 0, y: 35, filter: 'blur(6px)' }}
+            whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            viewport={{ once: false, amount: 0.1 }}
+            transition={{ duration: 0.75, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
             className="lg:col-span-7"
           >
             <div className="p-6 sm:p-8 rounded-3xl bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 shadow-sm dark:shadow-none">
@@ -317,10 +317,10 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
 
           {/* Right Column: Direct Contact & Office Details (lg:col-span-5) */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.08 }}
-            transition={{ duration: 0.5, delay: 0.15 }}
+            initial={{ opacity: 0, y: 35, filter: 'blur(6px)' }}
+            whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            viewport={{ once: false, amount: 0.1 }}
+            transition={{ duration: 0.75, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
             className="lg:col-span-5 space-y-6"
           >
             {/* Instant WhatsApp Gateway */}

@@ -58,11 +58,11 @@ export const TeamPage: React.FC<TeamPageProps> = ({ onOpenStrategyCall }) => {
           {squads.map((squad, idx) => (
             <motion.div
               key={idx}
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.05 }}
-              transition={{ duration: 0.45, delay: idx * 0.08 }}
-              whileHover={{ y: -4 }}
+              initial={{ opacity: 0, y: 50, scale: 0.95, filter: 'blur(8px)' }}
+              whileInView={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+              viewport={{ once: false, amount: 0.15 }}
+              transition={{ duration: 0.8, delay: (idx % 2) * 0.1, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={{ y: -8, scale: 1.025, transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] } }}
               className="p-8 rounded-3xl bg-white dark:bg-obsidian-900/60 border border-slate-200/80 dark:border-white/10 shadow-sm relative group hover:border-violet-500/50 transition-all flex flex-col justify-between"
             >
               <div>

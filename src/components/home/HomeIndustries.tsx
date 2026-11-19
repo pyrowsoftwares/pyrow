@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { useRouter } from '../../context/RouterContext';
 import { soundFX } from '../ui/sound-effects';
+import { LuxurySectionHeading } from '../ui/LuxurySectionHeading';
 
 export const HomeIndustries: React.FC = () => {
   const { navigate } = useRouter();
@@ -24,23 +25,20 @@ export const HomeIndustries: React.FC = () => {
 
   return (
     <section className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-200/80 dark:border-white/10">
-      <div className="text-center max-w-3xl mx-auto mb-12">
-        <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-600/10 text-violet-600 dark:text-violet-400 text-xs font-mono font-semibold uppercase tracking-widest border border-violet-500/20 mb-3">
-          Industries
-        </span>
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black font-display text-slate-900 dark:text-white tracking-tight">
-          We've worked across them all.
-        </h2>
-      </div>
+      <LuxurySectionHeading
+        badge="Industries"
+        title="We've worked across them all."
+        className="mb-12"
+      />
 
       <div className="flex flex-wrap items-center justify-center gap-3 max-w-4xl mx-auto mb-12">
         {industries.map((ind, idx) => (
           <motion.button
             key={idx}
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true, amount: 0.05 }}
-            transition={{ duration: 0.3, delay: idx * 0.025 }}
+            initial={{ opacity: 0, y: 14, scale: 0.94 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: false, amount: 0.1 }}
+            transition={{ duration: 0.35, delay: idx * 0.03, ease: [0.22, 1, 0.36, 1] }}
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.96 }}
             onClick={() => {

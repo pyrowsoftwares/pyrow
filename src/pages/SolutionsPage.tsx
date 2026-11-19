@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { PageHeader } from '../components/common/PageHeader';
 import { PageCtaBanner } from '../components/common/PageCtaBanner';
+import { LuxuryScrollCard } from '../components/ui/LuxuryScrollCard';
 import {
   ShoppingBag,
   HeartPulse,
@@ -91,13 +92,10 @@ export const SolutionsPage: React.FC<SolutionsPageProps> = ({
       <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {industries.map((ind, idx) => (
-            <motion.div
+            <LuxuryScrollCard
               key={idx}
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.05 }}
-              transition={{ duration: 0.4, delay: (idx % 4) * 0.05 }}
-              whileHover={{ y: -4 }}
+              index={idx}
+              columns={4}
               className="p-7 rounded-3xl bg-white dark:bg-obsidian-900/60 border border-slate-200/80 dark:border-white/10 shadow-sm flex flex-col justify-between group hover:border-violet-500/50 hover:shadow-xl transition-all"
             >
               <div>
@@ -130,7 +128,7 @@ export const SolutionsPage: React.FC<SolutionsPageProps> = ({
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>
-            </motion.div>
+            </LuxuryScrollCard>
           ))}
         </div>
       </section>
