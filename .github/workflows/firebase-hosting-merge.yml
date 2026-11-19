@@ -31,11 +31,18 @@ jobs:
           VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
           VITE_FIREBASE_MEASUREMENT_ID: ${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }}
 
-      - name: Deploy to Firebase Hosting
+      # Deploy using Firebase Service Account (created by `firebase init hosting:github`)
+      - name: Deploy to Firebase Hosting (Service Account)
+        if: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_PYROW_1D510 != '' }}
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_PYROW_1D510 || secrets.FIREBASE_SERVICE_ACCOUNT_PYROW || secrets.FIREBASE_SERVICE_ACCOUNT }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_PYROW_1D510 }}
           channelId: live
           projectId: pyrow-1d510
           target: pyrow
+
+      # Fallback: Deploy using FIREBASE_TOKEN (created by `firebase login:ci`)
+      - name: Deploy to Firebase Hosting (Token)
+        if: ${{ secrets.FIREBASE_TOKEN != '' && secrets.FIREBASE_SERVICE_ACCOUNT_PYROW_1D510 == '' }}
+        run: npx firebase-tools deploy --only hosting:pyrow --token "${{ secrets.FIREBASE_TOKEN }}"
