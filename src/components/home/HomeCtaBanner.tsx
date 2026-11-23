@@ -29,7 +29,7 @@ export const HomeCtaBanner: React.FC<HomeCtaBannerProps> = () => {
             <span className="relative z-10">
               Ready to automate
               <br />
-              <span className="bg-gradient-to-r from-violet-400 via-purple-300 to-indigo-400 bg-clip-text text-transparent">
+              <span className="font-serif italic font-normal tracking-wide underline decoration-violet-400/30 underline-offset-8 bg-gradient-to-r from-violet-400 via-purple-300 to-indigo-400 bg-clip-text text-transparent">
                 your business?
               </span>
             </span>

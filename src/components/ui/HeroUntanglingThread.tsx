@@ -448,24 +448,6 @@ export const HeroUntanglingThread: React.FC = () => {
           </span>
           <ChevronDown className="w-4 h-4 text-violet-600 dark:text-violet-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors animate-bounce" />
         </button>
-
-        {/* 5. Seamless Bottom Organic Curve Divider */}
-        <div
-          className="absolute bottom-0 left-0 right-0 w-full overflow-hidden pointer-events-none leading-none"
-          style={{ zIndex: 16 }}
-        >
-          <svg
-            viewBox="0 0 1440 64"
-            fill="none"
-            className="w-full h-6 sm:h-10 text-[#FAF8FF] dark:text-[#0B0F19] transition-colors duration-300"
-            preserveAspectRatio="none"
-          >
-            <path
-              d="M0,0 C480,64 960,64 1440,0 L1440,64 L0,64 Z"
-              fill="currentColor"
-            />
-          </svg>
-        </div>
       </div>
     </div>
   );

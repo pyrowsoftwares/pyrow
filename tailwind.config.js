@@ -113,6 +113,7 @@ export default {
       fontFamily: {
         sans: ['"Plus Jakarta Sans"', '"Inter"', 'system-ui', 'sans-serif'],
         display: ['"Inter Display"', '"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+        serif: ['"Instrument Serif"', 'Georgia', 'serif'],
         mono: ['"JetBrains Mono"', 'monospace'],
       },
       backgroundImage: {
