@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { PageHeader } from '../components/common/PageHeader';
 import { PageCtaBanner } from '../components/common/PageCtaBanner';
 import { LuxuryScrollCard } from '../components/ui/LuxuryScrollCard';
+import { QuantumSnapSection } from '../components/ui/QuantumSnapSection';
 import {
   ShoppingBag,
   HeartPulse,
@@ -89,7 +90,7 @@ export const SolutionsPage: React.FC<SolutionsPageProps> = ({
       />
 
       {/* Industry Solutions Grid */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <QuantumSnapSection id="solutions-grid-section" className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {industries.map((ind, idx) => (
             <LuxuryScrollCard
@@ -131,7 +132,7 @@ export const SolutionsPage: React.FC<SolutionsPageProps> = ({
             </LuxuryScrollCard>
           ))}
         </div>
-      </section>
+      </QuantumSnapSection>
 
       {/* Bottom CTA */}
       <PageCtaBanner

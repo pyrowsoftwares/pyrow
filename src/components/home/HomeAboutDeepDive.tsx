@@ -4,6 +4,7 @@ import { Check, ShieldCheck, Zap, Rocket, Building2, Store, Users, ArrowRight } 
 import { useRouter } from '../../context/RouterContext';
 import { soundFX } from '../ui/sound-effects';
 import { LuxurySectionHeading } from '../ui/LuxurySectionHeading';
+import { LuxuryScrollCard } from '../ui/LuxuryScrollCard';
 
 export const HomeAboutDeepDive: React.FC = () => {
   const { navigate } = useRouter();
@@ -105,36 +106,35 @@ export const HomeAboutDeepDive: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {coreServices.map((svc, idx) => (
-            <motion.div
+            <LuxuryScrollCard
               key={idx}
-              initial={{ opacity: 0, y: 50, scale: 0.95 }}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              viewport={{ once: false, amount: 0.2 }}
-              transition={{ duration: 0.75, delay: (idx % 3) * 0.1, ease: [0.22, 1, 0.36, 1] }}
-              whileHover={{ y: -8, scale: 1.02, transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] } }}
-              className="p-8 rounded-3xl bg-white dark:bg-obsidian-850 border border-slate-200/80 dark:border-white/10 shadow-sm flex flex-col justify-between hover:border-violet-500/50 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.12)] dark:hover:shadow-[0_20px_40px_-15px_rgba(124,58,237,0.25)] transition-all duration-300"
+              index={idx}
+              columns={3}
+              className="p-8 bg-white dark:bg-obsidian-850 border border-slate-200/80 dark:border-white/10"
             >
-              <div>
-                <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-3">
-                  {svc.title}
-                </h4>
-                <p className="text-xs sm:text-sm text-slate-600 dark:text-zinc-400 leading-relaxed mb-6">
-                  {svc.desc}
-                </p>
+              <div className="flex flex-col justify-between h-full">
+                <div>
+                  <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-3">
+                    {svc.title}
+                  </h4>
+                  <p className="text-xs sm:text-sm text-slate-600 dark:text-zinc-400 leading-relaxed mb-6">
+                    {svc.desc}
+                  </p>
 
-                <div className="space-y-2.5 mb-6 pt-4 border-t border-slate-100 dark:border-white/5">
-                  <div className="text-[11px] font-mono uppercase tracking-wider text-violet-600 dark:text-violet-400 font-bold">
-                    Key capabilities:
-                  </div>
-                  {svc.caps.map((cap, cIdx) => (
-                    <div key={cIdx} className="flex items-start gap-2 text-xs text-slate-700 dark:text-zinc-300">
-                      <Check className="w-3.5 h-3.5 text-emerald-500 mt-0.5 shrink-0" />
-                      <span>{cap}</span>
+                  <div className="space-y-2.5 mb-6 pt-4 border-t border-slate-100 dark:border-white/5">
+                    <div className="text-[11px] font-mono uppercase tracking-wider text-violet-600 dark:text-violet-400 font-bold">
+                      Key capabilities:
                     </div>
-                  ))}
+                    {svc.caps.map((cap, cIdx) => (
+                      <div key={cIdx} className="flex items-start gap-2 text-xs text-slate-700 dark:text-zinc-300">
+                        <Check className="w-3.5 h-3.5 text-emerald-500 mt-0.5 shrink-0" />
+                        <span>{cap}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </motion.div>
+            </LuxuryScrollCard>
           ))}
         </div>
       </div>
@@ -149,25 +149,24 @@ export const HomeAboutDeepDive: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {whyChooseUs.map((w, idx) => (
-            <motion.div
+            <LuxuryScrollCard
               key={idx}
-              initial={{ opacity: 0, y: 50, scale: 0.95 }}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              viewport={{ once: false, amount: 0.2 }}
-              transition={{ duration: 0.75, delay: (idx % 3) * 0.1, ease: [0.22, 1, 0.36, 1] }}
-              whileHover={{ y: -8, scale: 1.02, transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] } }}
-              className="space-y-3 p-6 rounded-2xl bg-white/80 dark:bg-obsidian-850/80 border border-slate-200/50 dark:border-white/5 hover:border-violet-500/40 hover:shadow-[0_15px_35px_-10px_rgba(124,58,237,0.2)] transition-all duration-300 shadow-sm"
+              index={idx}
+              columns={3}
+              className="p-6 bg-white/80 dark:bg-obsidian-850/80 border border-slate-200/50 dark:border-white/5"
             >
-              <div className="w-10 h-10 rounded-2xl bg-white dark:bg-obsidian-850 flex items-center justify-center border border-slate-200 dark:border-white/10 shadow-sm">
-                {w.icon}
+              <div className="space-y-3">
+                <div className="w-10 h-10 rounded-2xl bg-white dark:bg-obsidian-850 flex items-center justify-center border border-slate-200 dark:border-white/10 shadow-sm">
+                  {w.icon}
+                </div>
+                <h4 className="text-lg font-bold text-slate-900 dark:text-white">
+                  {w.title}
+                </h4>
+                <p className="text-xs sm:text-sm text-slate-600 dark:text-zinc-400 leading-relaxed">
+                  {w.desc}
+                </p>
               </div>
-              <h4 className="text-lg font-bold text-slate-900 dark:text-white">
-                {w.title}
-              </h4>
-              <p className="text-xs sm:text-sm text-slate-600 dark:text-zinc-400 leading-relaxed">
-                {w.desc}
-              </p>
-            </motion.div>
+            </LuxuryScrollCard>
           ))}
         </div>
       </div>
@@ -182,25 +181,24 @@ export const HomeAboutDeepDive: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {useCases.map((u, idx) => (
-            <motion.div
+            <LuxuryScrollCard
               key={idx}
-              initial={{ opacity: 0, y: 50, scale: 0.95 }}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              viewport={{ once: false, amount: 0.2 }}
-              transition={{ duration: 0.75, delay: (idx % 3) * 0.1, ease: [0.22, 1, 0.36, 1] }}
-              whileHover={{ y: -8, scale: 1.02, transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] } }}
-              className="p-8 rounded-3xl bg-white dark:bg-obsidian-850 border border-slate-200/80 dark:border-white/10 shadow-sm space-y-3 hover:border-violet-500/50 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.12)] dark:hover:shadow-[0_20px_40px_-15px_rgba(124,58,237,0.25)] transition-all duration-300"
+              index={idx}
+              columns={3}
+              className="p-8 bg-white dark:bg-obsidian-850 border border-slate-200/80 dark:border-white/10"
             >
-              <div className="w-10 h-10 rounded-2xl bg-slate-100 dark:bg-white/5 flex items-center justify-center border border-slate-200/60 dark:border-white/5">
-                {u.icon}
+              <div className="space-y-3">
+                <div className="w-10 h-10 rounded-2xl bg-slate-100 dark:bg-white/5 flex items-center justify-center border border-slate-200/60 dark:border-white/5">
+                  {u.icon}
+                </div>
+                <h4 className="text-lg font-bold text-slate-900 dark:text-white">
+                  {u.title}
+                </h4>
+                <p className="text-xs sm:text-sm text-slate-600 dark:text-zinc-400 leading-relaxed">
+                  {u.desc}
+                </p>
               </div>
-              <h4 className="text-lg font-bold text-slate-900 dark:text-white">
-                {u.title}
-              </h4>
-              <p className="text-xs sm:text-sm text-slate-600 dark:text-zinc-400 leading-relaxed">
-                {u.desc}
-              </p>
-            </motion.div>
+            </LuxuryScrollCard>
           ))}
         </div>
       </div>

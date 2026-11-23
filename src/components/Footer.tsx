@@ -18,6 +18,7 @@ import { FlameLogo } from './ui/FlameLogo';
 import { MagneticButton } from './ui/MagneticButton';
 import { soundFX } from './ui/sound-effects';
 import { useRouter } from '../context/RouterContext';
+import { submitEnquiry } from '../lib/supabase';
 
 interface FooterProps {
   onOpenStrategyCall: () => void;
@@ -32,10 +33,15 @@ export const Footer: React.FC<FooterProps> = ({
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
     soundFX.playChime();
+    await submitEnquiry({
+      type: 'newsletter',
+      email,
+      source_page: typeof window !== 'undefined' ? window.location.pathname : '/',
+    });
     setSubscribed(true);
   };
 
@@ -93,29 +99,20 @@ export const Footer: React.FC<FooterProps> = ({
                 <MessageSquare className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
                 <span>WhatsApp:</span>
                 <a
-                  href="https://wa.me/916383582980"
+                  href="https://wa.me/917358163590"
                   target="_blank"
                   rel="noreferrer"
                   className="hover:text-emerald-500 transition-colors font-mono"
                 >
-                  +91 63835 82980
-                </a>
-                <span className="text-slate-400">/</span>
-                <a
-                  href="https://wa.me/917867009044"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="hover:text-emerald-500 transition-colors font-mono"
-                >
-                  +91 78670 09044
+                  +91 73581 63590
                 </a>
               </div>
               <a
-                href="mailto:contact@pyrow.in"
+                href="mailto:support@pyrow.in"
                 className="flex items-center gap-2 hover:text-violet-500 transition-colors"
               >
                 <Mail className="w-3.5 h-3.5 text-violet-500" />
-                <span>Email: contact@pyrow.in</span>
+                <span>Email: support@pyrow.in</span>
               </a>
             </div>
 
@@ -374,6 +371,15 @@ export const Footer: React.FC<FooterProps> = ({
               className="hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
             >
               Architecture Standards
+            </button>
+            <span>•</span>
+            <button
+              onClick={() => handleLink('/admin')}
+              className="px-2.5 py-1 rounded-full bg-slate-100/80 dark:bg-white/5 hover:bg-slate-200/80 dark:hover:bg-white/10 text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white border border-slate-200/60 dark:border-white/10 transition-all cursor-pointer inline-flex items-center gap-1.5 text-[11px] font-mono group"
+              title="Pyrow Admin Gate"
+            >
+              <Lock className="w-2.5 h-2.5 text-slate-400 dark:text-zinc-500 group-hover:text-violet-500 transition-colors" />
+              <span>Admin Gate</span>
             </button>
           </div>
         </motion.div>

@@ -37,6 +37,7 @@ import { ContactPage } from './pages/ContactPage';
 import { CareersPage } from './pages/CareersPage';
 import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage';
 import { TermsPage } from './pages/TermsPage';
+import { AdminPage } from './pages/AdminPage';
 
 // Interactive UI and Modals
 import { StrategyCallModal } from './components/Modals/StrategyCallModal';
@@ -50,6 +51,7 @@ import { TooltipProvider } from './components/ui/tooltip';
 import { EssentialMolecules } from './components/ui/EssentialMolecules';
 import { ArrowUp, PhoneCall } from 'lucide-react';
 import { soundFX } from './components/ui/sound-effects';
+import { recordPageView } from './lib/supabase';
 
 function AppContent() {
   const { currentPath } = useRouter();
@@ -71,6 +73,11 @@ function AppContent() {
   const [demoSoftwareName, setDemoSoftwareName] = useState('Enterprise ERP Software');
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
+
+  // Track page views in Supabase Analytics
+  useEffect(() => {
+    recordPageView(currentPath);
+  }, [currentPath]);
 
   // Sync theme to document element
   useEffect(() => {
@@ -185,6 +192,8 @@ function AppContent() {
         return <PrivacyPolicyPage />;
       case '/terms':
         return <TermsPage />;
+      case '/admin':
+        return <AdminPage />;
       case '/':
       default:
         return (
@@ -245,7 +254,9 @@ function AppContent() {
             </QuantumSnapSection>
 
             {/* 12. Final CTA: Ready to automate your business? (Matching z3connect bottom section) */}
-            <HomeCtaBanner onOpenStrategyCall={() => handleOpenStrategyCall()} />
+            <QuantumSnapSection id="cta-banner-section">
+              <HomeCtaBanner onOpenStrategyCall={() => handleOpenStrategyCall()} />
+            </QuantumSnapSection>
           </>
         );
     }
@@ -264,13 +275,15 @@ function AppContent() {
         <CustomCursor theme={theme} />
 
         {/* Global Navigation Bar */}
-        <Navigation
-          onOpenStrategyCall={() => handleOpenStrategyCall()}
-          onOpenDemoRequest={handleOpenDemoRequest}
-          onOpenCommandPalette={() => setCommandPaletteOpen(true)}
-          theme={theme}
-          onToggleTheme={toggleTheme}
-        />
+        {currentPath !== '/admin' && (
+          <Navigation
+            onOpenStrategyCall={() => handleOpenStrategyCall()}
+            onOpenDemoRequest={handleOpenDemoRequest}
+            onOpenCommandPalette={() => setCommandPaletteOpen(true)}
+            theme={theme}
+            onToggleTheme={toggleTheme}
+          />
+        )}
 
         {/* Active Page View (Unified Stacking Context & Full Accessibility) */}
         <main className="relative z-10 w-full min-h-screen">
@@ -278,10 +291,12 @@ function AppContent() {
         </main>
 
         {/* Section 11: Global Footer */}
-        <Footer
-          onOpenStrategyCall={() => handleOpenStrategyCall()}
-          onOpenDemoRequest={handleOpenDemoRequest}
-        />
+        {currentPath !== '/admin' && (
+          <Footer
+            onOpenStrategyCall={() => handleOpenStrategyCall()}
+            onOpenDemoRequest={handleOpenDemoRequest}
+          />
+        )}
 
         {/* Floating Scroll-To-Top & Quick Action Pill */}
         {showScrollTop && (

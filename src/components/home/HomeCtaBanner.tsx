@@ -65,24 +65,17 @@ export const HomeCtaBanner: React.FC<HomeCtaBannerProps> = () => {
             <div>
               or call{' '}
               <a
-                href="tel:+916383582980"
+                href="tel:+917358163590"
                 className="text-white hover:text-violet-400 font-medium underline underline-offset-4 transition-colors"
               >
-                +91 63835 82980
-              </a>{' '}
-              /{' '}
-              <a
-                href="tel:+917867009044"
-                className="text-white hover:text-violet-400 font-medium underline underline-offset-4 transition-colors"
-              >
-                +91 78670 09044
+                +91 73581 63590
               </a>
             </div>
             <span className="hidden sm:inline">•</span>
             <div>
               or{' '}
               <a
-                href="https://wa.me/916383582980"
+                href="https://wa.me/917358163590"
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => soundFX.playClick()}

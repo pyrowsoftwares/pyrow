@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { PageHeader } from '../components/common/PageHeader';
 import { PageCtaBanner } from '../components/common/PageCtaBanner';
 import { LuxuryScrollCard } from '../components/ui/LuxuryScrollCard';
+import { QuantumSnapSection } from '../components/ui/QuantumSnapSection';
 import {
   Bot,
   ShoppingBag,
@@ -258,7 +259,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
       </motion.section>
 
       {/* Comprehensive Product Cards Grid */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <QuantumSnapSection id="products-catalog-section" className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <AnimatePresence>
             {filtered.map((prod, idx) => (
@@ -337,7 +338,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
             ))}
           </AnimatePresence>
         </div>
-      </section>
+      </QuantumSnapSection>
 
       {/* Bottom CTA Banner */}
       <PageCtaBanner

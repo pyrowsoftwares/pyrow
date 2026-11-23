@@ -4,9 +4,11 @@ import { ArrowRight } from 'lucide-react';
 import { useRouter } from '../../context/RouterContext';
 import { soundFX } from '../ui/sound-effects';
 import { LuxurySectionHeading } from '../ui/LuxurySectionHeading';
+import { useSectionAnimation, EASE_LUXURY_OUT } from '../ui/ScrollAnimationSystem';
 
 export const HomeIndustries: React.FC = () => {
   const { navigate } = useRouter();
+  const { pattern, isMobile } = useSectionAnimation();
 
   const industries = [
     'Healthcare & Clinics',
@@ -32,24 +34,31 @@ export const HomeIndustries: React.FC = () => {
       />
 
       <div className="flex flex-wrap items-center justify-center gap-3 max-w-4xl mx-auto mb-12">
-        {industries.map((ind, idx) => (
-          <motion.button
-            key={idx}
-            initial={{ opacity: 0, y: 14, scale: 0.94 }}
-            whileInView={{ opacity: 1, y: 0, scale: 1 }}
-            viewport={{ once: false, amount: 0.1 }}
-            transition={{ duration: 0.35, delay: idx * 0.03, ease: [0.22, 1, 0.36, 1] }}
-            whileHover={{ scale: 1.05, y: -2 }}
-            whileTap={{ scale: 0.96 }}
-            onClick={() => {
-              soundFX.playClick();
-              navigate('/solutions');
-            }}
-            className="px-5 py-3 rounded-full bg-white dark:bg-obsidian-850 border border-slate-200/80 dark:border-white/10 hover:border-violet-500 text-xs sm:text-sm font-semibold text-slate-800 dark:text-zinc-200 shadow-sm hover:shadow-md transition-all cursor-pointer"
-          >
-            {ind}
-          </motion.button>
-        ))}
+        {industries.map((ind, idx) => {
+          // Adjust initial offset based on parent section pattern
+          const initialX = pattern === 'slide-from-left' ? (isMobile ? -16 : -30) : pattern === 'slide-from-right' ? (isMobile ? 16 : 30) : 0;
+          const initialY = pattern === 'slide-down-reveal' ? -20 : pattern === 'scale-in' || pattern === 'zoom-reveal' ? 0 : 16;
+          const initialScale = pattern === 'scale-in' || pattern === 'zoom-reveal' ? 0.88 : 0.94;
+
+          return (
+            <motion.button
+              key={idx}
+              initial={{ opacity: 0, x: initialX, y: initialY, scale: initialScale }}
+              whileInView={{ opacity: 1, x: 0, y: 0, scale: 1 }}
+              viewport={{ once: false, amount: 0.1 }}
+              transition={{ duration: 0.45, delay: idx * 0.035, ease: EASE_LUXURY_OUT }}
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.96 }}
+              onClick={() => {
+                soundFX.playClick();
+                navigate('/solutions');
+              }}
+              className="px-5 py-3 rounded-full bg-white dark:bg-obsidian-850 border border-slate-200/80 dark:border-white/10 hover:border-violet-500 text-xs sm:text-sm font-semibold text-slate-800 dark:text-zinc-200 shadow-sm hover:shadow-md transition-all cursor-pointer"
+            >
+              {ind}
+            </motion.button>
+          );
+        })}
       </div>
 
       <div className="text-center">

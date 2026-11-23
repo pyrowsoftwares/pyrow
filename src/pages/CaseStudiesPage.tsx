@@ -5,6 +5,7 @@ import { PageCtaBanner } from '../components/common/PageCtaBanner';
 import { TrendingUp, Clock, CheckCircle2, Shield, Users, ArrowRight } from 'lucide-react';
 import { LuxuryScrollCard } from '../components/ui/LuxuryScrollCard';
 import { LuxurySectionHeading } from '../components/ui/LuxurySectionHeading';
+import { QuantumSnapSection } from '../components/ui/QuantumSnapSection';
 
 interface CaseStudiesPageProps {
   onOpenStrategyCall: () => void;
@@ -80,7 +81,7 @@ export const CaseStudiesPage: React.FC<CaseStudiesPageProps> = ({ onOpenStrategy
       />
 
       {/* Impact Metric Bar */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+      <QuantumSnapSection id="case-studies-metrics-section" className="py-12 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           {metrics.map((m, idx) => (
             <LuxuryScrollCard
@@ -101,10 +102,10 @@ export const CaseStudiesPage: React.FC<CaseStudiesPageProps> = ({ onOpenStrategy
             </LuxuryScrollCard>
           ))}
         </div>
-      </section>
+      </QuantumSnapSection>
 
       {/* Deep Case Studies Grid */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+      <QuantumSnapSection id="case-studies-grid-section" className="py-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
         <LuxurySectionHeading
           badge="Featured Deployments"
           title="Engineering Case Studies"
@@ -150,10 +151,10 @@ export const CaseStudiesPage: React.FC<CaseStudiesPageProps> = ({ onOpenStrategy
             </LuxuryScrollCard>
           ))}
         </div>
-      </section>
+      </QuantumSnapSection>
 
       {/* Client Testimonials Wall */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+      <QuantumSnapSection id="case-studies-testimonials-section" className="py-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
         <LuxurySectionHeading
           badge="Client Voices"
           title="The Business Impact in Their Words"
@@ -182,7 +183,7 @@ export const CaseStudiesPage: React.FC<CaseStudiesPageProps> = ({ onOpenStrategy
             </LuxuryScrollCard>
           ))}
         </div>
-      </section>
+      </QuantumSnapSection>
 
       {/* Bottom CTA */}
       <PageCtaBanner

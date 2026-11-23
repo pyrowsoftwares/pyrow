@@ -4,6 +4,7 @@ import { Cpu, CheckCircle2 } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { soundFX } from './ui/sound-effects';
 import { LuxurySectionHeading } from './ui/LuxurySectionHeading';
+import { LuxuryScrollCard } from './ui/LuxuryScrollCard';
 
 interface TechItem {
   name: string;
@@ -162,11 +163,10 @@ export const TechRadar: React.FC = () => {
                 soundFX.playClick();
                 setActiveCategory(c.id);
               }}
-              className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
-                activeCategory === c.id
+              className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${activeCategory === c.id
                   ? 'bg-violet-600 text-white shadow-md shadow-violet-500/20'
                   : 'bg-white/95 dark:bg-[#141D30]/95 text-slate-700 dark:text-zinc-400 border border-slate-200/90 dark:border-slate-800/90 hover:border-violet-500/30'
-              }`}
+                }`}
             >
               {c.label}
             </button>
@@ -176,42 +176,36 @@ export const TechRadar: React.FC = () => {
         {/* Technologies Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
           {filtered.map((tech, idx) => (
-            <motion.div
+            <LuxuryScrollCard
               key={tech.name}
-              initial={{ opacity: 0, y: 50, scale: 0.95 }}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              viewport={{ once: false, amount: 0.2 }}
-              transition={{ duration: 0.75, delay: (idx % 4) * 0.1, ease: [0.22, 1, 0.36, 1] }}
-              whileHover={{ y: -8, scale: 1.025, transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] } }}
-              onMouseMove={handleCardMouseMove}
-              onMouseEnter={() => soundFX.playHover()}
-              className="p-5 sm:p-6 rounded-3xl bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800/90 hover:border-violet-500/50 transition-all duration-300 shadow-sm hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.12)] dark:hover:shadow-[0_20px_40px_-15px_rgba(124,58,237,0.3)] flex flex-col justify-between group overflow-hidden"
-              style={{
-                backgroundImage: `radial-gradient(350px circle at var(--mouse-x, -200px) var(--mouse-y, -200px), rgba(124, 58, 237, 0.12), transparent 70%)`,
-              }}
+              index={idx}
+              columns={4}
+              className="p-5 sm:p-6 bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800/90 hover:border-violet-500/50"
             >
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <Badge variant="secondary" className="text-[10px] font-mono px-2 py-0.5 rounded-md text-slate-600 dark:text-zinc-400 font-semibold border border-slate-200/80 dark:border-white/5">
-                    {tech.tier}
-                  </Badge>
-                  <span className="text-xs font-mono font-bold text-violet-600 dark:text-purple-400">
-                    {tech.metric}
-                  </span>
+              <div className="flex flex-col justify-between h-full">
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <Badge variant="secondary" className="text-[10px] font-mono px-2 py-0.5 rounded-md text-slate-600 dark:text-zinc-400 font-semibold border border-slate-200/80 dark:border-white/5">
+                      {tech.tier}
+                    </Badge>
+                    <span className="text-xs font-mono font-bold text-violet-600 dark:text-purple-400">
+                      {tech.metric}
+                    </span>
+                  </div>
+                  <h4 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white group-hover:text-violet-600 dark:group-hover:text-purple-400 transition-colors">
+                    {tech.name}
+                  </h4>
+                  <p className="mt-2 text-xs text-slate-600 dark:text-zinc-400 leading-relaxed">
+                    {tech.summary}
+                  </p>
                 </div>
-                <h4 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white group-hover:text-violet-600 dark:group-hover:text-purple-400 transition-colors">
-                  {tech.name}
-                </h4>
-                <p className="mt-2 text-xs text-slate-600 dark:text-zinc-400 leading-relaxed">
-                  {tech.summary}
-                </p>
-              </div>
 
-              <div className="mt-5 pt-3 border-t border-slate-100 dark:border-white/5 flex items-center gap-1.5 text-[10px] font-mono text-slate-500 dark:text-zinc-500 font-semibold">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
-                <span>Production Hardened Standard</span>
+                <div className="mt-5 pt-3 border-t border-slate-100 dark:border-white/5 flex items-center gap-1.5 text-[10px] font-mono text-slate-500 dark:text-zinc-500 font-semibold">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
+                  <span>Production Hardened Standard</span>
+                </div>
               </div>
-            </motion.div>
+            </LuxuryScrollCard>
           ))}
         </div>
       </div>

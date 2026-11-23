@@ -35,3 +35,6 @@ firestore-debug.log*
 ui-debug.log*
 
 
+
+# Local setup & migration scripts
+scripts/

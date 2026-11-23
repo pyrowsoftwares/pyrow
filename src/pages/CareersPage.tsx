@@ -129,7 +129,7 @@ export const CareersPage: React.FC<CareersPageProps> = ({ onOpenStrategyCall }) 
             Current Engineering Squad Openings
           </h2>
           <p className="mt-3 text-sm text-slate-600 dark:text-zinc-400">
-            Don't see your exact role? Email your GitHub / portfolio to <span className="text-violet-600 dark:text-violet-400 font-semibold">careers@pyrow.in</span>.
+            Don't see your exact role? Email your GitHub / portfolio to <span className="text-violet-600 dark:text-violet-400 font-semibold">support@pyrow.in</span>.
           </p>
         </div>
 
@@ -175,7 +175,7 @@ export const CareersPage: React.FC<CareersPageProps> = ({ onOpenStrategyCall }) 
               </div>
 
               <a
-                href={`mailto:careers@pyrow.in?subject=Application for ${encodeURIComponent(pos.title)}`}
+                href={`mailto:support@pyrow.in?subject=Application for ${encodeURIComponent(pos.title)}`}
                 onClick={() => soundFX.playClick()}
                 className="shrink-0 inline-flex items-center gap-2 px-6 py-3 rounded-full text-xs font-mono uppercase tracking-wider bg-slate-900 dark:bg-white text-white dark:text-obsidian font-bold hover:scale-105 transition-all shadow-md"
               >
@@ -191,8 +191,8 @@ export const CareersPage: React.FC<CareersPageProps> = ({ onOpenStrategyCall }) 
         badge="Direct Founder Channel"
         title="Are you an exceptional engineer or designer?"
         description="We are always looking for outlier talent. Send a direct note to our founders."
-        primaryBtnText="careers@pyrow.in"
-        onPrimaryClick={() => window.open('mailto:careers@pyrow.in', '_blank')}
+        primaryBtnText="support@pyrow.in"
+        onPrimaryClick={() => window.open('mailto:support@pyrow.in', '_blank')}
       />
     </div>
   );

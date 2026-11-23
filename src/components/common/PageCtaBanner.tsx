@@ -68,7 +68,7 @@ export const PageCtaBanner: React.FC<PageCtaBannerProps> = ({
             </button>
 
             <a
-              href="https://wa.me/916383582980"
+              href="https://wa.me/917358163590"
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => soundFX.playClick()}
@@ -82,9 +82,7 @@ export const PageCtaBanner: React.FC<PageCtaBannerProps> = ({
           <div className="mt-6 flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs text-zinc-400">
             <div className="flex items-center gap-2 font-mono">
               <Phone className="w-3.5 h-3.5 text-violet-400" />
-              <a href="tel:+916383582980" className="hover:text-white transition-colors">+91 63835 82980</a>
-              <span>/</span>
-              <a href="tel:+917867009044" className="hover:text-white transition-colors">+91 78670 09044</a>
+              <a href="tel:+917358163590" className="hover:text-white transition-colors">+91 73581 63590</a>
             </div>
             <span>•</span>
             <div>Zero-obligation consultation</div>

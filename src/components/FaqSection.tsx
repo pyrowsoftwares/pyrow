@@ -10,6 +10,7 @@ import {
 import { Badge } from './ui/badge';
 import { soundFX } from './ui/sound-effects';
 import { LuxurySectionHeading } from './ui/LuxurySectionHeading';
+import { useSectionAnimation, EASE_LUXURY_OUT } from './ui/ScrollAnimationSystem';
 
 interface FaqItem {
   q: string;
@@ -19,6 +20,7 @@ interface FaqItem {
 
 export const FaqSection: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const { pattern, isMobile } = useSectionAnimation();
 
   const faqs: FaqItem[] = [
     {
@@ -113,38 +115,43 @@ export const FaqSection: React.FC = () => {
           className="rounded-3xl bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 shadow-sm dark:shadow-none p-4 sm:p-6"
         >
           <Accordion defaultValue={["faq-0"]} className="w-full space-y-2">
-            {filtered.map((item, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 14 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false, amount: 0.1 }}
-                transition={{ duration: 0.4, delay: (idx % 6) * 0.05, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <AccordionItem
-                  value={`faq-${idx}`}
-                  className="border border-slate-100 dark:border-slate-800/80 rounded-2xl px-4 py-1 data-[open]:bg-slate-50/50 dark:data-[open]:bg-white/[0.02] transition-colors"
+            {filtered.map((item, idx) => {
+              const initialX = pattern === 'slide-from-left' ? (isMobile ? -14 : -24) : pattern === 'slide-from-right' ? (isMobile ? 14 : 24) : 0;
+              const initialY = pattern === 'slide-down-reveal' ? -16 : 14;
+
+              return (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, x: initialX, y: initialY }}
+                  whileInView={{ opacity: 1, x: 0, y: 0 }}
+                  viewport={{ once: false, amount: 0.1 }}
+                  transition={{ duration: 0.45, delay: (idx % 6) * 0.06, ease: EASE_LUXURY_OUT }}
                 >
-                  <AccordionTrigger
-                    onClick={() => soundFX.playClick()}
-                    className="hover:no-underline py-4 text-left font-semibold text-slate-900 dark:text-white text-sm sm:text-base gap-3"
+                  <AccordionItem
+                    value={`faq-${idx}`}
+                    className="border border-slate-100 dark:border-slate-800/80 rounded-2xl px-4 py-1 data-[open]:bg-slate-50/50 dark:data-[open]:bg-white/[0.02] transition-colors"
                   >
-                    <div className="flex items-center gap-3">
-                      <span className="w-2 h-2 rounded-full bg-violet-600 flex-shrink-0" />
-                      <span>{item.q}</span>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="text-xs sm:text-sm text-slate-600 dark:text-zinc-300 leading-relaxed pb-4 pt-1 pl-5">
-                    <p>{item.a}</p>
-                    <div className="mt-3">
-                      <Badge variant="outline" className="text-[10px] font-mono border-slate-200 dark:border-slate-800 text-slate-500 dark:text-zinc-400">
-                        Category: {item.category}
-                      </Badge>
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              </motion.div>
-            ))}
+                    <AccordionTrigger
+                      onClick={() => soundFX.playClick()}
+                      className="hover:no-underline py-4 text-left font-semibold text-slate-900 dark:text-white text-sm sm:text-base gap-3"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="w-2 h-2 rounded-full bg-violet-600 flex-shrink-0" />
+                        <span>{item.q}</span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="text-xs sm:text-sm text-slate-600 dark:text-zinc-300 leading-relaxed pb-4 pt-1 pl-5">
+                      <p>{item.a}</p>
+                      <div className="mt-3">
+                        <Badge variant="outline" className="text-[10px] font-mono border-slate-200 dark:border-slate-800 text-slate-500 dark:text-zinc-400">
+                          Category: {item.category}
+                        </Badge>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </motion.div>
+              );
+            })}
           </Accordion>
         </motion.div>
       </div>

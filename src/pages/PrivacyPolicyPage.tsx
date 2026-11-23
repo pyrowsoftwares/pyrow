@@ -14,7 +14,7 @@ export const PrivacyPolicyPage: React.FC = () => {
         description="We are committed to safeguarding your personal and business data. Read how we collect, store, and protect your information."
         breadcrumbs={[{ label: 'Privacy Policy' }]}
         primaryCtaText="Contact Support"
-        onPrimaryCtaClick={() => window.open('mailto:privacy@pyrow.in', '_blank')}
+        onPrimaryCtaClick={() => window.open('mailto:support@pyrow.in', '_blank')}
       />
 
       <motion.article
@@ -65,7 +65,7 @@ export const PrivacyPolicyPage: React.FC = () => {
         </section>
 
         <div className="p-6 rounded-2xl bg-white dark:bg-obsidian-850 border border-slate-200 dark:border-white/10 text-xs text-slate-500 dark:text-zinc-400">
-          Last revised: November 18, 2026. For questions regarding privacy or data deletion, email <span className="text-violet-600 dark:text-violet-400 font-semibold">privacy@pyrow.in</span>.
+          Last revised: November 18, 2026. For questions regarding privacy or data deletion, email <span className="text-violet-600 dark:text-violet-400 font-semibold">support@pyrow.in</span>.
         </div>
       </motion.article>
 
@@ -74,7 +74,7 @@ export const PrivacyPolicyPage: React.FC = () => {
         title="Have questions about our data security practices?"
         description="Our compliance team is ready to provide security whitepapers and compliance documentation."
         primaryBtnText="Email Privacy Team"
-        onPrimaryClick={() => window.open('mailto:privacy@pyrow.in', '_blank')}
+        onPrimaryClick={() => window.open('mailto:support@pyrow.in', '_blank')}
       />
     </div>
   );

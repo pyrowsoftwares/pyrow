@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, Calendar, Clock, Video, User, Mail, Building, CheckCircle2, ShieldCheck, PhoneCall } from 'lucide-react';
 import { soundFX } from '../ui/sound-effects';
 import { MagneticButton } from '../ui/MagneticButton';
+import { submitEnquiry } from '../../lib/supabase';
 
 interface StrategyCallModalProps {
   isOpen: boolean;
@@ -41,9 +42,23 @@ export const StrategyCallModal: React.FC<StrategyCallModalProps> = ({ isOpen, on
   const times = ['10:30 AM IST', '02:00 PM IST', '04:30 PM IST', '06:00 PM IST', '08:30 PM IST'];
   const days = ['Tomorrow (Priority)', 'In 2 Days', 'Next Monday'];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     soundFX.playChime();
+
+    await submitEnquiry({
+      type: 'strategy_call',
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      company: formData.company,
+      service: selectedTopic,
+      preferred_time: `${selectedDay} at ${selectedTime}`,
+      message: formData.notes,
+      source_page: typeof window !== 'undefined' ? window.location.pathname : '/',
+      raw_data: { topic: selectedTopic, day: selectedDay, time: selectedTime, ...formData },
+    });
+
     setIsSuccess(true);
   };
 

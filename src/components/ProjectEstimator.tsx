@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { MagneticButton } from './ui/MagneticButton';
 import { soundFX } from './ui/sound-effects';
+import { submitEnquiry } from '../lib/supabase';
 
 interface ProjectEstimatorProps {
   onOpenStrategyCall: () => void;
@@ -69,15 +70,28 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
     }
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     soundFX.playClick();
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setSubmitted(true);
-      soundFX.playChime();
-    }, 600);
+
+    await submitEnquiry({
+      type: 'estimator',
+      name: contactForm.name,
+      email: contactForm.email,
+      phone: contactForm.phone,
+      company: contactForm.company,
+      service: selectedDisciplines.join(', '),
+      budget: selectedBudget,
+      timeline: selectedTimeline,
+      message: contactForm.message,
+      source_page: typeof window !== 'undefined' ? window.location.pathname : '/',
+      raw_data: { disciplines: selectedDisciplines, budget: selectedBudget, timeline: selectedTimeline, ...contactForm },
+    });
+
+    setIsSubmitting(false);
+    setSubmitted(true);
+    soundFX.playChime();
   };
 
   const openWhatsApp = () => {
@@ -85,7 +99,7 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
     const message = encodeURIComponent(
       `Hello Pyrow! I would like to consult with your engineering and marketing team regarding a new technology deployment.`
     );
-    window.open(`https://wa.me/916383582980?text=${message}`, '_blank');
+    window.open(`https://wa.me/917358163590?text=${message}`, '_blank');
   };
 
   return (
@@ -358,9 +372,7 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                 <div className="flex items-center gap-3 text-slate-700 dark:text-zinc-300">
                   <PhoneCall className="w-4 h-4 text-violet-600 dark:text-purple-400 shrink-0" />
                   <div className="flex flex-wrap items-center gap-x-2 font-mono font-semibold">
-                    <a href="tel:+916383582980" className="hover:text-violet-600 dark:hover:text-purple-400">+91 63835 82980</a>
-                    <span className="text-slate-400">/</span>
-                    <a href="tel:+917867009044" className="hover:text-violet-600 dark:hover:text-purple-400">+91 78670 09044</a>
+                    <a href="tel:+917358163590" className="hover:text-violet-600 dark:hover:text-purple-400">+91 73581 63590</a>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 text-slate-700 dark:text-zinc-300">

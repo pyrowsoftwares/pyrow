@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, PlayCircle, ShieldCheck, CheckCircle2, Database, ArrowRight } from 'lucide-react';
 import { soundFX } from '../ui/sound-effects';
 import { MagneticButton } from '../ui/MagneticButton';
+import { submitEnquiry } from '../../lib/supabase';
 
 interface DemoRequestModalProps {
   isOpen: boolean;
@@ -26,9 +27,22 @@ export const DemoRequestModal: React.FC<DemoRequestModalProps> = ({
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     soundFX.playChime();
+
+    await submitEnquiry({
+      type: 'demo_request',
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      company: formData.company,
+      software_requested: softwareName,
+      message: `Team size: ${formData.userCount}. Pre-loaded sandbox: ${formData.sandboxMode ? 'Yes' : 'No'}`,
+      source_page: typeof window !== 'undefined' ? window.location.pathname : '/',
+      raw_data: { softwareName, ...formData },
+    });
+
     setIsSuccess(true);
   };
 

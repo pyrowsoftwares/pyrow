@@ -14,7 +14,7 @@ export const TermsPage: React.FC = () => {
         description="Clear, fair, and transparent contractual terms governing engineering services and software deliverables with Pyrow."
         breadcrumbs={[{ label: 'Terms of Service' }]}
         primaryCtaText="Contact Us"
-        onPrimaryCtaClick={() => window.open('mailto:legal@pyrow.in', '_blank')}
+        onPrimaryCtaClick={() => window.open('mailto:support@pyrow.in', '_blank')}
       />
 
       <motion.article
@@ -65,7 +65,7 @@ export const TermsPage: React.FC = () => {
         </section>
 
         <div className="p-6 rounded-2xl bg-white dark:bg-obsidian-850 border border-slate-200 dark:border-white/10 text-xs text-slate-500 dark:text-zinc-400">
-          Last revised: November 18, 2026. For questions regarding legal terms, email <span className="text-violet-600 dark:text-violet-400 font-semibold">legal@pyrow.in</span>.
+          Last revised: November 18, 2026. For questions regarding legal terms, email <span className="text-violet-600 dark:text-violet-400 font-semibold">support@pyrow.in</span>.
         </div>
       </motion.article>
 
@@ -74,7 +74,7 @@ export const TermsPage: React.FC = () => {
         title="Ready to discuss your project scope?"
         description="We are transparent with our agreements, roadmaps, and pricing models."
         primaryBtnText="Contact Legal & Business"
-        onPrimaryClick={() => window.open('mailto:legal@pyrow.in', '_blank')}
+        onPrimaryClick={() => window.open('mailto:support@pyrow.in', '_blank')}
       />
     </div>
   );

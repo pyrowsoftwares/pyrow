@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useRouter } from '../context/RouterContext';
 import { Mail, Phone, MapPin, MessageSquare, Clock, Send, CheckCircle2, ChevronDown, Linkedin, Instagram, Globe } from 'lucide-react';
 import { soundFX } from '../components/ui/sound-effects';
+import { submitEnquiry } from '../lib/supabase';
 
 export const ContactPage: React.FC = () => {
   const { navigate } = useRouter();
@@ -30,20 +31,31 @@ export const ContactPage: React.FC = () => {
     { value: 'other', label: 'Custom Software, ERP, CRM, SaaS & Other' },
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     soundFX.playClick();
     setSubmitting(true);
-    setTimeout(() => {
-      setSubmitting(false);
-      setSubmitted(true);
-    }, 600);
+
+    await submitEnquiry({
+      type: 'contact',
+      name: formData.fullName,
+      email: formData.email,
+      phone: formData.contactNumber,
+      service: formData.projectType,
+      budget: `${formData.currency} ${formData.budget}`,
+      message: formData.projectDescription,
+      source_page: '/contact',
+      raw_data: formData,
+    });
+
+    setSubmitting(false);
+    setSubmitted(true);
   };
 
   const contactFaqs = [
     {
       q: 'How fast can I get a quote?',
-      a: 'Typically, we respond to all inquiries within 24 hours. For urgent requirements, you can reach us instantly via WhatsApp or call at +91 63835 82980 or +91 78670 09044.',
+      a: 'Typically, we respond to all inquiries within 24 hours. For urgent requirements, you can reach us instantly via WhatsApp or call at +91 73581 63590.',
     },
     {
       q: 'Where is our office located?',
@@ -121,27 +133,18 @@ export const ContactPage: React.FC = () => {
                 </div>
                 <div className="flex items-center gap-3 pt-3 mt-3 border-t border-slate-100 dark:border-white/5 text-xs font-mono">
                   <a
-                    href="https://wa.me/916383582980"
+                    href="https://wa.me/917358163590"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-slate-700 dark:text-zinc-300 hover:text-emerald-500 transition-colors font-semibold"
                   >
-                    +91 63835 82980
-                  </a>
-                  <span className="text-slate-300 dark:text-zinc-600">|</span>
-                  <a
-                    href="https://wa.me/917867009044"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-slate-700 dark:text-zinc-300 hover:text-emerald-500 transition-colors font-semibold"
-                  >
-                    +91 78670 09044
+                    +91 73581 63590
                   </a>
                 </div>
               </div>
 
               <a
-                href="mailto:contact@pyrow.in"
+                href="mailto:support@pyrow.in"
                 className="flex items-center gap-4 p-4 rounded-2xl bg-white dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 hover:border-violet-500/50 shadow-sm transition-all group"
               >
                 <div className="w-12 h-12 rounded-xl bg-violet-500/10 flex items-center justify-center text-violet-600 dark:text-violet-400 group-hover:scale-110 transition-transform">
@@ -152,7 +155,7 @@ export const ContactPage: React.FC = () => {
                     Direct Inquiries
                   </div>
                   <div className="text-base font-bold text-slate-900 dark:text-white group-hover:text-violet-500 transition-colors">
-                    contact@pyrow.in
+                    support@pyrow.in
                   </div>
                   <div className="text-xs text-slate-500 dark:text-zinc-400">
                     24-hour turnaround guaranteed
