@@ -102,7 +102,7 @@ export const FaqSection: React.FC = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by topic (e.g. pricing, ownership, timeline, WhatsApp)..."
-            className="w-full pl-11 pr-4 py-3 rounded-2xl bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-violet-500 shadow-sm dark:shadow-none"
+            className="w-full pl-11 pr-4 py-3 rounded-2xl bg-white/95 dark:bg-[#070512]/95 backdrop-blur-xl border border-slate-200/90 dark:border-white/[0.08] text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-violet-500 shadow-sm dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)] transition-colors"
           />
         </motion.div>
 
@@ -112,7 +112,7 @@ export const FaqSection: React.FC = () => {
           whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
           viewport={{ once: false, amount: 0.15 }}
           transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-          className="rounded-3xl bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 shadow-sm dark:shadow-none p-4 sm:p-6"
+          className="rounded-3xl bg-white/95 dark:bg-[#070512]/95 backdrop-blur-2xl border border-slate-200/90 dark:border-white/[0.08] shadow-sm dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)] p-4 sm:p-6"
         >
           <Accordion defaultValue={["faq-0"]} className="w-full space-y-2">
             {filtered.map((item, idx) => {
@@ -129,7 +129,7 @@ export const FaqSection: React.FC = () => {
                 >
                   <AccordionItem
                     value={`faq-${idx}`}
-                    className="border border-slate-100 dark:border-slate-800/80 rounded-2xl px-4 py-1 data-[open]:bg-slate-50/50 dark:data-[open]:bg-white/[0.02] transition-colors"
+                    className="border border-slate-200/80 dark:border-white/[0.06] rounded-2xl px-4 py-1 data-[open]:bg-slate-50/50 dark:data-[open]:bg-white/[0.03] transition-colors"
                   >
                     <AccordionTrigger
                       onClick={() => soundFX.playClick()}
@@ -140,10 +140,10 @@ export const FaqSection: React.FC = () => {
                         <span>{item.q}</span>
                       </div>
                     </AccordionTrigger>
-                    <AccordionContent className="text-xs sm:text-sm text-slate-600 dark:text-zinc-300 leading-relaxed pb-4 pt-1 pl-5">
+                    <AccordionContent className="text-xs sm:text-sm text-slate-600 dark:text-zinc-300 leading-relaxed pb-4 pt-1 pl-5 font-sans">
                       <p>{item.a}</p>
                       <div className="mt-3">
-                        <Badge variant="outline" className="text-[10px] font-mono border-slate-200 dark:border-slate-800 text-slate-500 dark:text-zinc-400">
+                        <Badge variant="outline" className="text-[10px] font-mono border-slate-200 dark:border-white/[0.08] text-slate-500 dark:text-zinc-400">
                           Category: {item.category}
                         </Badge>
                       </div>

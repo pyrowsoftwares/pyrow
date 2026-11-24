@@ -78,10 +78,9 @@ export const ContactPage: React.FC = () => {
           </div>
 
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-black font-display tracking-tight leading-tight">
-            Let's build
-            <br />
-            <span className="bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 dark:from-violet-400 dark:via-purple-300 dark:to-indigo-400 bg-clip-text text-transparent">
-              something great.
+            Let's build{' '}
+            <span className="font-serif italic font-normal tracking-wide underline decoration-violet-500/30 underline-offset-8 bg-gradient-to-r from-violet-600 via-purple-500 to-fuchsia-500 dark:from-violet-300 dark:via-purple-200 dark:to-indigo-300 bg-clip-text text-transparent">
+              Something Great.
             </span>
           </h1>
 
@@ -201,7 +200,8 @@ export const ContactPage: React.FC = () => {
             transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
             className="lg:col-span-7"
           >
-            <div className="p-8 sm:p-10 rounded-3xl bg-white dark:bg-obsidian-850 border border-slate-200 dark:border-white/10 shadow-xl relative overflow-hidden">
+            <div className="p-8 sm:p-10 rounded-[32px] bg-white dark:bg-[#070512]/90 backdrop-blur-3xl border border-slate-200 dark:border-white/[0.08] shadow-[0_0_80px_-20px_rgba(124,58,237,0.25)] relative overflow-hidden">
+              <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-400/25 to-transparent pointer-events-none" />
               {submitted ? (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.96 }}

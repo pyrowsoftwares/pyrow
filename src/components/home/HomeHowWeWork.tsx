@@ -51,23 +51,23 @@ export const HomeHowWeWork: React.FC = () => {
             key={idx}
             index={idx}
             columns={4}
-            className="p-8 rounded-3xl bg-white dark:bg-obsidian-850 border border-slate-200/80 dark:border-white/10 shadow-sm relative overflow-hidden flex flex-col justify-between group hover:border-violet-500/40 hover:shadow-[0_20px_40px_-15px_rgba(124,58,237,0.25)] transition-all"
+            className="p-8 rounded-3xl bg-white/95 dark:bg-[#070512]/90 border border-slate-200/80 dark:border-white/[0.08] shadow-sm dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)] relative overflow-hidden flex flex-col justify-between group hover:border-violet-500/40 hover:shadow-[0_20px_40px_-15px_rgba(124,58,237,0.3)] backdrop-blur-xl transition-all"
           >
             <div>
               <div className="flex items-center justify-between mb-6">
-                <span className="text-2xl font-black font-mono text-violet-600 dark:text-violet-400">
+                <span className="text-2xl font-mono font-bold text-violet-600 dark:text-violet-400">
                   {step.num}
                 </span>
-                <div className="p-2.5 rounded-xl bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-zinc-300">
+                <div className="p-2.5 rounded-xl bg-slate-100 dark:bg-white/[0.05] border border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-zinc-300">
                   {step.icon}
                 </div>
               </div>
 
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
+              <h3 className="text-xl font-bold font-display text-slate-900 dark:text-white mb-2">
                 {step.title}
               </h3>
 
-              <p className="text-xs sm:text-sm text-slate-600 dark:text-zinc-400 leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-zinc-400 leading-relaxed font-sans">
                 {step.desc}
               </p>
             </div>

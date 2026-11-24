@@ -177,9 +177,9 @@ export const QuantumSnapSection: React.FC<QuantumSnapSectionProps> = ({
         whileInView="visible"
         viewport={{ once: false, amount: 0.08 }}
         style={{ perspective: 1200 }}
-        className={`relative w-full overflow-visible my-4 sm:my-8 ${className}`}
+        className={`relative w-full max-w-[100vw] overflow-x-clip my-4 sm:my-8 ${className}`}
       >
-        <div className="relative w-full overflow-visible">
+        <div className="relative w-full max-w-[100vw] overflow-x-clip">
           {children}
         </div>
       </motion.section>

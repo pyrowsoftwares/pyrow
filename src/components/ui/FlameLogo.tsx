@@ -4,29 +4,36 @@ interface FlameLogoProps {
   variant?: 'full' | 'icon-only' | 'wordmark';
   className?: string;
   size?: 'sm' | 'md' | 'lg' | 'xl';
+  onClick?: (e: React.MouseEvent) => void;
 }
 
 export const FlameLogo: React.FC<FlameLogoProps> = ({
   variant = 'full',
   className = '',
   size = 'md',
+  onClick,
 }) => {
   // Balanced retina sizing for pixel-perfect clarity
   const sizeMap = {
     sm: { icon: 'h-6 sm:h-7', wordmark: 'h-5 sm:h-6' },
-    md: { icon: 'h-8 sm:h-9', wordmark: 'h-[25px] sm:h-[29px]' },
-    lg: { icon: 'h-10 sm:h-11', wordmark: 'h-[32px] sm:h-[36px]' },
-    xl: { icon: 'h-12 sm:h-14', wordmark: 'h-[40px] sm:h-[46px]' },
+    md: { icon: 'h-7 sm:h-9', wordmark: 'h-[22px] sm:h-[29px]' },
+    lg: { icon: 'h-9 sm:h-11', wordmark: 'h-[28px] sm:h-[36px]' },
+    xl: { icon: 'h-11 sm:h-14', wordmark: 'h-[36px] sm:h-[46px]' },
   }[size];
 
   return (
     <a
-      href="#"
+      href="/"
       onClick={(e) => {
-        e.preventDefault();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (onClick) {
+          e.preventDefault();
+          onClick(e);
+        } else {
+          e.preventDefault();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
       }}
-      className={`group relative inline-flex items-center gap-2.5 sm:gap-3 transition-transform duration-300 hover:scale-[1.03] active:scale-[0.98] focus:outline-none select-none ${className}`}
+      className={`group relative inline-flex items-center gap-2 sm:gap-3 transition-transform duration-300 hover:scale-[1.03] active:scale-[0.98] focus:outline-none select-none ${className}`}
       aria-label="Pyrow Home"
     >
       {/* Dynamic Ambient Mesh Glow behind logo: Electric Violet + Ultra Purple */}

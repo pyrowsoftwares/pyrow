@@ -52,6 +52,8 @@ import {
   CheckCircle,
   XCircle,
   Share2,
+  Sun,
+  Moon,
 } from 'lucide-react';
 import {
   supabase,
@@ -157,6 +159,27 @@ export const AdminPage: React.FC = () => {
   const [loginError, setLoginError] = useState<string | null>(null);
   const [loginSubmitting, setLoginSubmitting] = useState(false);
 
+  // Admin Portal Dynamic Theme State & Sync with localStorage
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof document !== 'undefined') {
+      return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+    }
+    return 'dark';
+  });
+
+  const toggleTheme = () => {
+    soundFX.playClick();
+    const nextTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(nextTheme);
+    localStorage.setItem('pyrow-theme', nextTheme);
+    sessionStorage.setItem('pyrow-theme', nextTheme);
+    if (nextTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  };
+
   // Data states
   const [enquiries, setEnquiries] = useState<EnquiryRecord[]>([]);
   const [quotations, setQuotations] = useState<QuotationRecord[]>([]);
@@ -164,6 +187,7 @@ export const AdminPage: React.FC = () => {
   const [whatsappLogs, setWhatsappLogs] = useState<WhatsAppLogRecord[]>([]);
   const [pageViews, setPageViews] = useState<PageViewRecord[]>([]);
   const [dataLoading, setDataLoading] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   // Enquiries filter & search
   const [searchTerm, setSearchTerm] = useState('');
@@ -1860,7 +1884,7 @@ export const AdminPage: React.FC = () => {
   // -------------------------------------------------------------
   if (!session) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12 bg-[#04030a] text-white relative overflow-hidden selection:bg-violet-600 selection:text-white">
+      <div className={`admin-portal min-h-screen flex flex-col items-center justify-center px-4 py-12 ${theme === 'dark' ? 'dark bg-[#04030a] text-white' : 'bg-slate-50 text-slate-900'} relative overflow-hidden selection:bg-violet-600 selection:text-white transition-colors duration-300`}>
         {/* MotionSites Ambient Background Glows */}
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[650px] bg-gradient-to-b from-violet-600/15 via-indigo-600/5 to-transparent rounded-full blur-[140px] pointer-events-none" />
         <div className="absolute -bottom-32 -left-32 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[160px] pointer-events-none" />
@@ -1868,7 +1892,7 @@ export const AdminPage: React.FC = () => {
 
         <button
           onClick={() => navigate('/')}
-          className="absolute top-6 left-6 inline-flex items-center gap-2 text-xs font-mono text-zinc-400 hover:text-white transition-colors cursor-pointer z-20 px-3 py-1.5 rounded-full border border-white/10 bg-white/[0.04] hover:bg-white/10 backdrop-blur-md"
+          className="absolute top-6 left-6 inline-flex items-center gap-2 text-xs font-mono text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer z-20 px-3.5 py-1.5 rounded-full border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/[0.04] hover:bg-white dark:hover:bg-white/10 backdrop-blur-md shadow-sm"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Back to Pyrow.in</span>
@@ -1986,15 +2010,162 @@ export const AdminPage: React.FC = () => {
   // VIEW B: EXECUTIVE COMMAND DASHBOARD WITH TECHNICAL SIDEBAR
   // -------------------------------------------------------------
   return (
-    <div className="h-screen w-screen overflow-hidden bg-[#04030a] text-slate-100 flex flex-col md:flex-row font-sans selection:bg-violet-600 selection:text-white relative">
+    <div className={`admin-portal h-screen w-screen overflow-hidden ${theme === 'dark' ? 'dark bg-[#04030a] text-slate-100' : 'bg-slate-50 text-slate-900'} flex flex-col md:flex-row font-sans selection:bg-violet-600 selection:text-white relative transition-colors duration-300`}>
       {/* MotionSites Ambient Top Glow */}
       <div className="absolute top-0 right-1/4 w-[600px] h-[300px] bg-violet-600/10 rounded-full blur-[140px] pointer-events-none z-0" />
 
-      {/* SIDEBAR NAVIGATION (MotionSites Obsidian Standard) */}
-      <aside className="admin-sidebar w-full md:w-64 lg:w-72 bg-[#070512]/95 backdrop-blur-2xl border-r border-white/[0.08] flex flex-col justify-between shrink-0 h-auto md:h-screen overflow-y-auto no-print z-20 sticky top-0 shadow-[10px_0_30px_-15px_rgba(0,0,0,0.6)]">
+      {/* MOBILE TOP BAR (Only visible on < md screens) */}
+      <header className="md:hidden sticky top-0 z-40 bg-white/95 dark:bg-[#070512]/95 backdrop-blur-2xl border-b border-slate-200 dark:border-white/[0.08] px-4 py-3 flex items-center justify-between no-print shadow-md shrink-0">
+        <div className="flex items-center gap-2.5">
+          <img
+            src="/assets/pyrow-icon-transparent.png"
+            alt="Pyrow Icon"
+            className="h-7 w-auto object-contain drop-shadow-[0_0_12px_rgba(124,58,237,0.4)]"
+          />
+          <img
+            src="/assets/pyrow-logo-transparent.png"
+            alt="Pyrow"
+            className="h-5 w-auto object-contain"
+          />
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 flex items-center gap-1 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span>Live Node</span>
+          </div>
+          <button
+            onClick={() => setMobileNavOpen(!mobileNavOpen)}
+            className="p-2 rounded-xl bg-slate-100 dark:bg-white/[0.06] border border-slate-200 dark:border-white/10 text-slate-700 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white cursor-pointer active:scale-95 transition-all shadow-sm"
+            aria-label="Toggle Navigation Menu"
+          >
+            {mobileNavOpen ? (
+              <span className="text-xs font-mono font-bold px-1 text-violet-600 dark:text-violet-400">✕</span>
+            ) : (
+              <LayoutDashboard className="w-4 h-4 text-violet-600 dark:text-violet-400" />
+            )}
+          </button>
+        </div>
+      </header>
+
+      {/* MOBILE HORIZONTAL QUICK TAB STRIP (Swipeable 1-tap navigation on phones) */}
+      <div className="md:hidden flex items-center gap-1.5 px-3 py-2 bg-[#05030e]/95 border-b border-white/[0.06] overflow-x-auto scrollbar-none no-print z-30 shrink-0">
+        {[
+          { id: 'dashboard', label: 'Overview' },
+          { id: 'enquiries', label: `Leads (${enquiries.length})` },
+          { id: 'quotations', label: `Quotes (${quotations.length})` },
+          { id: 'billing', label: `Billing (${invoices.length})` },
+          { id: 'messages', label: `Inbox (${contactMessages.length})` },
+          { id: 'whatsapp', label: 'WhatsApp' },
+          { id: 'traffic', label: 'Traffic' },
+          { id: 'database', label: 'Database' },
+          { id: 'settings', label: 'Security' },
+        ].map((item) => {
+          const isActive = activeTab === item.id;
+          return (
+            <button
+              key={item.id}
+              onClick={() => {
+                soundFX.playClick();
+                setActiveTab(item.id as AdminTab);
+                setMobileNavOpen(false);
+              }}
+              className={`px-3 py-1.5 rounded-full text-xs font-mono whitespace-nowrap cursor-pointer transition-all ${
+                isActive
+                  ? 'bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-bold shadow-md shadow-violet-600/30'
+                  : 'bg-white/[0.04] text-zinc-400 hover:text-white border border-white/[0.06]'
+              }`}
+            >
+              {item.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* MOBILE DRAWER OVERLAY (Full module control when hamburger is open) */}
+      <AnimatePresence>
+        {mobileNavOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2 }}
+            className="md:hidden fixed inset-x-0 top-[96px] bottom-0 z-50 bg-[#070512]/98 backdrop-blur-3xl border-b border-white/10 p-4 overflow-y-auto flex flex-col justify-between"
+          >
+            <div className="space-y-4">
+              <div className="px-2 text-[10px] font-mono text-zinc-500 uppercase tracking-widest font-bold">
+                Navigation Modules
+              </div>
+              <div className="space-y-1">
+                {[
+                  { id: 'dashboard', label: 'Overview Intelligence', icon: <LayoutDashboard className="w-4 h-4" /> },
+                  { id: 'enquiries', label: 'Inquiries & Leads', icon: <Inbox className="w-4 h-4" />, count: enquiries.length },
+                  { id: 'quotations', label: 'Quotation Studio', icon: <FileText className="w-4 h-4" />, count: quotations.length },
+                  { id: 'billing', label: 'Billing & GST Invoices', icon: <Receipt className="w-4 h-4" />, count: invoices.length },
+                  { id: 'messages', label: 'Contact Messages', icon: <Mail className="w-4 h-4" />, count: contactMessages.length },
+                  { id: 'whatsapp', label: 'WhatsApp Cloud API', icon: <MessageSquare className="w-4 h-4 text-emerald-400" /> },
+                  { id: 'traffic', label: 'Traffic & Geolocation', icon: <BarChart3 className="w-4 h-4 text-cyan-400" /> },
+                  { id: 'database', label: 'Database & SQL Health', icon: <Database className="w-4 h-4 text-violet-400" /> },
+                  { id: 'settings', label: 'Admin Security Config', icon: <Settings className="w-4 h-4" /> },
+                ].map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      soundFX.playClick();
+                      setActiveTab(item.id as AdminTab);
+                      setMobileNavOpen(false);
+                    }}
+                    className={`w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-mono transition-all ${
+                      activeTab === item.id
+                        ? 'bg-gradient-to-r from-violet-600/40 via-violet-600/20 to-transparent text-white font-bold border border-violet-500/40'
+                        : 'text-zinc-400 hover:text-white bg-white/[0.02]'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      {item.icon}
+                      <span>{item.label}</span>
+                    </div>
+                    {item.count !== undefined && item.count !== null && (
+                      <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-white/10 text-zinc-300">
+                        {item.count}
+                      </span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="pt-4 border-t border-slate-200 dark:border-white/10 space-y-3 mt-6">
+              <div className="p-3 rounded-2xl bg-slate-100 dark:bg-black/50 border border-slate-200 dark:border-white/[0.06] text-xs font-mono">
+                <div className="text-[10px] text-slate-500 dark:text-zinc-500 uppercase tracking-widest mb-0.5">Admin Session</div>
+                <div className="text-slate-900 dark:text-white font-bold truncate">{session.user.email}</div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleExitToPortfolio}
+                  className="flex-1 py-2.5 px-3 rounded-xl bg-slate-100 dark:bg-white/[0.05] text-slate-700 dark:text-zinc-300 text-xs font-mono flex items-center justify-center gap-1.5 border border-slate-200 dark:border-transparent"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5" />
+                  <span>Exit Site</span>
+                </button>
+                <button
+                  onClick={() => handleSecureLogout()}
+                  className="py-2.5 px-4 rounded-xl bg-rose-500/15 dark:bg-rose-500/20 text-rose-700 dark:text-rose-300 border border-rose-500/30 text-xs font-mono flex items-center gap-1.5"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span>Logout</span>
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* DESKTOP SIDEBAR NAVIGATION (Hidden on mobile, 100% untouched on PC) */}
+      <aside className="admin-sidebar hidden md:flex md:w-64 lg:w-72 bg-white/95 dark:bg-[#070512]/95 backdrop-blur-2xl border-r border-slate-200 dark:border-white/[0.08] flex-col justify-between shrink-0 h-screen overflow-y-auto no-print z-20 sticky top-0 shadow-[10px_0_30px_-15px_rgba(0,0,0,0.06)] dark:shadow-[10px_0_30px_-15px_rgba(0,0,0,0.6)] transition-colors duration-300">
         <div>
           {/* Logo & Header */}
-          <div className="p-5 border-b border-white/[0.08] flex items-center justify-between">
+          <div className="p-5 border-b border-slate-200 dark:border-white/[0.08] flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <img
                 src="/assets/pyrow-icon-transparent.png"
@@ -2007,9 +2178,9 @@ export const AdminPage: React.FC = () => {
                 className="h-6 w-auto object-contain"
               />
             </div>
-            <div className="text-[10px] font-mono text-emerald-400 flex items-center gap-1.5 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span>Live Node</span>
+            <div className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 flex items-center gap-1 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span>Node</span>
             </div>
           </div>
 
@@ -2097,7 +2268,7 @@ export const AdminPage: React.FC = () => {
         </div>
 
         {/* User Info & Secure Exit */}
-        <div className="p-4 border-t border-white/[0.08] space-y-3">
+        <div className="p-4 border-t border-slate-200 dark:border-white/[0.08] space-y-3">
           <div className="p-3 rounded-2xl bg-black/50 border border-white/[0.06] text-xs font-mono">
             <div className="text-[10px] text-zinc-500 uppercase tracking-widest mb-0.5">Admin Session</div>
             <div className="text-white font-bold truncate">{session.user.email}</div>
@@ -2130,7 +2301,7 @@ export const AdminPage: React.FC = () => {
       {/* MAIN VIEW AREA */}
       <div className="admin-dashboard-view flex-1 h-full md:h-screen overflow-y-auto bg-[#04030a] flex flex-col min-w-0">
         {/* Top Header (MotionSites Award Standard) */}
-        <header className="admin-main-header sticky top-0 z-30 bg-[#070512]/90 backdrop-blur-2xl border-b border-white/[0.08] px-6 py-4 flex items-center justify-between gap-4 shadow-lg shadow-black/40">
+        <header className="admin-main-header sticky top-0 z-30 bg-[#070512]/90 backdrop-blur-2xl border-b border-white/[0.08] px-4 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 shadow-lg shadow-black/40">
           <div>
             <h1 className="text-lg sm:text-xl font-bold font-display text-white tracking-tight flex items-center gap-2">
               {activeTab === 'dashboard' && (
@@ -2192,10 +2363,42 @@ export const AdminPage: React.FC = () => {
               </button>
             )}
 
+            {/* Theme Toggle Segmented Control in Admin Header */}
+            <div className="flex items-center p-1 rounded-2xl bg-slate-100 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] text-xs font-mono shadow-sm">
+              <button
+                type="button"
+                onClick={() => { if (theme !== 'light') toggleTheme(); }}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold cursor-pointer transition-all ${
+                  theme === 'light'
+                    ? 'bg-white text-slate-900 shadow-sm'
+                    : 'text-slate-500 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-white'
+                }`}
+                title="Switch to Light Theme"
+                aria-label="Light Theme"
+              >
+                <Sun className="w-3.5 h-3.5 text-amber-500" />
+                <span className="hidden sm:inline">Light</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => { if (theme !== 'dark') toggleTheme(); }}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold cursor-pointer transition-all ${
+                  theme === 'dark'
+                    ? 'bg-violet-600 text-white shadow-md shadow-violet-600/30'
+                    : 'text-slate-500 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-white'
+                }`}
+                title="Switch to Dark Theme"
+                aria-label="Dark Theme"
+              >
+                <Moon className="w-3.5 h-3.5 text-slate-200" />
+                <span className="hidden sm:inline">Dark</span>
+              </button>
+            </div>
+
             <button
               onClick={fetchAllData}
               disabled={dataLoading}
-              className="p-2.5 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-zinc-300 hover:text-white text-xs font-mono flex items-center gap-1.5 cursor-pointer transition-colors"
+              className="p-2.5 rounded-2xl bg-slate-100 dark:bg-white/[0.04] hover:bg-slate-200 dark:hover:bg-white/[0.08] border border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white text-xs font-mono flex items-center gap-1.5 cursor-pointer transition-colors shadow-sm"
               title="Sync latest records"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${dataLoading ? 'animate-spin text-violet-400' : ''}`} />
@@ -2204,15 +2407,15 @@ export const AdminPage: React.FC = () => {
           </div>
         </header>
 
-        <div className="p-6 sm:p-8 space-y-8">
+        <div className="p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8">
           {/* -------------------------------------------------------- */}
           {/* TAB: OVERVIEW DASHBOARD (MotionSites High-Density Cards) */}
           {/* -------------------------------------------------------- */}
           {activeTab === 'dashboard' && (
-            <div className="space-y-8">
+            <div className="space-y-6 sm:space-y-8">
               {/* Financial & Operational KPI Row */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-                <div className="p-6 rounded-[28px] bg-gradient-to-b from-white/[0.05] via-white/[0.02] to-transparent backdrop-blur-xl border border-white/[0.08] hover:border-violet-500/30 transition-all duration-300 relative overflow-hidden group shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                <div className="p-5 sm:p-6 rounded-2xl sm:rounded-[28px] bg-gradient-to-b from-white/[0.05] via-white/[0.02] to-transparent backdrop-blur-xl border border-white/[0.08] hover:border-violet-500/30 transition-all duration-300 relative overflow-hidden group shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
                   <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">Client Pipeline</span>
@@ -2225,7 +2428,7 @@ export const AdminPage: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="p-6 rounded-[28px] bg-gradient-to-b from-emerald-500/10 via-emerald-500/[0.03] to-transparent backdrop-blur-xl border border-emerald-500/20 hover:border-emerald-500/40 transition-all duration-300 relative overflow-hidden group shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
+                <div className="p-5 sm:p-6 rounded-2xl sm:rounded-[28px] bg-gradient-to-b from-emerald-500/10 via-emerald-500/[0.03] to-transparent backdrop-blur-xl border border-emerald-500/20 hover:border-emerald-500/40 transition-all duration-300 relative overflow-hidden group shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
                   <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-emerald-400/30 to-transparent" />
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-xs font-mono text-emerald-300 uppercase tracking-widest">Collections Made</span>
@@ -2240,7 +2443,7 @@ export const AdminPage: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="p-6 rounded-[28px] bg-gradient-to-b from-cyan-500/10 via-cyan-500/[0.03] to-transparent backdrop-blur-xl border border-cyan-500/20 hover:border-cyan-500/40 transition-all duration-300 relative overflow-hidden group shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
+                <div className="p-5 sm:p-6 rounded-2xl sm:rounded-[28px] bg-gradient-to-b from-cyan-500/10 via-cyan-500/[0.03] to-transparent backdrop-blur-xl border border-cyan-500/20 hover:border-cyan-500/40 transition-all duration-300 relative overflow-hidden group shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
                   <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent" />
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-xs font-mono text-cyan-300 uppercase tracking-widest">Live Pageviews</span>
@@ -2253,7 +2456,7 @@ export const AdminPage: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="p-6 rounded-[28px] bg-gradient-to-b from-fuchsia-500/10 via-fuchsia-500/[0.03] to-transparent backdrop-blur-xl border border-fuchsia-500/20 hover:border-fuchsia-500/40 transition-all duration-300 relative overflow-hidden group shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
+                <div className="p-5 sm:p-6 rounded-2xl sm:rounded-[28px] bg-gradient-to-b from-fuchsia-500/10 via-fuchsia-500/[0.03] to-transparent backdrop-blur-xl border border-fuchsia-500/20 hover:border-fuchsia-500/40 transition-all duration-300 relative overflow-hidden group shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
                   <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-fuchsia-400/30 to-transparent" />
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-xs font-mono text-fuchsia-300 uppercase tracking-widest">WhatsApp Engine</span>
@@ -2350,52 +2553,52 @@ export const AdminPage: React.FC = () => {
           {activeTab === 'whatsapp' && (
             <div className="space-y-8">
               {/* WhatsApp Connection Status Header */}
-              <div className="p-6 sm:p-8 rounded-[28px] bg-gradient-to-r from-emerald-950/40 via-[#070512] to-[#070512] border border-emerald-500/30 space-y-5 shadow-[0_8px_30px_rgb(0,0,0,0.3)] relative overflow-hidden">
-                <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-emerald-400/30 to-transparent" />
+              <div className="p-6 sm:p-8 rounded-[28px] bg-gradient-to-r from-emerald-500/10 via-white to-white dark:from-emerald-950/40 dark:via-[#070512] dark:to-[#070512] border border-emerald-500/30 space-y-5 shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)] relative overflow-hidden">
+                <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-emerald-400/40 to-transparent" />
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.25)]">
+                    <div className="w-14 h-14 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.25)]">
                       <MessageSquare className="w-7 h-7" />
                     </div>
                     <div>
                       <div className="flex items-center gap-2.5">
-                        <h3 className="text-xl font-bold font-display text-white">Meta WhatsApp Cloud API v21.0</h3>
-                        <span className="px-3 py-0.5 rounded-full text-[10px] font-mono bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 font-bold flex items-center gap-1.5">
+                        <h3 className="text-xl font-bold font-display text-slate-900 dark:text-white">Meta WhatsApp Cloud API v21.0</h3>
+                        <span className="px-3 py-0.5 rounded-full text-[10px] font-mono bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 font-bold flex items-center gap-1.5">
                           <CheckCircle className="w-3 h-3" />
                           Official Partner Live
                         </span>
                       </div>
-                      <p className="text-xs text-zinc-400 font-mono mt-0.5">
-                        Connected Line: <span className="text-white font-bold font-mono">+91 73581 63590</span> • WABA ID: <span className="font-mono text-zinc-300">108492049182341</span>
+                      <p className="text-xs text-slate-600 dark:text-zinc-400 font-mono mt-0.5">
+                        Connected Line: <span className="text-slate-900 dark:text-white font-bold font-mono">+91 73581 63590</span> • WABA ID: <span className="font-mono text-slate-700 dark:text-zinc-300">108492049182341</span>
                       </p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-mono text-zinc-400">Webhook Status:</span>
-                    <span className="px-3 py-1 rounded-xl bg-black/60 text-emerald-400 font-mono text-xs border border-emerald-500/30 shadow-[0_0_12px_rgba(16,185,129,0.2)] flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    <span className="text-xs font-mono text-slate-600 dark:text-zinc-400">Webhook Status:</span>
+                    <span className="px-3 py-1 rounded-xl bg-slate-100 dark:bg-black/60 text-emerald-600 dark:text-emerald-400 font-mono text-xs border border-emerald-500/30 shadow-sm dark:shadow-[0_0_12px_rgba(16,185,129,0.2)] flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                       <span>200 OK Active</span>
                     </span>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-white/[0.08] text-xs font-mono">
-                  <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.04]">
-                    <span className="text-zinc-500 block text-[10px] uppercase tracking-wider">Messaging Limit:</span>
-                    <span className="text-white font-bold">250,000 / Day (Tier 2)</span>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-slate-200 dark:border-white/[0.08] text-xs font-mono">
+                  <div className="p-3 rounded-xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/[0.04]">
+                    <span className="text-slate-500 dark:text-zinc-500 block text-[10px] uppercase tracking-wider">Messaging Limit:</span>
+                    <span className="text-slate-900 dark:text-white font-bold">250,000 / Day (Tier 2)</span>
                   </div>
-                  <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.04]">
-                    <span className="text-zinc-500 block text-[10px] uppercase tracking-wider">Quality Rating:</span>
-                    <span className="text-emerald-400 font-bold">HIGH (Green Rating)</span>
+                  <div className="p-3 rounded-xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/[0.04]">
+                    <span className="text-slate-500 dark:text-zinc-500 block text-[10px] uppercase tracking-wider">Quality Rating:</span>
+                    <span className="text-emerald-600 dark:text-emerald-400 font-bold">HIGH (Green Rating)</span>
                   </div>
-                  <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.04]">
-                    <span className="text-zinc-500 block text-[10px] uppercase tracking-wider">Webhook Endpoint:</span>
-                    <span className="text-zinc-300">/api/webhook/whatsapp</span>
+                  <div className="p-3 rounded-xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/[0.04]">
+                    <span className="text-slate-500 dark:text-zinc-500 block text-[10px] uppercase tracking-wider">Webhook Endpoint:</span>
+                    <span className="text-slate-700 dark:text-zinc-300">/api/webhook/whatsapp</span>
                   </div>
-                  <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.04]">
-                    <span className="text-zinc-500 block text-[10px] uppercase tracking-wider">Green Tick Verified:</span>
-                    <span className="text-emerald-400 font-bold">Pyrow Technologies</span>
+                  <div className="p-3 rounded-xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/[0.04]">
+                    <span className="text-slate-500 dark:text-zinc-500 block text-[10px] uppercase tracking-wider">Green Tick Verified:</span>
+                    <span className="text-emerald-600 dark:text-emerald-400 font-bold">Pyrow Technologies</span>
                   </div>
                 </div>
               </div>
@@ -2744,22 +2947,22 @@ export const AdminPage: React.FC = () => {
           {activeTab === 'database' && (
             <div className="space-y-8">
               {/* Database Connection Specs */}
-              <div className="p-6 rounded-2xl bg-gradient-to-r from-violet-950/40 via-slate-900 to-slate-900 border border-violet-500/30 space-y-4">
+              <div className="p-6 rounded-2xl bg-gradient-to-r from-violet-500/10 via-white to-white dark:from-violet-950/40 dark:via-slate-900 dark:to-slate-900 border border-violet-500/30 space-y-4 shadow-sm dark:shadow-none">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-2xl bg-violet-500/20 border border-violet-500/40 flex items-center justify-center text-violet-400">
+                    <div className="w-12 h-12 rounded-2xl bg-violet-500/15 border border-violet-500/30 flex items-center justify-center text-violet-600 dark:text-violet-400">
                       <Database className="w-6 h-6" />
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <h3 className="text-lg font-bold text-white">PostgreSQL 17.12 Production Database</h3>
-                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 font-bold flex items-center gap-1">
+                        <h3 className="text-lg font-bold text-slate-900 dark:text-white">PostgreSQL 17.12 Production Database</h3>
+                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 font-bold flex items-center gap-1">
                           <CheckCircle className="w-3 h-3" />
                           Healthy Active
                         </span>
                       </div>
-                      <p className="text-xs text-zinc-400 font-mono">
-                        Host: <span className="text-white font-mono">db.dgpkfrkhmkvywsgezhxh.supabase.co</span> • Port: 5432 • TLS 1.3
+                      <p className="text-xs text-slate-600 dark:text-zinc-400 font-mono">
+                        Host: <span className="text-slate-900 dark:text-white font-mono">db.dgpkfrkhmkvywsgezhxh.supabase.co</span> • Port: 5432 • TLS 1.3
                       </p>
                     </div>
                   </div>
@@ -2776,22 +2979,22 @@ export const AdminPage: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 border-t border-white/10 text-xs font-mono">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 border-t border-slate-200 dark:border-white/10 text-xs font-mono">
                   <div>
-                    <span className="text-zinc-500 block">Supabase Region:</span>
-                    <span className="text-white font-bold">ap-northeast-2 (Seoul/Asia)</span>
+                    <span className="text-slate-500 dark:text-zinc-500 block">Supabase Region:</span>
+                    <span className="text-slate-900 dark:text-white font-bold">ap-northeast-2 (Seoul/Asia)</span>
                   </div>
                   <div>
-                    <span className="text-zinc-500 block">Connection Pooling:</span>
-                    <span className="text-emerald-400 font-bold">Supavisor Active</span>
+                    <span className="text-slate-500 dark:text-zinc-500 block">Connection Pooling:</span>
+                    <span className="text-emerald-600 dark:text-emerald-400 font-bold">Supavisor Active</span>
                   </div>
                   <div>
-                    <span className="text-zinc-500 block">RLS Security Status:</span>
-                    <span className="text-emerald-400 font-bold">STRICT (All 5 tables)</span>
+                    <span className="text-slate-500 dark:text-zinc-500 block">RLS Security Status:</span>
+                    <span className="text-emerald-600 dark:text-emerald-400 font-bold">STRICT (All 5 tables)</span>
                   </div>
                   <div>
-                    <span className="text-zinc-500 block">Automated Backups:</span>
-                    <span className="text-white font-bold">Daily Cloud Snapshots</span>
+                    <span className="text-slate-500 dark:text-zinc-500 block">Automated Backups:</span>
+                    <span className="text-slate-900 dark:text-white font-bold">Daily Cloud Snapshots</span>
                   </div>
                 </div>
               </div>

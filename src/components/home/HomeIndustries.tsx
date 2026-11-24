@@ -53,7 +53,7 @@ export const HomeIndustries: React.FC = () => {
                 soundFX.playClick();
                 navigate('/solutions');
               }}
-              className="px-5 py-3 rounded-full bg-white dark:bg-obsidian-850 border border-slate-200/80 dark:border-white/10 hover:border-violet-500 text-xs sm:text-sm font-semibold text-slate-800 dark:text-zinc-200 shadow-sm hover:shadow-md transition-all cursor-pointer"
+              className="px-5 py-3 rounded-full bg-white/95 dark:bg-[#070512]/90 border border-slate-200/80 dark:border-white/[0.08] hover:border-violet-500/60 text-xs sm:text-sm font-semibold text-slate-800 dark:text-zinc-200 shadow-sm dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)] hover:shadow-lg backdrop-blur-md transition-all cursor-pointer"
             >
               {ind}
             </motion.button>

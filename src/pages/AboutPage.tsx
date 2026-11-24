@@ -77,8 +77,9 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenStrategyCall }) => {
           whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
           viewport={{ once: false, amount: 0.15 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="p-8 sm:p-12 rounded-3xl bg-white dark:bg-obsidian-900/80 border border-slate-200/80 dark:border-white/10 shadow-sm text-center"
+          className="p-8 sm:p-12 rounded-[32px] bg-white dark:bg-[#070512]/90 backdrop-blur-2xl border border-slate-200/80 dark:border-white/[0.08] shadow-[0_8px_30px_rgb(0,0,0,0.25)] text-center relative overflow-hidden group"
         >
+          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-400/25 to-transparent pointer-events-none" />
           <span className="text-xs font-mono font-bold text-violet-600 dark:text-violet-400 tracking-wider uppercase">
             Our Mission
           </span>
@@ -105,9 +106,10 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenStrategyCall }) => {
               viewport={{ once: false, amount: 0.15 }}
               transition={{ duration: 0.75, delay: (idx % 4) * 0.1, ease: [0.22, 1, 0.36, 1] }}
               whileHover={{ y: -5 }}
-              className="p-6 rounded-2xl bg-white dark:bg-obsidian-900/50 border border-slate-200/80 dark:border-white/5 shadow-sm transition-all"
+              className="p-6 rounded-[28px] bg-white dark:bg-[#070512]/90 backdrop-blur-xl border border-slate-200/80 dark:border-white/[0.08] shadow-[0_8px_30px_rgb(0,0,0,0.25)] hover:border-violet-500/40 transition-all relative overflow-hidden group"
             >
-              <div className="text-3xl sm:text-4xl font-black font-display bg-gradient-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent">
+              <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-400/20 to-transparent pointer-events-none" />
+              <div className="text-3xl sm:text-4xl font-black font-display font-mono bg-gradient-to-r from-violet-600 via-purple-500 to-fuchsia-500 dark:from-violet-300 dark:via-purple-200 dark:to-indigo-300 bg-clip-text text-transparent">
                 {s.value}
               </div>
               <div className="mt-1 text-xs sm:text-sm font-semibold text-slate-600 dark:text-zinc-400">

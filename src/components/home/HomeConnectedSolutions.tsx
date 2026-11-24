@@ -33,41 +33,65 @@ export const HomeConnectedSolutions: React.FC<{ onOpenStrategyCall?: () => void 
       headline: 'Sub-second speed that directly increases conversion rates.',
       desc: 'Built with Next.js 15, React 19, and native Flutter. Code-split bundles, edge asset caching, and fluid 60fps micro-interactions that eliminate cognitive bounce.',
       points: ['99+ Mobile Google PageSpeed', '100% Custom Source Code Handover', 'WCAG 2.1 Accessible UX'],
-      actionUrl: '/portfolio',
-      actionLabel: 'View Web & Mobile Work',
+      featuredRecord: {
+        title: 'Aurora Wealth & Investment App',
+        client: 'Aurora Capital Partners',
+        metric: '4.9★ App Store • $40M+ Assets Tracked',
+      },
+      targetCategory: 'mobile',
+      actionUrl: '#track-record',
+      actionLabel: 'View Mobile Deliverable in Track Record',
     },
     {
       num: '02',
-      title: 'Offline-First POS & Custom ERP',
+      title: 'Offline-First POS & Logistics ERP',
       category: 'Operations & Billing',
       speed: '0.8s Scan-to-Bill',
       headline: 'Zero stalled queues during internet blackouts.',
       desc: 'High-velocity retail POS systems and multi-branch cloud ERPs. Transactions execute locally in SQLite and sync transparently to central PostgreSQL databases once reconnected.',
-      points: ['Sub-second thermal receipt generation', 'Biometric employee payroll sync', 'Multi-warehouse automated stock reorders'],
-      actionUrl: '/products',
-      actionLabel: 'Explore POS & ERP Suites',
+      points: ['Sub-second thermal receipt generation', 'GPS dispatch telematics for 450+ fleet', 'Multi-warehouse automated stock reorders'],
+      featuredRecord: {
+        title: 'Prism Multi-Store POS & Velox Freight ERP',
+        client: 'Prism Lifestyle & Velox Logistics',
+        metric: '24 Retail Stores • 450+ Fleet Dispatches',
+      },
+      targetCategory: 'pos',
+      actionUrl: '#track-record',
+      actionLabel: 'View POS & ERP in Track Record',
     },
     {
       num: '03',
-      title: 'Autonomous AI & WhatsApp Funnels',
-      category: 'AI Automation',
-      speed: '< 1.2s NLP Latency',
-      headline: 'Turn cold inquiries into booked clients 24/7.',
-      desc: 'Direct integration with the official Meta WhatsApp Cloud API. Multilingual AI assistants that handle booking requests, answer pricing FAQs, and update your CRM without human delay.',
-      points: ['Official WhatsApp Green Tick support', 'Google Calendar booking synchronization', 'Natural NLP language understanding'],
-      actionUrl: '/solutions',
-      actionLabel: 'Explore AI Automations',
+      title: 'Clinical Hospital Systems & QSR Kiosks',
+      category: 'Healthcare & Hospitality',
+      speed: '< 400ms KDS Latency',
+      headline: 'Mission-critical systems where reliability is non-negotiable.',
+      desc: 'High-throughput inpatient/outpatient hospital management migrating 100k+ records with HIPAA compliance, paired with contactless QR ordering and synchronized kitchen display kiosks.',
+      points: ['HIPAA-compliant multi-tenant clinical records', 'Sub-400ms ticket transmission to kitchen', 'Multi-branch live ingredient deductions'],
+      featuredRecord: {
+        title: 'ApexCare Hospital ERP & DineFlow Kiosks',
+        client: 'Apex Health & DineFlow Food Group',
+        metric: '100k+ Patient Records • 40+ Food Outlets',
+      },
+      targetCategory: 'erp',
+      actionUrl: '#track-record',
+      actionLabel: 'View Healthcare & QSR in Track Record',
     },
     {
       num: '04',
-      title: 'Performance Marketing & SEO Growth',
-      category: 'Revenue Acceleration',
-      speed: 'High-ROAS Funnels',
-      headline: 'We build the product, then flood it with paying customers.',
-      desc: 'We do not build in isolation. Our digital marketing team runs profitable Google Search, Meta (Instagram/Facebook) ads, and high-ranking local/national SEO funnels.',
-      points: ['Full-funnel attribution tracking', 'High-converting landing page copywriting', 'Automated WhatsApp lead nurturing'],
-      actionUrl: '/contact',
-      actionLabel: 'Consult with Growth Team',
+      title: 'Autonomous AI & Growth Automation',
+      category: 'AI & Revenue Funnels',
+      speed: '< 1.2s NLP Latency',
+      headline: 'Turn cold inquiries into paying customers 24/7.',
+      desc: 'Direct integration with the official Meta WhatsApp Cloud API. Multilingual AI assistants that handle booking requests, answer pricing FAQs, and update your CRM without human delay.',
+      points: ['Official WhatsApp Green Tick support', 'Trained on high-converting copywriting', 'Automated CRM lead nurturing & scheduling'],
+      featuredRecord: {
+        title: 'Pyrow AutoPilot AI & ContentFlow',
+        client: 'OmniBrand D2C & Retail Outlets',
+        metric: '71% Autonomous Resolution • < 1.2s Response',
+      },
+      targetCategory: 'ai',
+      actionUrl: '#track-record',
+      actionLabel: 'View AI Automation in Track Record',
     },
   ];
 
@@ -92,17 +116,18 @@ export const HomeConnectedSolutions: React.FC<{ onOpenStrategyCall?: () => void 
             Most digital agencies only write code or only run ads. We bridge the gap: custom high-performance software engineered from scratch, paired with autonomous WhatsApp workflows and performance marketing that drive real balance-sheet growth.
           </p>
 
-          <div className="p-5 rounded-2xl bg-white dark:bg-obsidian-900 border border-slate-200/80 dark:border-white/10 shadow-sm space-y-3 mb-8">
+          <div className="p-6 rounded-[28px] bg-white dark:bg-[#070512]/90 backdrop-blur-xl border border-slate-200/80 dark:border-white/[0.08] shadow-[0_8px_30px_rgb(0,0,0,0.2)] space-y-3.5 mb-8 relative overflow-hidden">
+            <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-400/20 to-transparent pointer-events-none" />
             <div className="flex items-center gap-2.5 text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
               <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0" />
               <span>100% Client IP Ownership transferred on Day 1</span>
             </div>
             <div className="flex items-center gap-2.5 text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
-              <Lock className="w-4 h-4 text-violet-500 shrink-0" />
+              <Lock className="w-4 h-4 text-violet-400 shrink-0" />
               <span>Zero vendor lock-in, zero hidden per-seat licensing fees</span>
             </div>
             <div className="flex items-center gap-2.5 text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
-              <CheckCircle2 className="w-4 h-4 text-indigo-500 shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" />
               <span>99.98% Cloud Uptime SLA & continuous post-launch warranty</span>
             </div>
           </div>
@@ -120,7 +145,12 @@ export const HomeConnectedSolutions: React.FC<{ onOpenStrategyCall?: () => void 
               size="md"
               onClick={() => {
                 soundFX.playClick();
-                navigate('/portfolio');
+                const el = document.getElementById('track-record');
+                if (el) {
+                  el.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                  navigate('/portfolio');
+                }
               }}
             >
               Our Track Record
@@ -141,16 +171,26 @@ export const HomeConnectedSolutions: React.FC<{ onOpenStrategyCall?: () => void 
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: false, amount: 0.15 }}
                 transition={{ duration: 0.6, delay: idx * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                className={`p-7 sm:p-9 rounded-3xl bg-white dark:bg-obsidian-900 border transition-all duration-300 relative overflow-hidden group cursor-pointer ${
-                  isHovered
-                    ? 'border-violet-500/60 shadow-xl shadow-violet-500/10 -translate-y-1'
-                    : 'border-slate-200/90 dark:border-white/10 shadow-sm'
-                }`}
+                className={`p-7 sm:p-9 rounded-[32px] bg-white dark:bg-[#070512]/90 backdrop-blur-xl border transition-all duration-300 relative overflow-hidden group cursor-pointer shadow-[0_8px_30px_rgb(0,0,0,0.25)] ${isHovered
+                    ? 'border-violet-500/60 shadow-[0_0_40px_rgba(124,58,237,0.2)] -translate-y-1'
+                    : 'border-slate-200/90 dark:border-white/[0.08]'
+                  }`}
                 onClick={() => {
                   soundFX.playClick();
-                  navigate(item.actionUrl);
+                  if (item.actionUrl.startsWith('#')) {
+                    const targetId = item.actionUrl.slice(1);
+                    const el = document.getElementById(targetId);
+                    if (el) {
+                      el.scrollIntoView({ behavior: 'smooth' });
+                      return;
+                    }
+                    navigate('/portfolio');
+                  } else {
+                    navigate(item.actionUrl);
+                  }
                 }}
               >
+                <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-400/20 to-transparent pointer-events-none" />
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <span className="text-xl sm:text-2xl font-black font-mono text-violet-600 dark:text-violet-400">
@@ -173,9 +213,21 @@ export const HomeConnectedSolutions: React.FC<{ onOpenStrategyCall?: () => void 
                   {item.headline}
                 </div>
 
-                <p className="text-xs sm:text-sm text-slate-600 dark:text-zinc-400 leading-relaxed mb-6">
+                <p className="text-xs sm:text-sm text-slate-600 dark:text-zinc-400 leading-relaxed mb-5">
                   {item.desc}
                 </p>
+
+                {/* Featured Client Track Record Deliverable */}
+                <div className="mb-5 p-3.5 rounded-2xl bg-slate-50 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 text-xs transition-colors">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                    <div>
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-zinc-500 block">Verified Production Deliverable</span>
+                      <span className="font-bold text-slate-900 dark:text-white">{item.featuredRecord.title}</span>
+                    </div>
+                  </div>
+                  <span className="text-[11px] font-mono font-semibold text-emerald-700 dark:text-emerald-400 self-start sm:self-auto">{item.featuredRecord.metric}</span>
+                </div>
 
                 <div className="space-y-1.5 pt-4 border-t border-slate-100 dark:border-white/5 mb-6 text-xs text-slate-600 dark:text-zinc-400 font-mono">
                   {item.points.map((pt, pIdx) => (

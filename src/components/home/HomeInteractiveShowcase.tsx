@@ -65,34 +65,56 @@ export const HomeInteractiveShowcase: React.FC<{ onOpenDemoRequest?: (name?: str
   const contentflowRef = useRef<HTMLDivElement>(null);
   const erpRef = useRef<HTMLDivElement>(null);
 
-  // Automatic scroll observer: as user scrolls through the 4 sections, the active product switches smoothly
-  useEffect(() => {
-    const observerOptions = {
-      root: null,
-      rootMargin: '-20% 0px -40% 0px',
-      threshold: 0.15,
-    };
+  // Smooth, flicker-free scroll position observer with requestAnimationFrame
+  const isManualScrolling = useRef(false);
+  const manualScrollTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-    const handleIntersect = (entries: IntersectionObserverEntry[]) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const targetId = entry.target.getAttribute('data-product-id') as ProductKey;
-          if (targetId && targetId !== activeTab) {
-            setActiveTab(targetId);
+  useEffect(() => {
+    let rafId: number;
+
+    const handleScroll = () => {
+      if (isManualScrolling.current) return;
+
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        const cards: { id: ProductKey; el: HTMLDivElement | null }[] = [
+          { id: 'pos', el: posRef.current },
+          { id: 'assist', el: assistRef.current },
+          { id: 'contentflow', el: contentflowRef.current },
+          { id: 'erp', el: erpRef.current },
+        ];
+
+        // Optimal focal line in viewport (38% from top)
+        const focalLine = window.innerHeight * 0.38;
+        let closestId: ProductKey = 'pos';
+        let minDistance = Infinity;
+
+        cards.forEach(({ id, el }) => {
+          if (!el) return;
+          const rect = el.getBoundingClientRect();
+          // Distance from card center to focal line
+          const cardCenter = rect.top + rect.height * 0.5;
+          const distance = Math.abs(cardCenter - focalLine);
+          if (distance < minDistance) {
+            minDistance = distance;
+            closestId = id;
           }
-        }
+        });
+
+        setActiveTab((prev) => (prev !== closestId ? closestId : prev));
       });
     };
 
-    const observer = new IntersectionObserver(handleIntersect, observerOptions);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    // Run initial positioning check
+    handleScroll();
 
-    if (posRef.current) observer.observe(posRef.current);
-    if (assistRef.current) observer.observe(assistRef.current);
-    if (contentflowRef.current) observer.observe(contentflowRef.current);
-    if (erpRef.current) observer.observe(erpRef.current);
-
-    return () => observer.disconnect();
-  }, [activeTab]);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      cancelAnimationFrame(rafId);
+      if (manualScrollTimer.current) clearTimeout(manualScrollTimer.current);
+    };
+  }, []);
 
   const handleSimulateScan = () => {
     soundFX.playClick();
@@ -150,6 +172,12 @@ export const HomeInteractiveShowcase: React.FC<{ onOpenDemoRequest?: (name?: str
   const scrollToProduct = (id: ProductKey) => {
     soundFX.playClick();
     setActiveTab(id);
+    isManualScrolling.current = true;
+    if (manualScrollTimer.current) clearTimeout(manualScrollTimer.current);
+    manualScrollTimer.current = setTimeout(() => {
+      isManualScrolling.current = false;
+    }, 750);
+
     const elementMap: Record<ProductKey, React.RefObject<HTMLDivElement>> = {
       pos: posRef,
       assist: assistRef,
@@ -158,7 +186,12 @@ export const HomeInteractiveShowcase: React.FC<{ onOpenDemoRequest?: (name?: str
     };
     const target = elementMap[id]?.current;
     if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const navOffset = 150;
+      const elementPosition = target.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({
+        top: elementPosition - navOffset,
+        behavior: 'smooth',
+      });
     }
   };
 
@@ -183,28 +216,41 @@ export const HomeInteractiveShowcase: React.FC<{ onOpenDemoRequest?: (name?: str
         className="mb-14"
       />
 
-      {/* Pinned Scroll Progress Indicator (Auto-lights up on scroll, or click to jump) */}
-      <div className="sticky top-20 z-30 flex justify-center mb-12 py-2">
-        <div className="inline-flex items-center gap-1.5 p-1.5 rounded-full bg-white/90 dark:bg-obsidian-950/90 backdrop-blur-2xl border border-slate-200/90 dark:border-white/10 shadow-lg max-w-full overflow-x-auto scrollbar-none">
+      {/* Pinned Scroll Progress Indicator (Fluid MotionSites Glass Pill) */}
+      <div className="sticky top-20 z-30 flex justify-center mb-14 sm:mb-16 py-2">
+        <div className="inline-flex items-center gap-1 sm:gap-1.5 p-1.5 rounded-full bg-white/90 dark:bg-[#070512]/90 backdrop-blur-2xl border border-slate-200/90 dark:border-white/[0.08] shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_4px_25px_rgba(0,0,0,0.25)] max-w-full overflow-x-auto scrollbar-none">
           {PRODUCT_LIST.map((prod) => {
             const isActive = activeTab === prod.id;
             return (
               <button
                 key={prod.id}
                 onClick={() => scrollToProduct(prod.id)}
-                className={`flex items-center gap-2 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
+                className={`relative flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-full text-xs font-semibold cursor-pointer whitespace-nowrap transition-colors duration-200 ${
                   isActive
-                    ? 'bg-slate-900 dark:bg-white text-white dark:text-obsidian shadow-md font-bold'
-                    : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5'
+                    ? 'text-white font-bold'
+                    : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/60 dark:hover:bg-white/5'
                 }`}
               >
-                <span className="font-mono text-[10px] opacity-75">{prod.num}</span>
-                <span>{prod.label}</span>
                 {isActive && (
-                  <span className="hidden sm:inline-block text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/20 dark:bg-obsidian/20">
-                    {prod.badge}
-                  </span>
+                  <motion.div
+                    layoutId="active-showcase-pill-indicator"
+                    transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+                    className="absolute inset-0 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 shadow-md shadow-violet-600/30 border border-violet-400/30 -z-0"
+                  />
                 )}
+                <span className={`relative z-10 font-mono text-[10px] ${isActive ? 'text-white/80' : 'text-slate-400 dark:text-zinc-500'}`}>
+                  {prod.num}
+                </span>
+                <span className="relative z-10">{prod.label}</span>
+                <span
+                  className={`relative z-10 text-[10px] font-mono px-2 py-0.5 rounded-full transition-all duration-200 ${
+                    isActive
+                      ? 'bg-white/20 text-white border border-white/20 opacity-100 inline-block'
+                      : 'hidden sm:inline-block bg-transparent text-slate-400/70 dark:text-zinc-500/70 border border-transparent'
+                  }`}
+                >
+                  {prod.badge}
+                </span>
               </button>
             );
           })}
@@ -219,10 +265,10 @@ export const HomeInteractiveShowcase: React.FC<{ onOpenDemoRequest?: (name?: str
           <div
             ref={posRef}
             data-product-id="pos"
-            className={`p-6 sm:p-10 rounded-3xl transition-all duration-500 border ${
+            className={`p-6 sm:p-10 rounded-3xl transition-all duration-300 ease-out border ${
               activeTab === 'pos'
-                ? 'bg-white dark:bg-obsidian-900 border-emerald-500/50 shadow-xl shadow-emerald-500/5'
-                : 'bg-white/40 dark:bg-obsidian-900/30 border-slate-200/60 dark:border-white/5 opacity-70 hover:opacity-100'
+                ? 'bg-white dark:bg-obsidian-900 border-emerald-500/60 shadow-[0_15px_35px_-10px_rgba(16,185,129,0.18)] dark:shadow-xl dark:shadow-emerald-500/10'
+                : 'bg-white/50 dark:bg-obsidian-900/30 border-slate-200/70 dark:border-white/5 opacity-75 hover:opacity-100'
             }`}
           >
             <div className="flex items-center justify-between mb-4">
@@ -272,10 +318,10 @@ export const HomeInteractiveShowcase: React.FC<{ onOpenDemoRequest?: (name?: str
           <div
             ref={assistRef}
             data-product-id="assist"
-            className={`p-6 sm:p-10 rounded-3xl transition-all duration-500 border ${
+            className={`p-6 sm:p-10 rounded-3xl transition-all duration-300 ease-out border ${
               activeTab === 'assist'
-                ? 'bg-white dark:bg-obsidian-900 border-violet-500/50 shadow-xl shadow-violet-500/5'
-                : 'bg-white/40 dark:bg-obsidian-900/30 border-slate-200/60 dark:border-white/5 opacity-70 hover:opacity-100'
+                ? 'bg-white dark:bg-obsidian-900 border-violet-500/60 shadow-[0_15px_35px_-10px_rgba(139,92,246,0.18)] dark:shadow-xl dark:shadow-violet-500/10'
+                : 'bg-white/50 dark:bg-obsidian-900/30 border-slate-200/70 dark:border-white/5 opacity-75 hover:opacity-100'
             }`}
           >
             <div className="flex items-center justify-between mb-4">
@@ -325,10 +371,10 @@ export const HomeInteractiveShowcase: React.FC<{ onOpenDemoRequest?: (name?: str
           <div
             ref={contentflowRef}
             data-product-id="contentflow"
-            className={`p-6 sm:p-10 rounded-3xl transition-all duration-500 border ${
+            className={`p-6 sm:p-10 rounded-3xl transition-all duration-300 ease-out border ${
               activeTab === 'contentflow'
-                ? 'bg-white dark:bg-obsidian-900 border-fuchsia-500/50 shadow-xl shadow-fuchsia-500/5'
-                : 'bg-white/40 dark:bg-obsidian-900/30 border-slate-200/60 dark:border-white/5 opacity-70 hover:opacity-100'
+                ? 'bg-white dark:bg-obsidian-900 border-fuchsia-500/60 shadow-[0_15px_35px_-10px_rgba(217,70,239,0.18)] dark:shadow-xl dark:shadow-fuchsia-500/10'
+                : 'bg-white/50 dark:bg-obsidian-900/30 border-slate-200/70 dark:border-white/5 opacity-75 hover:opacity-100'
             }`}
           >
             <div className="flex items-center justify-between mb-4">
@@ -378,10 +424,10 @@ export const HomeInteractiveShowcase: React.FC<{ onOpenDemoRequest?: (name?: str
           <div
             ref={erpRef}
             data-product-id="erp"
-            className={`p-6 sm:p-10 rounded-3xl transition-all duration-500 border ${
+            className={`p-6 sm:p-10 rounded-3xl transition-all duration-300 ease-out border ${
               activeTab === 'erp'
-                ? 'bg-white dark:bg-obsidian-900 border-indigo-500/50 shadow-xl shadow-indigo-500/5'
-                : 'bg-white/40 dark:bg-obsidian-900/30 border-slate-200/60 dark:border-white/5 opacity-70 hover:opacity-100'
+                ? 'bg-white dark:bg-obsidian-900 border-indigo-500/60 shadow-[0_15px_35px_-10px_rgba(99,102,241,0.18)] dark:shadow-xl dark:shadow-indigo-500/10'
+                : 'bg-white/50 dark:bg-obsidian-900/30 border-slate-200/70 dark:border-white/5 opacity-75 hover:opacity-100'
             }`}
           >
             <div className="flex items-center justify-between mb-4">
@@ -428,59 +474,60 @@ export const HomeInteractiveShowcase: React.FC<{ onOpenDemoRequest?: (name?: str
           </div>
         </div>
 
-        {/* Right Column: Sticky Live Simulated Software Console (lg:col-span-6) */}
+        {/* Right Column: Sticky Live Simulated Software Console (MotionSites Standard) */}
         {/* Pins to top on scroll and automatically displays the UI of whichever product the user is currently scrolling past! */}
-        <div className="lg:col-span-6 lg:sticky lg:top-32">
-          <div className="rounded-3xl bg-slate-950 border border-slate-800 p-6 sm:p-8 shadow-2xl overflow-hidden relative">
-            <AnimatePresence mode="wait">
+        <div className="lg:col-span-6 lg:sticky lg:top-44 pt-2 sm:pt-4">
+          <div className="rounded-[32px] bg-white/95 dark:bg-[#070512]/95 backdrop-blur-3xl border border-slate-200/90 dark:border-white/[0.08] p-6 sm:p-8 shadow-[0_20px_50px_-15px_rgba(124,58,237,0.15)] dark:shadow-[0_0_80px_-20px_rgba(124,58,237,0.3)] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.9)] dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.18)] overflow-hidden relative">
+            <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-500/20 dark:via-white/20 to-transparent" />
+            <AnimatePresence mode="wait" initial={false}>
               {/* CONSOLE VIEW: POS */}
               {activeTab === 'pos' && (
                 <motion.div
                   key="pos-console"
-                  initial={{ opacity: 0, scale: 0.96 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.96 }}
-                  transition={{ duration: 0.3 }}
-                  className="space-y-4 font-mono text-slate-100"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.18, ease: 'easeOut' }}
+                  className="space-y-4 font-mono text-slate-800 dark:text-slate-100"
                 >
-                  <div className="flex items-center justify-between pb-3 border-b border-white/10">
+                  <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-white/10">
                     <div className="flex items-center gap-2">
                       <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-                      <span className="text-xs font-bold text-emerald-400">
+                      <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
                         PYROW POS // SUB-SECOND ENGINE
                       </span>
                     </div>
-                    <span className="text-[11px] text-zinc-400">LATENCY: 0.78s</span>
+                    <span className="text-[11px] text-slate-500 dark:text-zinc-400">LATENCY: 0.78s</span>
                   </div>
 
                   <div className="space-y-2 max-h-52 overflow-y-auto pr-1">
                     {posItems.map((item, idx) => (
                       <div
                         key={idx}
-                        className="flex items-center justify-between p-2.5 rounded-lg bg-white/5 border border-white/5 text-xs"
+                        className="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 dark:bg-white/5 border border-slate-200/80 dark:border-white/5 text-xs transition-colors"
                       >
                         <div className="flex items-center gap-2">
-                          <Barcode className="w-4 h-4 text-emerald-400 shrink-0" />
+                          <Barcode className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                           <div>
-                            <div className="font-semibold text-white">{item.name}</div>
-                            <div className="text-[10px] text-zinc-400">{item.code}</div>
+                            <div className="font-semibold text-slate-900 dark:text-white">{item.name}</div>
+                            <div className="text-[10px] text-slate-500 dark:text-zinc-400">{item.code}</div>
                           </div>
                         </div>
                         <div className="text-right">
-                          <div className="font-bold text-emerald-400">₹{item.price}</div>
-                          <div className="text-[10px] text-zinc-500">Qty: {item.qty}</div>
+                          <div className="font-bold text-emerald-600 dark:text-emerald-400">₹{item.price}</div>
+                          <div className="text-[10px] text-slate-500 dark:text-zinc-500">Qty: {item.qty}</div>
                         </div>
                       </div>
                     ))}
                   </div>
 
-                  <div className="p-3.5 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between font-sans">
+                  <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-between font-sans">
                     <div>
-                      <div className="text-[10px] text-zinc-400 uppercase tracking-widest font-mono">Net Payable Total</div>
-                      <div className="text-2xl font-black text-white">₹{posTotal.toLocaleString('en-IN')}</div>
+                      <div className="text-[10px] text-slate-500 dark:text-zinc-400 uppercase tracking-widest font-mono font-bold">Net Payable Total</div>
+                      <div className="text-2xl font-black text-slate-900 dark:text-white">₹{posTotal.toLocaleString('en-IN')}</div>
                     </div>
-                    <div className="text-right text-[11px] text-emerald-400">
-                      <span className="inline-block px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+                    <div className="text-right text-[11px] text-emerald-600 dark:text-emerald-400">
+                      <span className="inline-block px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 font-mono font-semibold">
                         UPI QR & 80mm Print
                       </span>
                     </div>
@@ -490,21 +537,21 @@ export const HomeInteractiveShowcase: React.FC<{ onOpenDemoRequest?: (name?: str
                     <button
                       onClick={handleSimulateScan}
                       disabled={posSimulatingScan}
-                      className="flex-1 py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95 disabled:opacity-50"
+                      className="flex-1 py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95 disabled:opacity-50 shadow-md shadow-emerald-600/20"
                     >
                       <Barcode className="w-4 h-4" />
                       <span>{posSimulatingScan ? 'Scanning...' : 'Test Barcode Scan'}</span>
                     </button>
                     <button
                       onClick={handleSimulatePrint}
-                      className="py-2.5 px-4 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold text-xs flex items-center justify-center gap-2 cursor-pointer transition-all"
+                      className="py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/15 text-slate-800 dark:text-white font-semibold text-xs flex items-center justify-center gap-2 cursor-pointer transition-all border border-slate-200 dark:border-transparent"
                     >
-                      <Printer className="w-4 h-4 text-zinc-300" />
+                      <Printer className="w-4 h-4 text-slate-600 dark:text-zinc-300" />
                       <span>Print</span>
                     </button>
                     <button
                       onClick={handleResetPos}
-                      className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer"
+                      className="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-600 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-white transition-colors cursor-pointer border border-slate-200 dark:border-transparent"
                       title="Reset POS"
                     >
                       <RotateCcw className="w-4 h-4" />
@@ -512,7 +559,7 @@ export const HomeInteractiveShowcase: React.FC<{ onOpenDemoRequest?: (name?: str
                   </div>
 
                   {posPrintedNotice && (
-                    <div className="p-2 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs text-center font-sans">
+                    <div className="p-2 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 text-xs text-center font-sans">
                       ✓ Thermal receipt printed & WhatsApp digital bill dispatched!
                     </div>
                   )}
@@ -523,18 +570,18 @@ export const HomeInteractiveShowcase: React.FC<{ onOpenDemoRequest?: (name?: str
               {activeTab === 'assist' && (
                 <motion.div
                   key="assist-console"
-                  initial={{ opacity: 0, scale: 0.96 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.96 }}
-                  transition={{ duration: 0.3 }}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.18, ease: 'easeOut' }}
                   className="space-y-3 font-sans"
                 >
-                  <div className="flex items-center justify-between pb-3 border-b border-white/10 text-xs font-mono">
+                  <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-white/10 text-xs font-mono">
                     <div className="flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-                      <span className="font-bold text-white">Pyrow Assist // Live Cloud Chat</span>
+                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                      <span className="font-bold text-slate-900 dark:text-white">Pyrow Assist // Live Cloud Chat</span>
                     </div>
-                    <span className="text-zinc-400 text-[10px]">Meta API v21.0</span>
+                    <span className="text-slate-500 dark:text-zinc-400 text-[10px]">Meta API v21.0</span>
                   </div>
 
                   <div className="h-[230px] overflow-y-auto space-y-3 py-2 pr-1 text-xs">
@@ -546,8 +593,8 @@ export const HomeInteractiveShowcase: React.FC<{ onOpenDemoRequest?: (name?: str
                         <div
                           className={`max-w-[85%] p-3 rounded-2xl ${
                             msg.sender === 'user'
-                              ? 'bg-violet-600 text-white rounded-tr-none'
-                              : 'bg-white/10 text-zinc-100 rounded-tl-none border border-white/10'
+                              ? 'bg-violet-600 text-white rounded-tr-none shadow-md'
+                              : 'bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-zinc-100 rounded-tl-none border border-slate-200 dark:border-white/10'
                           }`}
                         >
                           {msg.text}
@@ -556,27 +603,27 @@ export const HomeInteractiveShowcase: React.FC<{ onOpenDemoRequest?: (name?: str
                     ))}
                     {assistTyping && (
                       <div className="flex justify-start">
-                        <div className="p-2.5 rounded-2xl bg-white/10 text-zinc-400 rounded-tl-none border border-white/10 flex items-center gap-1.5 text-[11px] font-mono">
-                          <span className="w-1.5 h-1.5 rounded-full bg-zinc-400 animate-bounce" />
-                          <span className="w-1.5 h-1.5 rounded-full bg-zinc-400 animate-bounce [animation-delay:0.2s]" />
-                          <span className="w-1.5 h-1.5 rounded-full bg-zinc-400 animate-bounce [animation-delay:0.4s]" />
+                        <div className="p-2.5 rounded-2xl bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-zinc-400 rounded-tl-none border border-slate-200 dark:border-white/10 flex items-center gap-1.5 text-[11px] font-mono">
+                          <span className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-zinc-400 animate-bounce" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-zinc-400 animate-bounce [animation-delay:0.2s]" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-zinc-400 animate-bounce [animation-delay:0.4s]" />
                           <span>Pyrow Assist is typing...</span>
                         </div>
                       </div>
                     )}
                   </div>
 
-                  <form onSubmit={handleSendAssistMsg} className="flex items-center gap-2 pt-2 border-t border-white/10">
+                  <form onSubmit={handleSendAssistMsg} className="flex items-center gap-2 pt-2 border-t border-slate-200 dark:border-white/10">
                     <input
                       type="text"
                       value={assistInput}
                       onChange={(e) => setAssistInput(e.target.value)}
                       placeholder="Type a message to test response..."
-                      className="flex-1 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-violet-500 font-sans"
+                      className="flex-1 px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus:outline-none focus:border-violet-500 font-sans"
                     />
                     <button
                       type="submit"
-                      className="p-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white cursor-pointer transition-all"
+                      className="p-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white cursor-pointer transition-all shadow-md shadow-violet-600/20"
                     >
                       <Send className="w-4 h-4" />
                     </button>
@@ -588,34 +635,40 @@ export const HomeInteractiveShowcase: React.FC<{ onOpenDemoRequest?: (name?: str
               {activeTab === 'contentflow' && (
                 <motion.div
                   key="contentflow-console"
-                  initial={{ opacity: 0, scale: 0.96 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.96 }}
-                  transition={{ duration: 0.3 }}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.18, ease: 'easeOut' }}
                   className="space-y-4 font-sans"
                 >
-                  <div className="flex items-center justify-between pb-3 border-b border-white/10">
+                  <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-white/10">
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => setCfActiveChannel('linkedin')}
-                        className={`px-3 py-1 rounded-lg text-xs font-semibold cursor-pointer ${
-                          cfActiveChannel === 'linkedin' ? 'bg-fuchsia-600 text-white' : 'text-zinc-400 hover:bg-white/5'
+                        className={`px-3 py-1 rounded-lg text-xs font-semibold cursor-pointer transition-colors ${
+                          cfActiveChannel === 'linkedin'
+                            ? 'bg-fuchsia-600 text-white shadow-sm'
+                            : 'text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-white/5'
                         }`}
                       >
                         LinkedIn
                       </button>
                       <button
                         onClick={() => setCfActiveChannel('instagram')}
-                        className={`px-3 py-1 rounded-lg text-xs font-semibold cursor-pointer ${
-                          cfActiveChannel === 'instagram' ? 'bg-fuchsia-600 text-white' : 'text-zinc-400 hover:bg-white/5'
+                        className={`px-3 py-1 rounded-lg text-xs font-semibold cursor-pointer transition-colors ${
+                          cfActiveChannel === 'instagram'
+                            ? 'bg-fuchsia-600 text-white shadow-sm'
+                            : 'text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-white/5'
                         }`}
                       >
                         Instagram
                       </button>
                       <button
                         onClick={() => setCfActiveChannel('x')}
-                        className={`px-3 py-1 rounded-lg text-xs font-semibold cursor-pointer ${
-                          cfActiveChannel === 'x' ? 'bg-fuchsia-600 text-white' : 'text-zinc-400 hover:bg-white/5'
+                        className={`px-3 py-1 rounded-lg text-xs font-semibold cursor-pointer transition-colors ${
+                          cfActiveChannel === 'x'
+                            ? 'bg-fuchsia-600 text-white shadow-sm'
+                            : 'text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-white/5'
                         }`}
                       >
                         X Post
@@ -627,14 +680,14 @@ export const HomeInteractiveShowcase: React.FC<{ onOpenDemoRequest?: (name?: str
                         setCfCopied(true);
                         setTimeout(() => setCfCopied(false), 2000);
                       }}
-                      className="text-xs text-fuchsia-400 hover:underline flex items-center gap-1 cursor-pointer font-mono"
+                      className="text-xs text-fuchsia-600 dark:text-fuchsia-400 hover:underline flex items-center gap-1 cursor-pointer font-mono font-semibold"
                     >
                       {cfCopied ? <Check className="w-3.5 h-3.5" /> : <Share2 className="w-3.5 h-3.5" />}
                       <span>{cfCopied ? 'Copied!' : 'Copy'}</span>
                     </button>
                   </div>
 
-                  <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-xs sm:text-sm text-zinc-300 leading-relaxed min-h-[170px]">
+                  <div className="p-4 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-xs sm:text-sm text-slate-800 dark:text-zinc-300 leading-relaxed min-h-[170px]">
                     {cfActiveChannel === 'linkedin' && (
                       <p>
                         🚀 Most retail founders spend 14 hours a week stuck in manual spreadsheets. Here is the automation stack we deployed for a multi-store retailer that reclaimed 92% of their team’s time:<br /><br />
@@ -656,7 +709,7 @@ export const HomeInteractiveShowcase: React.FC<{ onOpenDemoRequest?: (name?: str
                     )}
                   </div>
 
-                  <div className="p-2.5 rounded-xl bg-fuchsia-500/10 border border-fuchsia-500/20 text-xs text-fuchsia-300 flex items-center justify-between font-mono">
+                  <div className="p-2.5 rounded-xl bg-fuchsia-500/10 border border-fuchsia-500/20 text-xs text-fuchsia-700 dark:text-fuchsia-300 flex items-center justify-between font-mono">
                     <span>Generated in 0.64s • Score: 98/100</span>
                     <span className="font-bold">Ready to Publish</span>
                   </div>
@@ -667,44 +720,44 @@ export const HomeInteractiveShowcase: React.FC<{ onOpenDemoRequest?: (name?: str
               {activeTab === 'erp' && (
                 <motion.div
                   key="erp-console"
-                  initial={{ opacity: 0, scale: 0.96 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.96 }}
-                  transition={{ duration: 0.3 }}
-                  className="space-y-4 font-mono text-slate-100"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.18, ease: 'easeOut' }}
+                  className="space-y-4 font-mono text-slate-800 dark:text-slate-100"
                 >
-                  <div className="flex items-center justify-between pb-3 border-b border-white/10 text-xs">
-                    <span className="font-bold text-white">Pyrow Flow // Multi-Branch Metrics</span>
-                    <span className="text-indigo-400">PostgreSQL 17</span>
+                  <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-white/10 text-xs">
+                    <span className="font-bold text-slate-900 dark:text-white">Pyrow Flow // Multi-Branch Metrics</span>
+                    <span className="text-indigo-600 dark:text-indigo-400 font-semibold">PostgreSQL 17</span>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
-                    <div className="p-3 rounded-xl bg-white/5 border border-white/5">
-                      <div className="text-[10px] text-zinc-400">Total Revenue MTD</div>
-                      <div className="text-xl font-black text-emerald-400 font-sans">₹42.8 Lakhs</div>
-                      <div className="text-[9px] text-zinc-500">+18.4% vs last month</div>
+                    <div className="p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5">
+                      <div className="text-[10px] text-slate-500 dark:text-zinc-400">Total Revenue MTD</div>
+                      <div className="text-xl font-black text-emerald-600 dark:text-emerald-400 font-sans">₹42.8 Lakhs</div>
+                      <div className="text-[9px] text-slate-500 dark:text-zinc-500 font-sans">+18.4% vs last month</div>
                     </div>
-                    <div className="p-3 rounded-xl bg-white/5 border border-white/5">
-                      <div className="text-[10px] text-zinc-400">Warehouse Nodes</div>
-                      <div className="text-xl font-black text-white font-sans">18,420 Units</div>
-                      <div className="text-[9px] text-emerald-400">All Nodes In Stock</div>
+                    <div className="p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5">
+                      <div className="text-[10px] text-slate-500 dark:text-zinc-400">Warehouse Nodes</div>
+                      <div className="text-xl font-black text-slate-900 dark:text-white font-sans">18,420 Units</div>
+                      <div className="text-[9px] text-emerald-600 dark:text-emerald-400 font-sans">All Nodes In Stock</div>
                     </div>
                   </div>
 
-                  <div className="p-3 rounded-xl bg-white/5 border border-white/5 text-xs">
-                    <div className="text-[11px] font-bold text-zinc-300 mb-2 font-sans">Live Automated Operations Log</div>
-                    <div className="space-y-1.5 text-[11px] text-zinc-400">
+                  <div className="p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-xs">
+                    <div className="text-[11px] font-bold text-slate-800 dark:text-zinc-300 mb-2 font-sans">Live Automated Operations Log</div>
+                    <div className="space-y-1.5 text-[11px] text-slate-600 dark:text-zinc-400">
                       <div className="flex justify-between">
                         <span>• Branch 03 Inventory Auto-Reconciled</span>
-                        <span className="text-emerald-400">✓ Sync (0.4s)</span>
+                        <span className="text-emerald-600 dark:text-emerald-400 font-semibold">✓ Sync (0.4s)</span>
                       </div>
                       <div className="flex justify-between">
                         <span>• GST E-Way Bill Generated for Batch #9842</span>
-                        <span className="text-emerald-400">✓ Dispatched</span>
+                        <span className="text-emerald-600 dark:text-emerald-400 font-semibold">✓ Dispatched</span>
                       </div>
                       <div className="flex justify-between">
                         <span>• Automated Daily PostgreSQL Snapshot</span>
-                        <span className="text-indigo-400">✓ AES-256</span>
+                        <span className="text-indigo-600 dark:text-indigo-400 font-semibold">✓ AES-256</span>
                       </div>
                     </div>
                   </div>

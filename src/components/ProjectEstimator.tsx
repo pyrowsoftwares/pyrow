@@ -137,7 +137,7 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
             transition={{ duration: 0.75, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
             className="lg:col-span-7"
           >
-            <div className="p-6 sm:p-8 rounded-3xl bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 shadow-sm dark:shadow-none">
+            <div className="p-6 sm:p-8 rounded-3xl bg-white/95 dark:bg-[#070512]/95 backdrop-blur-2xl border border-slate-200/90 dark:border-white/[0.08] shadow-sm dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)]">
               {!submitted ? (
                 <form onSubmit={handleFormSubmit} className="space-y-6">
                   {/* Step 1: Disciplines */}
@@ -156,7 +156,7 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                             aria-pressed={isSelected}
                             className={`p-3.5 rounded-2xl border text-xs font-bold cursor-pointer flex items-center justify-between transition-all focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none ${isSelected
                                 ? 'bg-violet-500/10 border-violet-500 text-violet-600 dark:text-white shadow-sm'
-                                : 'bg-slate-50 dark:bg-obsidian-800 text-slate-600 dark:text-zinc-400 border-slate-200/80 dark:border-white/5 hover:border-slate-300'
+                                : 'bg-slate-50 dark:bg-white/[0.03] text-slate-600 dark:text-zinc-400 border-slate-200/80 dark:border-white/[0.06] hover:border-slate-300 dark:hover:border-white/20'
                               }`}
                           >
                             <span>{d}</span>
@@ -190,7 +190,7 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                             }}
                             className={`py-2 px-2 text-xs font-semibold rounded-xl border text-center transition-all cursor-pointer ${isSelected
                                 ? 'bg-purple-600 text-white font-bold border-purple-600 shadow-sm'
-                                : 'bg-slate-50 dark:bg-obsidian-800 text-slate-600 dark:text-zinc-400 border-slate-200/80 dark:border-white/5 hover:text-slate-900'
+                                : 'bg-slate-50 dark:bg-white/[0.03] text-slate-600 dark:text-zinc-400 border-slate-200/80 dark:border-white/[0.06] hover:text-slate-900 dark:hover:border-white/20'
                               }`}
                           >
                             {time}
@@ -218,7 +218,7 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                             }}
                             className={`py-2.5 px-3 text-xs font-mono rounded-xl border text-center transition-all cursor-pointer ${isSelected
                                 ? 'bg-violet-600 text-white font-bold border-violet-600 shadow-sm'
-                                : 'bg-slate-50 dark:bg-obsidian-800 text-slate-600 dark:text-zinc-400 border-slate-200/80 dark:border-white/5 hover:text-slate-900'
+                                : 'bg-slate-50 dark:bg-white/[0.03] text-slate-600 dark:text-zinc-400 border-slate-200/80 dark:border-white/[0.06] hover:text-slate-900 dark:hover:border-white/20'
                               }`}
                           >
                             {b}
@@ -243,7 +243,7 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                           value={contactForm.name}
                           onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
                           placeholder="e.g. Rajesh Kumar"
-                          className="w-full bg-slate-50 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 rounded-xl px-3.5 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-violet-500"
+                          className="w-full bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] rounded-xl px-3.5 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-violet-500 transition-colors"
                         />
                       </div>
                       <div>
@@ -254,7 +254,7 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                           value={contactForm.email}
                           onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
                           placeholder="rajesh@company.com"
-                          className="w-full bg-slate-50 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 rounded-xl px-3.5 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-violet-500"
+                          className="w-full bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] rounded-xl px-3.5 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-violet-500 transition-colors"
                         />
                       </div>
                     </div>
@@ -268,7 +268,7 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                           value={contactForm.phone}
                           onChange={(e) => setContactForm({ ...contactForm, phone: e.target.value })}
                           placeholder="+91 98765 43210"
-                          className="w-full bg-slate-50 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 rounded-xl px-3.5 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-violet-500"
+                          className="w-full bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] rounded-xl px-3.5 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-violet-500 transition-colors"
                         />
                       </div>
                       <div>
@@ -278,7 +278,7 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                           value={contactForm.company}
                           onChange={(e) => setContactForm({ ...contactForm, company: e.target.value })}
                           placeholder="Your Brand / Company"
-                          className="w-full bg-slate-50 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 rounded-xl px-3.5 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-violet-500"
+                          className="w-full bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] rounded-xl px-3.5 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-violet-500 transition-colors"
                         />
                       </div>
                     </div>
@@ -290,7 +290,7 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                         value={contactForm.message}
                         onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
                         placeholder="Tell us what features or goals you have in mind..."
-                        className="w-full bg-slate-50 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 rounded-xl px-3.5 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-violet-500 resize-none"
+                        className="w-full bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] rounded-xl px-3.5 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-violet-500 resize-none transition-colors"
                       />
                     </div>
 
@@ -299,7 +299,7 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                       size="lg"
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full justify-center mt-2"
+                      className="w-full justify-center mt-2 shadow-lg shadow-violet-600/25 border border-violet-400/30"
                       icon={<Send className="w-4 h-4" />}
                     >
                       {isSubmitting ? 'Submitting & Dispatching...' : 'Submit Project Enquiry'}
@@ -350,7 +350,7 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                   <p className="text-xs text-slate-500 dark:text-zinc-400">Average response time: &lt; 5 minutes</p>
                 </div>
               </div>
-              <p className="text-xs text-slate-600 dark:text-zinc-300 leading-relaxed mb-4">
+              <p className="text-xs text-slate-600 dark:text-zinc-300 leading-relaxed mb-4 font-sans">
                 Chat directly with our senior solutions team on WhatsApp to share wireframes, ask questions, or schedule a video call.
               </p>
               <button
@@ -363,8 +363,8 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
             </div>
 
             {/* Direct Consultation Call */}
-            <div className="p-6 rounded-3xl bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 shadow-sm dark:shadow-none space-y-4">
-              <h4 className="text-sm font-mono uppercase tracking-wider text-slate-500 dark:text-zinc-400 font-bold">
+            <div className="p-6 rounded-3xl bg-white/95 dark:bg-[#070512]/95 backdrop-blur-xl border border-slate-200/90 dark:border-white/[0.08] shadow-sm dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)] space-y-4">
+              <h4 className="text-xs font-mono uppercase tracking-wider text-slate-500 dark:text-zinc-400 font-bold">
                 Direct Engineering Desk
               </h4>
 
@@ -376,7 +376,7 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                   </div>
                 </div>
                 <div className="flex items-center gap-3 text-slate-700 dark:text-zinc-300">
-                  <Clock className="w-4 h-4 text-cyber-blue" />
+                  <Clock className="w-4 h-4 text-cyan-500" />
                   <span>Mon – Sat: 9:00 AM – 8:00 PM IST</span>
                 </div>
                 <div className="flex items-start gap-3 text-slate-700 dark:text-zinc-300">

@@ -164,8 +164,8 @@ export const TechRadar: React.FC = () => {
                 setActiveCategory(c.id);
               }}
               className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${activeCategory === c.id
-                  ? 'bg-violet-600 text-white shadow-md shadow-violet-500/20'
-                  : 'bg-white/95 dark:bg-[#141D30]/95 text-slate-700 dark:text-zinc-400 border border-slate-200/90 dark:border-slate-800/90 hover:border-violet-500/30'
+                  ? 'bg-violet-600 text-white shadow-md shadow-violet-500/25 border border-violet-400/30'
+                  : 'bg-white/95 dark:bg-[#070512]/90 text-slate-700 dark:text-zinc-400 border border-slate-200/90 dark:border-white/[0.08] hover:border-violet-500/40 dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)]'
                 }`}
             >
               {c.label}
@@ -180,12 +180,12 @@ export const TechRadar: React.FC = () => {
               key={tech.name}
               index={idx}
               columns={4}
-              className="p-5 sm:p-6 bg-white/95 dark:bg-[#141D30]/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800/90 hover:border-violet-500/50"
+              className="p-5 sm:p-6 rounded-2xl bg-white/95 dark:bg-[#070512]/90 backdrop-blur-xl border border-slate-200/90 dark:border-white/[0.08] hover:border-violet-500/50 dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)] transition-all"
             >
               <div className="flex flex-col justify-between h-full">
                 <div>
                   <div className="flex items-center justify-between mb-3">
-                    <Badge variant="secondary" className="text-[10px] font-mono px-2 py-0.5 rounded-md text-slate-600 dark:text-zinc-400 font-semibold border border-slate-200/80 dark:border-white/5">
+                    <Badge variant="secondary" className="text-[10px] font-mono px-2 py-0.5 rounded-md text-slate-600 dark:text-zinc-400 font-semibold border border-slate-200/80 dark:border-white/[0.08]">
                       {tech.tier}
                     </Badge>
                     <span className="text-xs font-mono font-bold text-violet-600 dark:text-purple-400">
@@ -195,12 +195,12 @@ export const TechRadar: React.FC = () => {
                   <h4 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white group-hover:text-violet-600 dark:group-hover:text-purple-400 transition-colors">
                     {tech.name}
                   </h4>
-                  <p className="mt-2 text-xs text-slate-600 dark:text-zinc-400 leading-relaxed">
+                  <p className="mt-2 text-xs text-slate-600 dark:text-zinc-400 leading-relaxed font-sans">
                     {tech.summary}
                   </p>
                 </div>
 
-                <div className="mt-5 pt-3 border-t border-slate-100 dark:border-white/5 flex items-center gap-1.5 text-[10px] font-mono text-slate-500 dark:text-zinc-500 font-semibold">
+                <div className="mt-5 pt-3 border-t border-slate-100 dark:border-white/[0.06] flex items-center gap-1.5 text-[10px] font-mono text-slate-500 dark:text-zinc-500 font-semibold">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
                   <span>Production Hardened Standard</span>
                 </div>

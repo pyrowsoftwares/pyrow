@@ -214,7 +214,12 @@ function AppContent() {
               <HomeConnectedSolutions onOpenStrategyCall={() => handleOpenStrategyCall()} />
             </QuantumSnapSection>
 
-            {/* 4. Architecture Standards: Core Molecules Alignment */}
+            {/* 4. Production Track Record & Enterprise Case Studies */}
+            <QuantumSnapSection id="track-record">
+              <CaseStudies onOpenStrategyCall={handleOpenStrategyCall} />
+            </QuantumSnapSection>
+
+            {/* 5. Architecture Standards: Core Molecules Alignment */}
             <QuantumSnapSection id="architecture-section">
               <EssentialMolecules />
             </QuantumSnapSection>
@@ -260,7 +265,7 @@ function AppContent() {
 
   return (
     <TooltipProvider>
-      <div className="relative min-h-screen bg-transparent text-slate-900 dark:text-zinc-100 selection:bg-violet-600 selection:text-white font-sans transition-colors duration-300">
+      <div className="relative min-h-screen w-full max-w-[100vw] overflow-x-clip bg-transparent text-slate-900 dark:text-zinc-100 selection:bg-violet-600 selection:text-white font-sans transition-colors duration-300">
         {/* Animated Global Atmospheric Cyber Matrix & Floating Starfield */}
         <AnimatedGlobalBackground />
 
@@ -282,7 +287,7 @@ function AppContent() {
         )}
 
         {/* Active Page View (Unified Stacking Context & Full Accessibility) */}
-        <main className="relative z-10 w-full min-h-screen">
+        <main className="relative z-10 w-full max-w-[100vw] overflow-x-clip min-h-screen">
           {renderCurrentRoute()}
         </main>
 

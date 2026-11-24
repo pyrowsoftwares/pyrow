@@ -97,10 +97,11 @@ export const SolutionsPage: React.FC<SolutionsPageProps> = ({
               key={idx}
               index={idx}
               columns={4}
-              className="p-7 rounded-3xl bg-white dark:bg-obsidian-900/60 border border-slate-200/80 dark:border-white/10 shadow-sm flex flex-col justify-between group hover:border-violet-500/50 hover:shadow-xl transition-all"
+              className="p-7 rounded-[30px] bg-white dark:bg-[#070512]/90 backdrop-blur-xl border border-slate-200/80 dark:border-white/[0.08] shadow-[0_8px_30px_rgb(0,0,0,0.25)] flex flex-col justify-between group hover:border-violet-500/40 hover:shadow-[0_0_35px_rgba(124,58,237,0.15)] transition-all duration-300 relative overflow-hidden"
             >
+              <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-400/20 to-transparent pointer-events-none" />
               <div>
-                <div className="p-3.5 rounded-2xl bg-violet-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 w-fit mb-5 group-hover:scale-110 transition-transform duration-200">
+                <div className="p-3.5 rounded-2xl bg-violet-50 dark:bg-white/[0.04] border border-slate-100 dark:border-white/[0.08] w-fit mb-5 group-hover:scale-110 transition-transform duration-200">
                   {ind.icon}
                 </div>
                 <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">

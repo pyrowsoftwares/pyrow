@@ -96,16 +96,16 @@ export const HomeImpactMarquee: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: false, amount: 0.2 }}
             transition={{ duration: 0.6, delay: idx * 0.08, ease: [0.22, 1, 0.36, 1] }}
-            className="p-8 rounded-3xl bg-white dark:bg-obsidian-900 border border-slate-200/80 dark:border-white/10 shadow-sm text-center flex flex-col justify-between hover:border-violet-500/40 transition-colors"
+            className="p-8 rounded-3xl bg-white/95 dark:bg-[#070512]/90 border border-slate-200/80 dark:border-white/[0.08] shadow-sm dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)] text-center flex flex-col justify-between hover:border-violet-500/40 backdrop-blur-xl transition-all"
           >
             <div>
-              <div className="text-4xl sm:text-5xl lg:text-6xl font-black font-display text-slate-900 dark:text-white mb-2">
+              <div className="text-4xl sm:text-5xl lg:text-6xl font-bold font-mono tracking-tight text-slate-900 dark:text-white mb-2">
                 {m.stat}
               </div>
-              <div className="text-sm font-bold text-violet-600 dark:text-violet-400 mb-2">
+              <div className="text-xs font-mono uppercase tracking-wider font-bold text-violet-600 dark:text-violet-400 mb-2">
                 {m.label}
               </div>
-              <div className="text-xs text-slate-600 dark:text-zinc-400 leading-relaxed">
+              <div className="text-xs text-slate-600 dark:text-zinc-400 leading-relaxed font-sans">
                 {m.sub}
               </div>
             </div>
@@ -122,7 +122,7 @@ export const HomeImpactMarquee: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: false, amount: 0.15 }}
             transition={{ duration: 0.5, delay: idx * 0.07, ease: [0.22, 1, 0.36, 1] }}
-            className="p-7 rounded-3xl bg-white dark:bg-obsidian-900 border border-slate-200/80 dark:border-white/10 shadow-sm flex flex-col justify-between hover:shadow-lg transition-all"
+            className="p-7 rounded-3xl bg-white/95 dark:bg-[#070512]/90 border border-slate-200/80 dark:border-white/[0.08] shadow-sm dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)] flex flex-col justify-between hover:border-violet-500/40 hover:shadow-lg backdrop-blur-xl transition-all"
           >
             <div>
               <div className="flex items-center gap-1 text-amber-400 mb-4">
@@ -135,7 +135,7 @@ export const HomeImpactMarquee: React.FC = () => {
               </p>
             </div>
 
-            <div className="pt-4 border-t border-slate-100 dark:border-white/5 flex items-center justify-between">
+            <div className="pt-4 border-t border-slate-100 dark:border-white/[0.06] flex items-center justify-between">
               <div>
                 <div className="text-xs font-bold text-slate-900 dark:text-white">
                   {t.client}
