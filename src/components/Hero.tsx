@@ -26,20 +26,6 @@ export const Hero: React.FC<HeroProps> = ({ onOpenStrategyCall }) => {
     setMousePos({ x: 0, y: 0 });
   };
 
-  const techLogos = [
-    { name: 'React 19', category: 'Frontend' },
-    { name: 'Next.js 15', category: 'Full-Stack' },
-    { name: 'TypeScript', category: 'Architecture' },
-    { name: 'Node.js', category: 'Distributed' },
-    { name: 'Python & AI', category: 'Pipelines' },
-    { name: 'AWS Cloud', category: 'DevOps' },
-    { name: 'PostgreSQL', category: 'Data Layer' },
-    { name: 'Docker & K8s', category: 'Cloud' },
-    { name: 'Redis', category: 'Cache' },
-    { name: 'Google Ads', category: 'Growth' },
-    { name: 'Meta Ads', category: 'Acquisition' },
-  ];
-
   return (
     <div id="hero" className="relative w-full max-w-[100vw] overflow-x-clip bg-transparent">
       {/* 1. Interactive Untangling Thread Intro Animation */}
@@ -172,63 +158,66 @@ export const Hero: React.FC<HeroProps> = ({ onOpenStrategyCall }) => {
           </MagneticButton>
         </motion.div>
 
-        {/* Quick Metrics Trust Pill */}
+        {/* Trust Credibility Pill */}
         <motion.div
-          initial={{ opacity: 0, y: 22, scale: 0.95 }}
+          initial={{ opacity: 0, y: 20, scale: 0.95 }}
           whileInView={{ opacity: 1, y: 0, scale: 1 }}
           viewport={{ once: false, amount: 0.15 }}
-          transition={{ duration: 0.7, delay: 0.40, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-8 inline-flex items-center gap-2 sm:gap-6 px-4 sm:px-6 py-2 sm:py-2.5 rounded-full bg-white/80 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/[0.08] text-[11px] sm:text-xs font-mono font-medium text-slate-700 dark:text-zinc-300 shadow-[0_4px_20px_rgba(0,0,0,0.15)] backdrop-blur-2xl max-w-full flex-wrap justify-center"
+          transition={{ duration: 0.7, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          className="mt-8 inline-flex items-center gap-2 sm:gap-5 px-4 sm:px-6 py-2 rounded-full bg-white/80 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/[0.08] text-[11px] sm:text-xs font-mono font-medium text-slate-700 dark:text-zinc-300 shadow-[0_4px_20px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.25)] backdrop-blur-2xl max-w-full flex-wrap justify-center"
         >
-          <div>
-            <span className="font-bold text-violet-600 dark:text-violet-400 font-mono text-sm">100+</span> Enterprise Clients
+          <div className="flex items-center gap-1.5 text-amber-500">
+            <span>★★★★★</span>
+            <span className="font-bold text-slate-900 dark:text-white ml-0.5">4.9/5 Rating</span>
           </div>
-          <span className="text-slate-300 dark:text-white/20">•</span>
-          <div>
-            <span className="font-bold text-fuchsia-600 dark:text-fuchsia-400 font-mono text-sm">120+</span> Deployed Systems
+          <span className="text-slate-300 dark:text-white/20 hidden sm:inline">•</span>
+          <div className="flex items-center gap-1.5">
+            <span className="font-bold text-violet-600 dark:text-violet-400 font-mono text-sm">120+</span>
+            <span>Enterprise Systems</span>
           </div>
-          <span className="text-slate-300 dark:text-white/20">•</span>
-          <div>
-            <span className="font-bold text-emerald-600 dark:text-emerald-400 font-mono text-sm">99.98%</span> Production SLA
+          <span className="text-slate-300 dark:text-white/20 hidden sm:inline">•</span>
+          <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-semibold">
+            <CheckCircle2 className="w-3.5 h-3.5" />
+            <span>100% Code Ownership</span>
           </div>
         </motion.div>
 
-        {/* Tech Molecules Marquee with Alpha Gradient Masks */}
+        {/* Alternative: Curated Core Architecture Stack (Clean, Static, Non-Scrolling) */}
         <motion.div
-          initial={{ opacity: 0, y: 25 }}
+          initial={{ opacity: 0, y: 22 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: false, amount: 0.15 }}
-          transition={{ duration: 0.75, delay: 0.48, ease: [0.22, 1, 0.36, 1] }}
-          className="w-full max-w-4xl mx-auto overflow-hidden relative mt-9 sm:mt-11"
-          style={{
-            maskImage: 'linear-gradient(to right, transparent, black 12%, black 88%, transparent)',
-            WebkitMaskImage: 'linear-gradient(to right, transparent, black 12%, black 88%, transparent)',
-          }}
+          transition={{ duration: 0.75, delay: 0.42, ease: [0.22, 1, 0.36, 1] }}
+          className="mt-6 flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 max-w-3xl mx-auto"
         >
-          <div className="flex items-center gap-2.5 animate-marquee whitespace-nowrap">
-            {[...techLogos, ...techLogos].map((tech, idx) => (
-              <div
-                key={`${tech.name}-${idx}`}
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/80 dark:bg-white/5 border border-slate-200/80 dark:border-white/10 text-xs font-mono text-slate-700 dark:text-zinc-300 shadow-sm backdrop-blur-md transition-colors"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-violet-500 dark:bg-violet-400" />
-                <span className="font-semibold text-slate-900 dark:text-white">{tech.name}</span>
-                <span className="text-[10px] text-slate-500 dark:text-zinc-500">• {tech.category}</span>
-              </div>
-            ))}
-          </div>
+          {[
+            { name: 'React 19 & Next.js 15', category: 'Frontend', dot: 'bg-cyan-500' },
+            { name: 'TypeScript & Node.js', category: 'Architecture', dot: 'bg-blue-500' },
+            { name: 'Python & AI Pipelines', category: 'Intelligence', dot: 'bg-violet-500' },
+            { name: 'AWS Cloud & K8s', category: 'DevOps', dot: 'bg-amber-500' },
+            { name: 'PostgreSQL & Redis', category: 'Data Layer', dot: 'bg-emerald-500' },
+          ].map((tech) => (
+            <div
+              key={tech.name}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/70 dark:bg-white/[0.03] border border-slate-200/70 dark:border-white/[0.06] text-[11px] font-mono text-slate-700 dark:text-zinc-300 shadow-sm backdrop-blur-md hover:border-violet-500/30 transition-colors"
+            >
+              <span className={`w-1.5 h-1.5 rounded-full ${tech.dot}`} />
+              <span className="font-semibold text-slate-900 dark:text-white">{tech.name}</span>
+              <span className="text-[10px] text-slate-400 dark:text-zinc-500 hidden sm:inline">• {tech.category}</span>
+            </div>
+          ))}
         </motion.div>
       </div>
 
-      {/* KPI Trust Bar — 100% Unified Surface with Zero Color Discrepancy */}
-      <motion.div
-        initial={{ opacity: 0, y: 30, filter: 'blur(6px)' }}
-        whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-        viewport={{ once: false, amount: 0.2 }}
-        transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-        className="relative z-10 mt-16 border-t border-b border-slate-200/80 dark:border-white/10 bg-white/60 dark:bg-white/[0.02] backdrop-blur-2xl py-7 sm:py-8 transition-colors duration-300"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* KPI Trust Deck — Clean Floating Glass Bento Card (No Harsh Edge-to-Edge Divider Lines) */}
+      <div className="relative z-10 mt-12 sm:mt-14 max-w-6xl mx-auto px-4 sm:px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 30, filter: 'blur(6px)' }}
+          whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          viewport={{ once: false, amount: 0.2 }}
+          transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          className="rounded-3xl border border-slate-200/80 dark:border-white/10 bg-white/70 dark:bg-white/[0.02] backdrop-blur-2xl shadow-xl shadow-purple-500/5 py-7 sm:py-8 px-6 sm:px-10 transition-colors duration-300"
+        >
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 text-center">
             {/* Metric 1 */}
             <div className="flex flex-col items-center">
@@ -274,8 +263,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenStrategyCall }) => {
               </span>
             </div>
           </div>
-        </div>
-      </motion.div>
+        </motion.div>
+      </div>
     </section>
   </div>
   );
