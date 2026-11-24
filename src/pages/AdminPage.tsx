@@ -1856,31 +1856,39 @@ export const AdminPage: React.FC = () => {
   }
 
   // -------------------------------------------------------------
-  // VIEW A: ADMIN LOGIN GATE
+  // VIEW A: ADMIN LOGIN GATE (MotionSites Aesthetic Standard)
   // -------------------------------------------------------------
   if (!session) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12 bg-gradient-to-b from-slate-900 via-obsidian-950 to-slate-950 text-white">
+      <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12 bg-[#04030a] text-white relative overflow-hidden selection:bg-violet-600 selection:text-white">
+        {/* MotionSites Ambient Background Glows */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[650px] bg-gradient-to-b from-violet-600/15 via-indigo-600/5 to-transparent rounded-full blur-[140px] pointer-events-none" />
+        <div className="absolute -bottom-32 -left-32 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[160px] pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(#ffffff0a_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none opacity-40" />
+
         <button
           onClick={() => navigate('/')}
-          className="absolute top-6 left-6 inline-flex items-center gap-2 text-xs font-mono text-zinc-400 hover:text-white transition-colors cursor-pointer"
+          className="absolute top-6 left-6 inline-flex items-center gap-2 text-xs font-mono text-zinc-400 hover:text-white transition-colors cursor-pointer z-20 px-3 py-1.5 rounded-full border border-white/10 bg-white/[0.04] hover:bg-white/10 backdrop-blur-md"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-3.5 h-3.5" />
           <span>Back to Pyrow.in</span>
         </button>
 
         <motion.div
-          initial={{ opacity: 0, y: 20, scale: 0.96 }}
+          initial={{ opacity: 0, y: 24, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="w-full max-w-md p-8 sm:p-10 rounded-3xl bg-white/5 backdrop-blur-2xl border border-white/10 shadow-2xl relative overflow-hidden"
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="w-full max-w-md p-8 sm:p-10 rounded-[32px] bg-white/[0.03] backdrop-blur-3xl border border-white/[0.08] shadow-[0_0_80px_-20px_rgba(124,58,237,0.25)] relative overflow-hidden z-10"
         >
+          {/* Top Hairline Highlight */}
+          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
+
           <div className="text-center relative z-10 mb-8">
             <div className="flex items-center justify-center gap-3 mb-4">
               <img
                 src="/assets/pyrow-icon-transparent.png"
                 alt="Pyrow Icon"
-                className="h-10 w-auto object-contain drop-shadow-md"
+                className="h-10 w-auto object-contain drop-shadow-[0_0_15px_rgba(124,58,237,0.5)]"
               />
               <img
                 src="/assets/pyrow-logo-transparent.png"
@@ -1888,10 +1896,10 @@ export const AdminPage: React.FC = () => {
                 className="h-8 w-auto object-contain"
               />
             </div>
-            <h1 className="text-xl sm:text-2xl font-black font-display tracking-tight text-white">
-              Operations <span className="font-serif italic font-normal tracking-wide underline decoration-violet-500/30 underline-offset-8 bg-gradient-to-r from-violet-400 via-purple-300 to-indigo-400 bg-clip-text text-transparent">Control Panel</span>
+            <h1 className="text-2xl sm:text-3xl font-black font-display tracking-tight text-white">
+              Operations <span className="font-serif italic font-normal tracking-wide underline decoration-violet-500/30 underline-offset-8 bg-gradient-to-r from-violet-300 via-purple-200 to-indigo-300 bg-clip-text text-transparent">Control Panel</span>
             </h1>
-            <p className="text-xs text-zinc-400 mt-2 font-mono flex items-center justify-center gap-1.5">
+            <p className="text-xs text-zinc-400 mt-3 font-mono flex items-center justify-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
               <span>Encrypted Session • Cloud Database Control</span>
             </p>
@@ -1978,17 +1986,20 @@ export const AdminPage: React.FC = () => {
   // VIEW B: EXECUTIVE COMMAND DASHBOARD WITH TECHNICAL SIDEBAR
   // -------------------------------------------------------------
   return (
-    <div className="h-screen w-screen overflow-hidden bg-slate-950 text-slate-100 flex flex-col md:flex-row font-sans">
-      {/* SIDEBAR NAVIGATION */}
-      <aside className="admin-sidebar w-full md:w-64 lg:w-72 bg-slate-900/95 border-r border-white/10 flex flex-col justify-between shrink-0 h-auto md:h-screen overflow-y-auto no-print z-20 sticky top-0">
+    <div className="h-screen w-screen overflow-hidden bg-[#04030a] text-slate-100 flex flex-col md:flex-row font-sans selection:bg-violet-600 selection:text-white relative">
+      {/* MotionSites Ambient Top Glow */}
+      <div className="absolute top-0 right-1/4 w-[600px] h-[300px] bg-violet-600/10 rounded-full blur-[140px] pointer-events-none z-0" />
+
+      {/* SIDEBAR NAVIGATION (MotionSites Obsidian Standard) */}
+      <aside className="admin-sidebar w-full md:w-64 lg:w-72 bg-[#070512]/95 backdrop-blur-2xl border-r border-white/[0.08] flex flex-col justify-between shrink-0 h-auto md:h-screen overflow-y-auto no-print z-20 sticky top-0 shadow-[10px_0_30px_-15px_rgba(0,0,0,0.6)]">
         <div>
           {/* Logo & Header */}
-          <div className="p-5 border-b border-white/10 flex items-center justify-between">
+          <div className="p-5 border-b border-white/[0.08] flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <img
                 src="/assets/pyrow-icon-transparent.png"
                 alt="Pyrow Icon"
-                className="h-8 w-auto object-contain drop-shadow-md"
+                className="h-8 w-auto object-contain drop-shadow-[0_0_12px_rgba(124,58,237,0.4)]"
               />
               <img
                 src="/assets/pyrow-logo-transparent.png"
@@ -1996,19 +2007,20 @@ export const AdminPage: React.FC = () => {
                 className="h-6 w-auto object-contain"
               />
             </div>
-            <div className="text-[10px] font-mono text-emerald-400 flex items-center gap-1 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+            <div className="text-[10px] font-mono text-emerald-400 flex items-center gap-1.5 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              Live
+              <span>Live Node</span>
             </div>
           </div>
 
           {/* Navigation Links */}
           <nav className="p-3 space-y-1">
-            <div className="px-3 py-1.5 text-[10px] font-mono text-zinc-500 uppercase tracking-wider font-bold">
-              Business & Leads
+            <div className="px-3 py-2 text-[10px] font-mono text-zinc-500 uppercase tracking-widest font-bold flex items-center justify-between">
+              <span>Business & Pipeline</span>
+              <span className="text-[9px] text-zinc-600 font-normal">v2.4</span>
             </div>
             {[
-              { id: 'dashboard', label: 'Overview Dashboard', icon: <LayoutDashboard className="w-4 h-4" />, count: null },
+              { id: 'dashboard', label: 'Overview Intelligence', icon: <LayoutDashboard className="w-4 h-4" />, count: null },
               { id: 'enquiries', label: 'Inquiries & Leads', icon: <Inbox className="w-4 h-4" />, count: enquiries.length },
               { id: 'quotations', label: 'Quotation Studio', icon: <FileText className="w-4 h-4" />, count: quotations.length },
               { id: 'billing', label: 'Billing & GST Invoices', icon: <Receipt className="w-4 h-4" />, count: invoices.length },
@@ -2020,20 +2032,22 @@ export const AdminPage: React.FC = () => {
                   soundFX.playClick();
                   setActiveTab(item.id as AdminTab);
                 }}
-                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-mono transition-all cursor-pointer ${
+                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-mono transition-all cursor-pointer relative group ${
                   activeTab === item.id
-                    ? 'bg-violet-600 text-white font-bold shadow-lg shadow-violet-600/30'
-                    : 'text-zinc-400 hover:text-white hover:bg-white/5'
+                    ? 'bg-gradient-to-r from-violet-600/30 via-violet-600/15 to-transparent text-white font-bold border border-violet-500/40 shadow-[0_0_20px_-3px_rgba(124,58,237,0.3)]'
+                    : 'text-zinc-400 hover:text-white hover:bg-white/[0.04]'
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  {item.icon}
+                  <span className={activeTab === item.id ? 'text-violet-300' : 'text-zinc-400 group-hover:text-zinc-200'}>
+                    {item.icon}
+                  </span>
                   <span>{item.label}</span>
                 </div>
                 {item.count !== null && (
                   <span
                     className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-                      activeTab === item.id ? 'bg-white/20 text-white' : 'bg-white/5 text-zinc-400'
+                      activeTab === item.id ? 'bg-violet-500/30 text-violet-200 border border-violet-400/30' : 'bg-white/5 text-zinc-500'
                     }`}
                   >
                     {item.count}
@@ -2042,8 +2056,9 @@ export const AdminPage: React.FC = () => {
               </button>
             ))}
 
-            <div className="px-3 pt-4 pb-1.5 text-[10px] font-mono text-zinc-500 uppercase tracking-wider font-bold">
-              Technical Systems
+            <div className="px-3 pt-5 pb-2 text-[10px] font-mono text-zinc-500 uppercase tracking-widest font-bold flex items-center justify-between">
+              <span>Technical Systems</span>
+              <span className="text-[9px] text-zinc-600 font-normal">Cloud</span>
             </div>
             {[
               { id: 'whatsapp', label: 'WhatsApp Cloud API', icon: <MessageSquare className="w-4 h-4 text-emerald-400" />, badge: 'Meta' },
@@ -2057,10 +2072,10 @@ export const AdminPage: React.FC = () => {
                   soundFX.playClick();
                   setActiveTab(item.id as AdminTab);
                 }}
-                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-mono transition-all cursor-pointer ${
+                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-mono transition-all cursor-pointer relative group ${
                   activeTab === item.id
-                    ? 'bg-violet-600 text-white font-bold shadow-lg shadow-violet-600/30'
-                    : 'text-zinc-400 hover:text-white hover:bg-white/5'
+                    ? 'bg-gradient-to-r from-violet-600/30 via-violet-600/15 to-transparent text-white font-bold border border-violet-500/40 shadow-[0_0_20px_-3px_rgba(124,58,237,0.3)]'
+                    : 'text-zinc-400 hover:text-white hover:bg-white/[0.04]'
                 }`}
               >
                 <div className="flex items-center gap-3">
@@ -2082,20 +2097,20 @@ export const AdminPage: React.FC = () => {
         </div>
 
         {/* User Info & Secure Exit */}
-        <div className="p-4 border-t border-white/10 space-y-3">
-          <div className="p-3 rounded-xl bg-black/40 border border-white/5 text-xs font-mono">
-            <div className="text-[10px] text-zinc-500 uppercase tracking-wider mb-0.5">Admin Session</div>
+        <div className="p-4 border-t border-white/[0.08] space-y-3">
+          <div className="p-3 rounded-2xl bg-black/50 border border-white/[0.06] text-xs font-mono">
+            <div className="text-[10px] text-zinc-500 uppercase tracking-widest mb-0.5">Admin Session</div>
             <div className="text-white font-bold truncate">{session.user.email}</div>
-            <div className="text-[10px] text-amber-400 mt-1 flex items-center gap-1">
+            <div className="text-[10px] text-amber-400 mt-1 flex items-center gap-1.5">
               <Shield className="w-3 h-3" />
-              <span>Strict Auto-Signout</span>
+              <span>Strict Auto-Signout Active</span>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
             <button
               onClick={handleExitToPortfolio}
-              className="flex-1 py-2 px-3 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 text-xs font-mono flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+              className="flex-1 py-2 px-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 hover:text-white text-xs font-mono flex items-center justify-center gap-1.5 transition-colors cursor-pointer border border-white/[0.06]"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Exit Site</span>
@@ -2113,23 +2128,46 @@ export const AdminPage: React.FC = () => {
       </aside>
 
       {/* MAIN VIEW AREA */}
-      <div className="admin-dashboard-view flex-1 h-full md:h-screen overflow-y-auto bg-slate-950 flex flex-col min-w-0">
-        {/* Top Header */}
-        <header className="admin-main-header sticky top-0 z-30 bg-slate-950/85 backdrop-blur-xl border-b border-white/10 px-6 py-4 flex items-center justify-between gap-4">
+      <div className="admin-dashboard-view flex-1 h-full md:h-screen overflow-y-auto bg-[#04030a] flex flex-col min-w-0">
+        {/* Top Header (MotionSites Award Standard) */}
+        <header className="admin-main-header sticky top-0 z-30 bg-[#070512]/90 backdrop-blur-2xl border-b border-white/[0.08] px-6 py-4 flex items-center justify-between gap-4 shadow-lg shadow-black/40">
           <div>
-            <h1 className="text-lg font-bold text-white capitalize">
-              {activeTab === 'dashboard' && 'Executive Operations Dashboard'}
-              {activeTab === 'enquiries' && 'Customer Inquiries & Leads'}
-              {activeTab === 'quotations' && 'Software Quotation Studio'}
-              {activeTab === 'billing' && 'Billing, GST Invoices & Payments'}
-              {activeTab === 'whatsapp' && 'Meta WhatsApp Business Cloud API'}
-              {activeTab === 'traffic' && 'Visitor IP & Geolocation Analytics'}
-              {activeTab === 'database' && 'PostgreSQL Database & SQL Engine'}
-              {activeTab === 'messages' && 'Direct Contact Inbox'}
-              {activeTab === 'settings' && 'Admin Security & System Environment'}
+            <h1 className="text-lg sm:text-xl font-bold font-display text-white tracking-tight flex items-center gap-2">
+              {activeTab === 'dashboard' && (
+                <>Executive Operations <span className="font-serif italic font-normal tracking-wide text-violet-400 underline decoration-violet-500/30 underline-offset-4">Intelligence</span></>
+              )}
+              {activeTab === 'enquiries' && (
+                <>Customer Pipeline & <span className="font-serif italic font-normal tracking-wide text-violet-400 underline decoration-violet-500/30 underline-offset-4">Inquiries</span></>
+              )}
+              {activeTab === 'quotations' && (
+                <>Software Quotation <span className="font-serif italic font-normal tracking-wide text-violet-400 underline decoration-violet-500/30 underline-offset-4">Studio</span></>
+              )}
+              {activeTab === 'billing' && (
+                <>Billing & Invoicing <span className="font-serif italic font-normal tracking-wide text-emerald-400 underline decoration-emerald-500/30 underline-offset-4">Ledger</span></>
+              )}
+              {activeTab === 'whatsapp' && (
+                <>Meta WhatsApp Cloud <span className="font-serif italic font-normal tracking-wide text-emerald-400 underline decoration-emerald-500/30 underline-offset-4">Automations</span></>
+              )}
+              {activeTab === 'traffic' && (
+                <>Visitor Geolocation & <span className="font-serif italic font-normal tracking-wide text-cyan-400 underline decoration-cyan-500/30 underline-offset-4">Analytics</span></>
+              )}
+              {activeTab === 'database' && (
+                <>PostgreSQL Database & <span className="font-serif italic font-normal tracking-wide text-violet-400 underline decoration-violet-500/30 underline-offset-4">SQL Health</span></>
+              )}
+              {activeTab === 'messages' && (
+                <>Direct Communication <span className="font-serif italic font-normal tracking-wide text-indigo-400 underline decoration-indigo-500/30 underline-offset-4">Inbox</span></>
+              )}
+              {activeTab === 'settings' && (
+                <>System Environment & <span className="font-serif italic font-normal tracking-wide text-zinc-400 underline decoration-white/20 underline-offset-4">Security</span></>
+              )}
             </h1>
-            <p className="text-xs text-zinc-400 font-mono">
-              Pyrow Technologies Enterprise • Production Node
+            <p className="text-xs text-zinc-400 font-mono flex items-center gap-2 mt-0.5">
+              <span>Pyrow Technologies Enterprise</span>
+              <span className="text-zinc-600">•</span>
+              <span className="text-emerald-400 flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span>Production Node 14ms</span>
+              </span>
             </p>
           </div>
 
@@ -2137,7 +2175,7 @@ export const AdminPage: React.FC = () => {
             {activeTab === 'quotations' && (
               <button
                 onClick={handleOpenCreateQuotation}
-                className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-white text-xs font-mono font-bold flex items-center gap-1.5 shadow-md shadow-violet-600/25"
+                className="px-4 py-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 text-white text-xs font-mono font-bold flex items-center gap-1.5 shadow-lg shadow-violet-600/30 border border-violet-400/30 hover:scale-[1.02] transition-transform cursor-pointer"
               >
                 <Plus className="w-4 h-4" />
                 <span>New Quotation</span>
@@ -2147,7 +2185,7 @@ export const AdminPage: React.FC = () => {
             {activeTab === 'billing' && (
               <button
                 onClick={handleOpenCreateInvoice}
-                className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-xs font-mono font-bold flex items-center gap-1.5 shadow-md shadow-emerald-600/25"
+                className="px-4 py-2 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-xs font-mono font-bold flex items-center gap-1.5 shadow-lg shadow-emerald-600/30 border border-emerald-400/30 hover:scale-[1.02] transition-transform cursor-pointer"
               >
                 <Plus className="w-4 h-4" />
                 <span>Generate Invoice</span>
@@ -2157,123 +2195,145 @@ export const AdminPage: React.FC = () => {
             <button
               onClick={fetchAllData}
               disabled={dataLoading}
-              className="p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 hover:text-white text-xs font-mono flex items-center gap-1.5 cursor-pointer"
+              className="p-2.5 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-zinc-300 hover:text-white text-xs font-mono flex items-center gap-1.5 cursor-pointer transition-colors"
               title="Sync latest records"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${dataLoading ? 'animate-spin text-violet-400' : ''}`} />
-              <span className="hidden sm:inline">Refresh</span>
+              <span className="hidden sm:inline">Sync Live Data</span>
             </button>
           </div>
         </header>
 
         <div className="p-6 sm:p-8 space-y-8">
           {/* -------------------------------------------------------- */}
-          {/* TAB: OVERVIEW DASHBOARD */}
+          {/* TAB: OVERVIEW DASHBOARD (MotionSites High-Density Cards) */}
           {/* -------------------------------------------------------- */}
           {activeTab === 'dashboard' && (
             <div className="space-y-8">
               {/* Financial & Operational KPI Row */}
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-                <div className="p-5 rounded-2xl bg-white/5 border border-white/10">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-mono text-zinc-400 uppercase">Customer Inquiries</span>
+                <div className="p-6 rounded-[28px] bg-gradient-to-b from-white/[0.05] via-white/[0.02] to-transparent backdrop-blur-xl border border-white/[0.08] hover:border-violet-500/30 transition-all duration-300 relative overflow-hidden group shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">Client Pipeline</span>
                     <Inbox className="w-4 h-4 text-violet-400" />
                   </div>
-                  <div className="text-3xl font-black font-display text-white">{enquiries.length}</div>
-                  <div className="text-[11px] text-zinc-500 font-mono mt-1">Lead conversion channels</div>
+                  <div className="text-3xl sm:text-4xl font-black font-display text-white tracking-tight">{enquiries.length}</div>
+                  <div className="text-[11px] text-zinc-400 font-mono mt-1.5 flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-violet-400" />
+                    <span>Active high-intent leads</span>
+                  </div>
                 </div>
 
-                <div className="p-5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-mono text-emerald-300 uppercase">Collections Made</span>
+                <div className="p-6 rounded-[28px] bg-gradient-to-b from-emerald-500/10 via-emerald-500/[0.03] to-transparent backdrop-blur-xl border border-emerald-500/20 hover:border-emerald-500/40 transition-all duration-300 relative overflow-hidden group shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-emerald-400/30 to-transparent" />
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-xs font-mono text-emerald-300 uppercase tracking-widest">Collections Made</span>
                     <CreditCard className="w-4 h-4 text-emerald-400" />
                   </div>
-                  <div className="text-3xl font-black font-display text-emerald-400">
+                  <div className="text-3xl sm:text-4xl font-black font-display text-emerald-400 tracking-tight">
                     ₹{totalCollected.toLocaleString('en-IN')}
                   </div>
-                  <div className="text-[11px] text-emerald-300/70 font-mono mt-1">GST Compliant Invoices</div>
+                  <div className="text-[11px] text-emerald-300/70 font-mono mt-1.5 flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                    <span>GST Invoiced & Collected</span>
+                  </div>
                 </div>
 
-                <div className="p-5 rounded-2xl bg-cyan-500/10 border border-cyan-500/20">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-mono text-cyan-300 uppercase">Live Pageviews</span>
+                <div className="p-6 rounded-[28px] bg-gradient-to-b from-cyan-500/10 via-cyan-500/[0.03] to-transparent backdrop-blur-xl border border-cyan-500/20 hover:border-cyan-500/40 transition-all duration-300 relative overflow-hidden group shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent" />
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-xs font-mono text-cyan-300 uppercase tracking-widest">Live Pageviews</span>
                     <BarChart3 className="w-4 h-4 text-cyan-400" />
                   </div>
-                  <div className="text-3xl font-black font-display text-cyan-400">{totalViews}</div>
-                  <div className="text-[11px] text-cyan-300/70 font-mono mt-1">IP & Geolocation logged</div>
+                  <div className="text-3xl sm:text-4xl font-black font-display text-cyan-400 tracking-tight">{totalViews}</div>
+                  <div className="text-[11px] text-cyan-300/70 font-mono mt-1.5 flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+                    <span>Global geolocation verified</span>
+                  </div>
                 </div>
 
-                <div className="p-5 rounded-2xl bg-fuchsia-500/10 border border-fuchsia-500/20">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-mono text-fuchsia-300 uppercase">WhatsApp Engine</span>
+                <div className="p-6 rounded-[28px] bg-gradient-to-b from-fuchsia-500/10 via-fuchsia-500/[0.03] to-transparent backdrop-blur-xl border border-fuchsia-500/20 hover:border-fuchsia-500/40 transition-all duration-300 relative overflow-hidden group shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-fuchsia-400/30 to-transparent" />
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-xs font-mono text-fuchsia-300 uppercase tracking-widest">WhatsApp Engine</span>
                     <MessageSquare className="w-4 h-4 text-fuchsia-400" />
                   </div>
-                  <div className="text-3xl font-black font-display text-fuchsia-400">99.4%</div>
-                  <div className="text-[11px] text-fuchsia-300/70 font-mono mt-1">Meta Cloud Delivery SLA</div>
+                  <div className="text-3xl sm:text-4xl font-black font-display text-fuchsia-400 tracking-tight">99.4%</div>
+                  <div className="text-[11px] text-fuchsia-300/70 font-mono mt-1.5 flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-fuchsia-400" />
+                    <span>Meta Cloud Delivery SLA</span>
+                  </div>
                 </div>
               </div>
 
-              {/* Quick Jump Panels */}
+              {/* Quick Jump Panels (MotionSites High-Density Grid) */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 space-y-4">
+                <div className="p-6 rounded-[28px] bg-gradient-to-b from-white/[0.04] to-transparent backdrop-blur-xl border border-white/[0.08] hover:border-violet-500/30 transition-all space-y-4 shadow-[0_8px_30px_rgb(0,0,0,0.3)] relative overflow-hidden">
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                    <h3 className="text-sm font-bold font-display text-white flex items-center gap-2">
                       <Inbox className="w-4 h-4 text-violet-400" />
                       <span>Recent Inquiries</span>
                     </h3>
-                    <button onClick={() => setActiveTab('enquiries')} className="text-xs text-violet-400 hover:underline font-mono">
-                      View all
+                    <button onClick={() => setActiveTab('enquiries')} className="text-xs text-violet-400 hover:text-violet-300 font-mono flex items-center gap-1 cursor-pointer">
+                      <span>View all</span>
+                      <ChevronRight className="w-3 h-3" />
                     </button>
                   </div>
                   <div className="space-y-2.5">
                     {enquiries.slice(0, 4).map((item) => (
-                      <div key={item.id} className="p-3 rounded-xl bg-black/20 border border-white/5 text-xs font-mono">
+                      <div key={item.id} className="p-3.5 rounded-2xl bg-black/40 border border-white/[0.06] hover:border-violet-500/30 text-xs font-mono transition-colors">
                         <div className="flex justify-between font-bold text-white">
-                          <span>{item.name || 'Anonymous'}</span>
-                          <span className="text-[10px] text-violet-400">{item.type}</span>
+                          <span className="truncate pr-2">{item.name || 'Anonymous Client'}</span>
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/30 uppercase tracking-wider">{item.type}</span>
                         </div>
-                        <div className="text-zinc-400 text-[11px] mt-0.5">{item.phone || item.email}</div>
+                        <div className="text-zinc-400 text-[11px] mt-1 truncate">{item.phone || item.email}</div>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 space-y-4">
+                <div className="p-6 rounded-[28px] bg-gradient-to-b from-white/[0.04] to-transparent backdrop-blur-xl border border-white/[0.08] hover:border-emerald-500/30 transition-all space-y-4 shadow-[0_8px_30px_rgb(0,0,0,0.3)] relative overflow-hidden">
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-emerald-400/20 to-transparent" />
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                    <h3 className="text-sm font-bold font-display text-white flex items-center gap-2">
                       <Receipt className="w-4 h-4 text-emerald-400" />
                       <span>Recent Billing Invoices</span>
                     </h3>
-                    <button onClick={() => setActiveTab('billing')} className="text-xs text-emerald-400 hover:underline font-mono">
-                      Invoices
+                    <button onClick={() => setActiveTab('billing')} className="text-xs text-emerald-400 hover:text-emerald-300 font-mono flex items-center gap-1 cursor-pointer">
+                      <span>Invoices</span>
+                      <ChevronRight className="w-3 h-3" />
                     </button>
                   </div>
                   <div className="space-y-2.5">
                     {invoices.slice(0, 4).map((inv) => (
-                      <div key={inv.id} className="p-3 rounded-xl bg-black/20 border border-white/5 text-xs font-mono">
+                      <div key={inv.id} className="p-3.5 rounded-2xl bg-black/40 border border-white/[0.06] hover:border-emerald-500/30 text-xs font-mono transition-colors">
                         <div className="flex justify-between font-bold text-white">
                           <span>{inv.invoice_number}</span>
-                          <span className="text-emerald-400">₹{Number(inv.total_amount).toLocaleString('en-IN')}</span>
+                          <span className="text-emerald-400 font-bold">₹{Number(inv.total_amount).toLocaleString('en-IN')}</span>
                         </div>
-                        <div className="text-zinc-400 text-[11px] mt-0.5">{inv.client_company || inv.client_name}</div>
+                        <div className="text-zinc-400 text-[11px] mt-1 truncate">{inv.client_company || inv.client_name}</div>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 space-y-4">
+                <div className="p-6 rounded-[28px] bg-gradient-to-b from-white/[0.04] to-transparent backdrop-blur-xl border border-white/[0.08] hover:border-cyan-500/30 transition-all space-y-4 shadow-[0_8px_30px_rgb(0,0,0,0.3)] relative overflow-hidden">
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent" />
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                    <h3 className="text-sm font-bold font-display text-white flex items-center gap-2">
                       <MapPin className="w-4 h-4 text-cyan-400" />
                       <span>Visitor Geolocation</span>
                     </h3>
-                    <button onClick={() => setActiveTab('traffic')} className="text-xs text-cyan-400 hover:underline font-mono">
-                      Analytics
+                    <button onClick={() => setActiveTab('traffic')} className="text-xs text-cyan-400 hover:text-cyan-300 font-mono flex items-center gap-1 cursor-pointer">
+                      <span>Analytics</span>
+                      <ChevronRight className="w-3 h-3" />
                     </button>
                   </div>
                   <div className="space-y-2.5">
                     {sortedCities.slice(0, 4).map(([city, count], idx) => (
-                      <div key={idx} className="p-3 rounded-xl bg-black/20 border border-white/5 flex justify-between text-xs font-mono">
+                      <div key={idx} className="p-3.5 rounded-2xl bg-black/40 border border-white/[0.06] hover:border-cyan-500/30 flex justify-between text-xs font-mono transition-colors">
                         <span className="text-zinc-200">#{idx + 1} {city}</span>
                         <span className="font-bold text-cyan-400">{count} visits</span>
                       </div>
@@ -2285,54 +2345,56 @@ export const AdminPage: React.FC = () => {
           )}
 
           {/* -------------------------------------------------------- */}
-          {/* TAB: WHATSAPP CLOUD API */}
+          {/* TAB: WHATSAPP CLOUD API (MotionSites Aesthetic) */}
           {/* -------------------------------------------------------- */}
           {activeTab === 'whatsapp' && (
             <div className="space-y-8">
               {/* WhatsApp Connection Status Header */}
-              <div className="p-6 rounded-2xl bg-gradient-to-r from-emerald-950/40 via-slate-900 to-slate-900 border border-emerald-500/30 space-y-4">
+              <div className="p-6 sm:p-8 rounded-[28px] bg-gradient-to-r from-emerald-950/40 via-[#070512] to-[#070512] border border-emerald-500/30 space-y-5 shadow-[0_8px_30px_rgb(0,0,0,0.3)] relative overflow-hidden">
+                <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-emerald-400/30 to-transparent" />
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
-                      <MessageSquare className="w-6 h-6" />
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.25)]">
+                      <MessageSquare className="w-7 h-7" />
                     </div>
                     <div>
-                      <div className="flex items-center gap-2">
-                        <h3 className="text-lg font-bold text-white">Meta WhatsApp Cloud API v21.0</h3>
-                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 font-bold flex items-center gap-1">
+                      <div className="flex items-center gap-2.5">
+                        <h3 className="text-xl font-bold font-display text-white">Meta WhatsApp Cloud API v21.0</h3>
+                        <span className="px-3 py-0.5 rounded-full text-[10px] font-mono bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 font-bold flex items-center gap-1.5">
                           <CheckCircle className="w-3 h-3" />
                           Official Partner Live
                         </span>
                       </div>
-                      <p className="text-xs text-zinc-400 font-mono">
-                        Connected Line: <span className="text-white font-bold">+91 73581 63590</span> • WABA ID: 108492049182341
+                      <p className="text-xs text-zinc-400 font-mono mt-0.5">
+                        Connected Line: <span className="text-white font-bold font-mono">+91 73581 63590</span> • WABA ID: <span className="font-mono text-zinc-300">108492049182341</span>
                       </p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-mono text-zinc-400">Webhook Status:</span>
-                    <span className="px-2.5 py-1 rounded-lg bg-black/40 text-emerald-400 font-mono text-xs border border-emerald-500/30">
-                      200 OK Active
+                    <span className="px-3 py-1 rounded-xl bg-black/60 text-emerald-400 font-mono text-xs border border-emerald-500/30 shadow-[0_0_12px_rgba(16,185,129,0.2)] flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      <span>200 OK Active</span>
                     </span>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 border-t border-white/10 text-xs font-mono">
-                  <div>
-                    <span className="text-zinc-500 block">Messaging Limit:</span>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-white/[0.08] text-xs font-mono">
+                  <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+                    <span className="text-zinc-500 block text-[10px] uppercase tracking-wider">Messaging Limit:</span>
                     <span className="text-white font-bold">250,000 / Day (Tier 2)</span>
                   </div>
-                  <div>
-                    <span className="text-zinc-500 block">Quality Rating:</span>
+                  <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+                    <span className="text-zinc-500 block text-[10px] uppercase tracking-wider">Quality Rating:</span>
                     <span className="text-emerald-400 font-bold">HIGH (Green Rating)</span>
                   </div>
-                  <div>
-                    <span className="text-zinc-500 block">Webhook Endpoint:</span>
+                  <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+                    <span className="text-zinc-500 block text-[10px] uppercase tracking-wider">Webhook Endpoint:</span>
                     <span className="text-zinc-300">/api/webhook/whatsapp</span>
                   </div>
-                  <div>
-                    <span className="text-zinc-500 block">Green Tick Verified:</span>
+                  <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+                    <span className="text-zinc-500 block text-[10px] uppercase tracking-wider">Green Tick Verified:</span>
                     <span className="text-emerald-400 font-bold">Pyrow Technologies</span>
                   </div>
                 </div>
@@ -2536,51 +2598,56 @@ export const AdminPage: React.FC = () => {
           {/* -------------------------------------------------------- */}
           {activeTab === 'billing' && (
             <div className="space-y-8">
-              {/* Billing Financial Counters */}
+              {/* Billing Financial Counters (MotionSites Aesthetic) */}
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-                <div className="p-5 rounded-2xl bg-white/5 border border-white/10">
-                  <span className="text-xs font-mono text-zinc-400 uppercase">Total Invoiced</span>
-                  <div className="text-2xl sm:text-3xl font-black font-display text-white mt-1">
+                <div className="p-6 rounded-[28px] bg-gradient-to-b from-white/[0.04] to-transparent backdrop-blur-xl border border-white/[0.08] hover:border-violet-500/30 transition-all relative overflow-hidden group shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                  <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">Total Invoiced</span>
+                  <div className="text-2xl sm:text-3xl font-black font-display text-white mt-1.5 tracking-tight">
                     ₹{totalInvoiced.toLocaleString('en-IN')}
                   </div>
-                  <div className="text-[11px] text-zinc-500 font-mono mt-0.5">{invoices.length} total tax invoices</div>
+                  <div className="text-[11px] text-zinc-500 font-mono mt-1">{invoices.length} total tax invoices</div>
                 </div>
 
-                <div className="p-5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20">
-                  <span className="text-xs font-mono text-emerald-300 uppercase">Collected Revenue</span>
-                  <div className="text-2xl sm:text-3xl font-black font-display text-emerald-400 mt-1">
+                <div className="p-6 rounded-[28px] bg-gradient-to-b from-emerald-500/10 via-emerald-500/[0.03] to-transparent backdrop-blur-xl border border-emerald-500/20 hover:border-emerald-500/40 transition-all relative overflow-hidden group shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-emerald-400/30 to-transparent" />
+                  <span className="text-xs font-mono text-emerald-300 uppercase tracking-widest">Collected Revenue</span>
+                  <div className="text-2xl sm:text-3xl font-black font-display text-emerald-400 mt-1.5 tracking-tight">
                     ₹{totalCollected.toLocaleString('en-IN')}
                   </div>
-                  <div className="text-[11px] text-emerald-300/70 font-mono mt-0.5">Realized bank funds</div>
+                  <div className="text-[11px] text-emerald-300/70 font-mono mt-1">Realized bank funds</div>
                 </div>
 
-                <div className="p-5 rounded-2xl bg-amber-500/10 border border-amber-500/20">
-                  <span className="text-xs font-mono text-amber-300 uppercase">Pending Receivables</span>
-                  <div className="text-2xl sm:text-3xl font-black font-display text-amber-400 mt-1">
+                <div className="p-6 rounded-[28px] bg-gradient-to-b from-amber-500/10 via-amber-500/[0.03] to-transparent backdrop-blur-xl border border-amber-500/20 hover:border-amber-500/40 transition-all relative overflow-hidden group shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-amber-400/30 to-transparent" />
+                  <span className="text-xs font-mono text-amber-300 uppercase tracking-widest">Pending Receivables</span>
+                  <div className="text-2xl sm:text-3xl font-black font-display text-amber-400 mt-1.5 tracking-tight">
                     ₹{totalPending.toLocaleString('en-IN')}
                   </div>
-                  <div className="text-[11px] text-amber-300/70 font-mono mt-0.5">Awaiting milestone clearance</div>
+                  <div className="text-[11px] text-amber-300/70 font-mono mt-1">Awaiting milestone clearance</div>
                 </div>
 
-                <div className="p-5 rounded-2xl bg-violet-500/10 border border-violet-500/20">
-                  <span className="text-xs font-mono text-violet-300 uppercase">GST 18% Output Tax</span>
-                  <div className="text-2xl sm:text-3xl font-black font-display text-violet-400 mt-1">
+                <div className="p-6 rounded-[28px] bg-gradient-to-b from-violet-500/10 via-violet-500/[0.03] to-transparent backdrop-blur-xl border border-violet-500/20 hover:border-violet-500/40 transition-all relative overflow-hidden group shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-400/30 to-transparent" />
+                  <span className="text-xs font-mono text-violet-300 uppercase tracking-widest">GST 18% Output Tax</span>
+                  <div className="text-2xl sm:text-3xl font-black font-display text-violet-400 mt-1.5 tracking-tight">
                     ₹{totalGst.toLocaleString('en-IN')}
                   </div>
-                  <div className="text-[11px] text-violet-300/70 font-mono mt-0.5">Eligible for ITC credit</div>
+                  <div className="text-[11px] text-violet-300/70 font-mono mt-1">Eligible for ITC credit</div>
                 </div>
               </div>
 
               {/* Invoices List */}
-              <div className="p-6 rounded-2xl bg-white/5 border border-white/10 space-y-4">
+              <div className="p-6 rounded-[28px] bg-gradient-to-b from-white/[0.04] to-transparent backdrop-blur-xl border border-white/[0.08] space-y-4 shadow-[0_8px_30px_rgb(0,0,0,0.3)] relative overflow-hidden">
+                <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
-                    <h3 className="text-base font-bold text-white">Commercial Tax Invoices</h3>
-                    <p className="text-xs text-zinc-400 font-mono">SAC 998314 IT & Software Services Invoicing</p>
+                    <h3 className="text-base font-bold font-display text-white">Commercial Tax Invoices</h3>
+                    <p className="text-xs text-zinc-400 font-mono">SAC 998314 IT & Software Engineering Services Invoicing</p>
                   </div>
                   <button
                     onClick={handleOpenCreateInvoice}
-                    className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs font-mono flex items-center gap-1.5 self-start cursor-pointer"
+                    className="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs font-mono flex items-center gap-1.5 self-start cursor-pointer shadow-lg shadow-emerald-600/30 border border-emerald-400/30"
                   >
                     <Plus className="w-4 h-4" />
                     <span>Create Tax Invoice</span>
@@ -2904,8 +2971,9 @@ export const AdminPage: React.FC = () => {
           {/* -------------------------------------------------------- */}
           {activeTab === 'enquiries' && (
             <div className="space-y-6">
-              {/* Filter Bar */}
-              <div className="p-5 rounded-2xl bg-white/5 border border-white/10 space-y-4">
+              {/* Filter Bar (MotionSites Standard) */}
+              <div className="p-6 rounded-[28px] bg-gradient-to-b from-white/[0.04] to-transparent backdrop-blur-xl border border-white/[0.08] space-y-4 shadow-[0_8px_30px_rgb(0,0,0,0.3)] relative overflow-hidden">
+                <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
                 <div className="flex flex-col md:flex-row gap-3 items-center justify-between">
                   <div className="relative w-full md:w-96">
                     <Search className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -2914,7 +2982,7 @@ export const AdminPage: React.FC = () => {
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       placeholder="Search by name, phone, email, IP, city..."
-                      className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900/90 border border-white/10 text-xs sm:text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-violet-500"
+                      className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-black/50 border border-white/10 text-xs sm:text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-violet-500 transition-colors"
                     />
                   </div>
 
@@ -2923,8 +2991,10 @@ export const AdminPage: React.FC = () => {
                       <button
                         key={s}
                         onClick={() => setSelectedStatus(s)}
-                        className={`px-3 py-1.5 rounded-xl text-xs font-mono capitalize transition-all cursor-pointer ${
-                          selectedStatus === s ? 'bg-violet-600 text-white font-bold' : 'bg-white/5 text-zinc-400 hover:text-white'
+                        className={`px-3.5 py-1.5 rounded-xl text-xs font-mono capitalize transition-all cursor-pointer ${
+                          selectedStatus === s
+                            ? 'bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-bold shadow-md shadow-violet-600/30 border border-violet-400/30'
+                            : 'bg-white/[0.04] text-zinc-400 hover:text-white hover:bg-white/[0.08]'
                         }`}
                       >
                         {s.replace('_', ' ')}
@@ -2935,16 +3005,19 @@ export const AdminPage: React.FC = () => {
               </div>
 
               {/* Enquiries Cards */}
-              <div className="space-y-3.5">
+              <div className="space-y-4">
                 {filteredEnquiries.map((item) => {
                   const cleanPhone = (item.phone || '').replace(/[^0-9]/g, '');
                   return (
                     <div
                       key={item.id}
-                      className={`p-5 rounded-2xl bg-white/5 border transition-all ${
-                        item.status === 'new' ? 'border-amber-500/30 bg-amber-500/[0.02]' : 'border-white/10 hover:border-white/20'
+                      className={`p-6 rounded-[28px] bg-gradient-to-b from-white/[0.04] to-transparent backdrop-blur-xl border transition-all relative overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.3)] ${
+                        item.status === 'new'
+                          ? 'border-amber-500/40 shadow-[0_0_25px_rgba(245,158,11,0.08)]'
+                          : 'border-white/[0.08] hover:border-violet-500/30'
                       }`}
                     >
+                      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
                       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                         <div className="space-y-1.5 flex-1">
                           <div className="flex items-center gap-2 flex-wrap">
@@ -3034,34 +3107,51 @@ export const AdminPage: React.FC = () => {
           {/* -------------------------------------------------------- */}
           {activeTab === 'traffic' && (
             <div className="space-y-8">
+              {/* Traffic Metrics (MotionSites Standard) */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
-                  <div className="text-xs font-mono text-zinc-400 uppercase mb-1">Total Visitors Logged</div>
-                  <div className="text-3xl font-black font-display text-cyan-400">{totalViews}</div>
-                  <div className="text-xs text-zinc-500 font-mono mt-1">IP & Geolocation Active</div>
+                <div className="p-6 rounded-[28px] bg-gradient-to-b from-cyan-500/10 via-cyan-500/[0.03] to-transparent backdrop-blur-xl border border-cyan-500/20 hover:border-cyan-500/40 transition-all relative overflow-hidden group shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent" />
+                  <div className="text-xs font-mono text-cyan-300 uppercase tracking-widest mb-1.5 flex items-center justify-between">
+                    <span>Total Visitors Logged</span>
+                    <BarChart3 className="w-4 h-4 text-cyan-400" />
+                  </div>
+                  <div className="text-3xl sm:text-4xl font-black font-display text-cyan-400 tracking-tight">{totalViews}</div>
+                  <div className="text-xs text-cyan-300/70 font-mono mt-1.5 flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                    <span>IP & Geolocation Active</span>
+                  </div>
                 </div>
 
-                <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
-                  <div className="text-xs font-mono text-zinc-400 uppercase mb-1">Top Cities</div>
-                  <div className="text-3xl font-black font-display text-white">{sortedCities.length}</div>
-                  <div className="text-xs text-zinc-500 font-mono mt-1">Unique visitor locations</div>
+                <div className="p-6 rounded-[28px] bg-gradient-to-b from-white/[0.04] to-transparent backdrop-blur-xl border border-white/[0.08] hover:border-white/20 transition-all relative overflow-hidden group shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                  <div className="text-xs font-mono text-zinc-400 uppercase tracking-widest mb-1.5 flex items-center justify-between">
+                    <span>Active Global Cities</span>
+                    <MapPin className="w-4 h-4 text-violet-400" />
+                  </div>
+                  <div className="text-3xl sm:text-4xl font-black font-display text-white tracking-tight">{sortedCities.length}</div>
+                  <div className="text-xs text-zinc-500 font-mono mt-1.5">Unique visitor locations</div>
                 </div>
 
-                <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
-                  <div className="text-xs font-mono text-zinc-400 uppercase mb-1">Active Device Ratio</div>
-                  <div className="text-3xl font-black font-display text-violet-400">
+                <div className="p-6 rounded-[28px] bg-gradient-to-b from-violet-500/10 via-violet-500/[0.03] to-transparent backdrop-blur-xl border border-violet-500/20 hover:border-violet-500/40 transition-all relative overflow-hidden group shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-400/30 to-transparent" />
+                  <div className="text-xs font-mono text-violet-300 uppercase tracking-widest mb-1.5 flex items-center justify-between">
+                    <span>Device Distribution</span>
+                    <Smartphone className="w-4 h-4 text-violet-400" />
+                  </div>
+                  <div className="text-3xl sm:text-4xl font-black font-display text-violet-400 tracking-tight">
                     {pageViews.filter((p) => p.device_type === 'desktop').length}D / {pageViews.filter((p) => p.device_type === 'mobile').length}M
                   </div>
-                  <div className="text-xs text-zinc-500 font-mono mt-1">Desktop vs Mobile views</div>
+                  <div className="text-xs text-violet-300/70 font-mono mt-1.5">Desktop vs Mobile views</div>
                 </div>
               </div>
 
               {/* Real-Time Visitor Log Table */}
-              <div className="p-6 rounded-2xl bg-white/5 border border-white/10 space-y-4">
+              <div className="p-6 rounded-[28px] bg-gradient-to-b from-white/[0.04] to-transparent backdrop-blur-xl border border-white/[0.08] space-y-4 shadow-[0_8px_30px_rgb(0,0,0,0.3)] relative overflow-hidden">
+                <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
                 <div className="flex items-center justify-between">
-                  <h3 className="text-base font-bold text-white flex items-center gap-2">
+                  <h3 className="text-base font-bold font-display text-white flex items-center gap-2">
                     <Clock className="w-4 h-4 text-emerald-400" />
-                    <span>Real-Time Visitor Log Stream (IP & Location)</span>
+                    <span>Real-Time Visitor Log Stream (IP & Geolocation)</span>
                   </h3>
                   {pageViews.length > 0 && (
                     <button
