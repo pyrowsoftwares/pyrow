@@ -38,3 +38,5 @@ ui-debug.log*
 
 # Local setup & migration scripts
 scripts/
+!scripts/patch-rollup.js
+!scripts/verify-main-branch.cjs
