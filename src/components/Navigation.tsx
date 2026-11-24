@@ -26,6 +26,8 @@ import {
   Briefcase,
   HelpCircle,
   Clock,
+  MessageSquare,
+  X,
 } from 'lucide-react';
 import { FlameLogo } from './ui/FlameLogo';
 import { MagneticButton } from './ui/MagneticButton';
@@ -46,11 +48,32 @@ export const Navigation: React.FC<NavigationProps> = ({
   theme,
   onToggleTheme,
 }) => {
-  const { navigate } = useRouter();
+  const { navigate, currentPath } = useRouter();
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openMobileAccordion, setOpenMobileAccordion] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
+
+  // Lock body scroll when mobile drawer is open & handle Escape key
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && mobileMenuOpen) {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [mobileMenuOpen]);
 
   useEffect(() => {
     let lastScrolled = window.scrollY > 20;
@@ -88,21 +111,18 @@ export const Navigation: React.FC<NavigationProps> = ({
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-40 px-3 sm:px-6 transition-all duration-300 pointer-events-none">
+      <header className="fixed top-0 left-0 right-0 z-50 w-full max-w-[100vw] px-2.5 sm:px-6 transition-all duration-300 pointer-events-auto">
         <div
-          className={`mx-auto max-w-7xl rounded-full transition-all duration-300 pointer-events-auto ${
+          className={`mx-auto max-w-7xl rounded-2xl sm:rounded-full transition-all duration-300 ${
             scrolled
-              ? 'backdrop-blur-xl bg-white/90 dark:bg-obsidian-950/85 border border-slate-200/90 dark:border-white/10 shadow-lg dark:shadow-2xl dark:shadow-black/80 my-2 px-4 sm:px-6 py-2.5'
-              : 'backdrop-blur-lg bg-white/75 dark:bg-obsidian-900/60 border border-slate-200/80 dark:border-white/10 my-3 sm:my-4 px-4 sm:px-6 py-3 shadow-sm'
+              ? 'backdrop-blur-2xl bg-white/95 dark:bg-[#070512]/95 border border-slate-200/90 dark:border-white/[0.08] shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] my-1.5 sm:my-2 px-3.5 sm:px-6 py-2.5'
+              : 'backdrop-blur-2xl bg-white/90 dark:bg-[#070512]/90 border border-slate-200/90 dark:border-white/[0.08] my-2 sm:my-4 px-3.5 sm:px-6 py-2.5 sm:py-3 shadow-[0_4px_25px_rgba(0,0,0,0.2)]'
           }`}
         >
           <div className="flex items-center justify-between">
             {/* Brand Logo with Sizing & Glow */}
-            <div
-              className="flex items-center gap-3 cursor-pointer"
-              onClick={() => handleNav('/')}
-            >
-              <FlameLogo variant="full" size="md" />
+            <div className="flex items-center gap-2 sm:gap-3 cursor-pointer shrink-0">
+              <FlameLogo variant="full" size="md" onClick={() => handleNav('/')} />
             </div>
 
             {/* Desktop Navigation Links — Z3Connect Architectural Blueprint */}
@@ -468,212 +488,373 @@ export const Navigation: React.FC<NavigationProps> = ({
                 Get quote
               </MagneticButton>
 
-              {/* Mobile Drawer Navigation with shadcn Sheet */}
-              <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-                <SheetTrigger
-                  className="p-2 rounded-full bg-slate-100 dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-zinc-300 lg:hidden cursor-pointer"
-                  aria-label="Toggle Navigation Menu"
-                >
-                  <Menu className="w-5 h-5" />
-                </SheetTrigger>
-                <SheetContent side="right" className="w-[320px] sm:w-[380px] p-6 bg-white dark:bg-obsidian-900 border-l border-slate-200 dark:border-white/10 z-50 overflow-y-auto">
-                  <SheetHeader className="mb-4">
-                    <SheetTitle className="flex items-center text-left">
-                      <FlameLogo />
-                    </SheetTitle>
-                  </SheetHeader>
-                  <div className="flex flex-col space-y-2">
-                    {/* Mobile Home */}
-                    <button
-                      onClick={() => handleNav('/')}
-                      className="text-left text-sm font-semibold text-slate-900 dark:text-white py-2.5 border-b border-slate-100 dark:border-white/5 flex items-center justify-between cursor-pointer hover:text-violet-600 transition-colors"
-                    >
-                      <span>Home</span>
-                      <ArrowRight className="w-4 h-4 text-violet-600" />
-                    </button>
-
-                    {/* Mobile Company Accordion */}
-                    <div className="border-b border-slate-100 dark:border-white/5 pb-1">
-                      <button
-                        onClick={() => toggleMobileAccordion('company')}
-                        className="w-full text-left text-sm font-semibold text-slate-900 dark:text-white py-2.5 flex items-center justify-between cursor-pointer hover:text-violet-600 transition-colors"
-                      >
-                        <span>Company</span>
-                        <ChevronDown
-                          className={`w-4 h-4 transition-transform duration-200 text-slate-400 ${
-                            openMobileAccordion === 'company' ? 'rotate-180 text-violet-600' : ''
-                          }`}
-                        />
-                      </button>
-                      {openMobileAccordion === 'company' && (
-                        <div className="pl-3 pb-2 space-y-2 border-l-2 border-violet-500/20 my-1">
-                          <button
-                            onClick={() => handleNav('/about')}
-                            className="block text-xs text-slate-600 dark:text-zinc-400 hover:text-violet-600 dark:hover:text-white py-1 cursor-pointer"
-                          >
-                            About us
-                          </button>
-                          {/* Founder (Commented out as requested) */}
-                          {/*
-                          <button
-                            onClick={() => handleNav('/founder')}
-                            className="block text-xs text-slate-600 dark:text-zinc-400 hover:text-violet-600 dark:hover:text-white py-1 cursor-pointer"
-                          >
-                            Founder
-                          </button>
-                          */}
-                          <button
-                            onClick={() => handleNav('/philosophy')}
-                            className="block text-xs text-slate-600 dark:text-zinc-400 hover:text-violet-600 dark:hover:text-white py-1 cursor-pointer"
-                          >
-                            Philosophy
-                          </button>
-                          {/* Team (Commented out as requested) */}
-                          {/*
-                          <button
-                            onClick={() => handleNav('/team')}
-                            className="block text-xs text-slate-600 dark:text-zinc-400 hover:text-violet-600 dark:hover:text-white py-1 cursor-pointer"
-                          >
-                            Team
-                          </button>
-                          */}
-                          <button
-                            onClick={() => handleNav('/why-we-exist')}
-                            className="block text-xs text-slate-600 dark:text-zinc-400 hover:text-violet-600 dark:hover:text-white py-1 cursor-pointer"
-                          >
-                            Why we exist
-                          </button>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Mobile Products Accordion */}
-                    <div className="border-b border-slate-100 dark:border-white/5 pb-1">
-                      <button
-                        onClick={() => toggleMobileAccordion('products')}
-                        className="w-full text-left text-sm font-semibold text-slate-900 dark:text-white py-2.5 flex items-center justify-between cursor-pointer hover:text-violet-600 transition-colors"
-                      >
-                        <span>Products</span>
-                        <ChevronDown
-                          className={`w-4 h-4 transition-transform duration-200 text-slate-400 ${
-                            openMobileAccordion === 'products' ? 'rotate-180 text-violet-600' : ''
-                          }`}
-                        />
-                      </button>
-                      {openMobileAccordion === 'products' && (
-                        <div className="pl-3 pb-2 space-y-2 border-l-2 border-violet-500/20 my-1">
-                          <button
-                            onClick={() => handleNav('/products')}
-                            className="block text-xs text-slate-600 dark:text-zinc-400 hover:text-violet-600 dark:hover:text-white py-1 cursor-pointer"
-                          >
-                            All products
-                          </button>
-                          <button
-                            onClick={() => handleNav('/solutions')}
-                            className="block text-xs text-slate-600 dark:text-zinc-400 hover:text-violet-600 dark:hover:text-white py-1 cursor-pointer"
-                          >
-                            Solutions
-                          </button>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Mobile Work Accordion */}
-                    <div className="border-b border-slate-100 dark:border-white/5 pb-1">
-                      <button
-                        onClick={() => toggleMobileAccordion('work')}
-                        className="w-full text-left text-sm font-semibold text-slate-900 dark:text-white py-2.5 flex items-center justify-between cursor-pointer hover:text-violet-600 transition-colors"
-                      >
-                        <span>Work</span>
-                        <ChevronDown
-                          className={`w-4 h-4 transition-transform duration-200 text-slate-400 ${
-                            openMobileAccordion === 'work' ? 'rotate-180 text-violet-600' : ''
-                          }`}
-                        />
-                      </button>
-                      {openMobileAccordion === 'work' && (
-                        <div className="pl-3 pb-2 space-y-2 border-l-2 border-violet-500/20 my-1">
-                          <button
-                            onClick={() => handleNav('/portfolio')}
-                            className="block text-xs text-slate-600 dark:text-zinc-400 hover:text-violet-600 dark:hover:text-white py-1 cursor-pointer"
-                          >
-                            Clients & Work
-                          </button>
-                          <button
-                            onClick={() => handleNav('/case-studies')}
-                            className="block text-xs text-slate-600 dark:text-zinc-400 hover:text-violet-600 dark:hover:text-white py-1 cursor-pointer"
-                          >
-                            Case studies
-                          </button>
-                          <button
-                            onClick={() => handleNav('/portfolio')}
-                            className="block text-xs text-slate-600 dark:text-zinc-400 hover:text-violet-600 dark:hover:text-white py-1 cursor-pointer"
-                          >
-                            Portfolio
-                          </button>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Mobile Blogs */}
-                    <button
-                      onClick={() => handleNav('/blogs')}
-                      className="text-left text-sm font-semibold text-slate-900 dark:text-white py-2.5 border-b border-slate-100 dark:border-white/5 flex items-center justify-between cursor-pointer hover:text-violet-600 transition-colors"
-                    >
-                      <span>Blogs</span>
-                      <ArrowRight className="w-4 h-4 text-violet-600" />
-                    </button>
-
-                    {/* Mobile Contact */}
-                    <button
-                      onClick={() => handleNav('/contact')}
-                      className="text-left text-sm font-semibold text-slate-900 dark:text-white py-2.5 border-b border-slate-100 dark:border-white/5 flex items-center justify-between cursor-pointer hover:text-violet-600 transition-colors"
-                    >
-                      <span>Contact</span>
-                      <ArrowRight className="w-4 h-4 text-violet-600" />
-                    </button>
-
-                    {/* Mobile Careers (Hidden as requested)
-                    <button
-                      onClick={() => handleNav('/careers')}
-                      className="text-left text-sm font-semibold text-slate-900 dark:text-white py-2.5 border-b border-slate-100 dark:border-white/5 flex items-center justify-between cursor-pointer hover:text-violet-600 transition-colors"
-                    >
-                      <span>Careers</span>
-                      <ArrowRight className="w-4 h-4 text-violet-600" />
-                    </button>
-                    */}
-
-                    <div className="pt-4 flex flex-col gap-2.5">
-                      <MagneticButton
-                        variant="primary"
-                        size="md"
-                        onClick={() => {
-                          setMobileMenuOpen(false);
-                          onOpenStrategyCall();
-                        }}
-                        className="w-full justify-center"
-                      >
-                        Get quote
-                      </MagneticButton>
-                      <MagneticButton
-                        variant="secondary"
-                        size="md"
-                        onClick={() => {
-                          setMobileMenuOpen(false);
-                          scrollTo('estimator');
-                        }}
-                        className="w-full justify-center"
-                      >
-                        Project Estimator Desk
-                      </MagneticButton>
-                    </div>
-                  </div>
-                </SheetContent>
-              </Sheet>
+              {/* Mobile Drawer Navigation Toggle Button */}
+              <button
+                onClick={() => {
+                  soundFX.playClick();
+                  setMobileMenuOpen(!mobileMenuOpen);
+                }}
+                className="min-w-[40px] min-h-[40px] p-2 rounded-full bg-slate-100 dark:bg-white/[0.08] border border-slate-200 dark:border-white/10 text-slate-800 dark:text-zinc-200 lg:hidden cursor-pointer flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-sm"
+                aria-label="Toggle Navigation Menu"
+              >
+                {mobileMenuOpen ? (
+                  <X className="w-5 h-5 text-violet-600 dark:text-violet-400" />
+                ) : (
+                  <Menu className="w-5 h-5 text-slate-800 dark:text-white" />
+                )}
+              </button>
             </div>
           </div>
         </div>
       </header>
+
+      {/* Cinematic MotionSites Mobile Navigation Drawer */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <div className="fixed inset-0 z-[100] lg:hidden">
+            {/* Dark Frosted Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.22 }}
+              onClick={() => setMobileMenuOpen(false)}
+              className="fixed inset-0 bg-black/75 backdrop-blur-md"
+            />
+
+            {/* Slide-in Drawer from Right with High-Stiffness Spring */}
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+              className="fixed top-0 right-0 bottom-0 w-[88vw] max-w-[370px] bg-white dark:bg-[#070512] border-l border-slate-200/90 dark:border-white/10 shadow-2xl p-5 sm:p-6 flex flex-col justify-between overflow-y-auto overscroll-contain z-10"
+            >
+              <div>
+                {/* Drawer Header */}
+                <div className="flex items-center justify-between pb-3.5 border-b border-slate-200/80 dark:border-white/10 mb-3">
+                  <div className="cursor-pointer">
+                    <FlameLogo
+                      variant="full"
+                      size="sm"
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        handleNav('/');
+                      }}
+                    />
+                  </div>
+                  <button
+                    onClick={() => {
+                      soundFX.playClick();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="w-8 h-8 rounded-full bg-slate-100 dark:bg-white/[0.08] text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white flex items-center justify-center cursor-pointer transition-colors"
+                    aria-label="Close Menu"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+
+                {/* Quick Command Search Bar inside Mobile Drawer */}
+                <button
+                  onClick={() => {
+                    soundFX.playClick();
+                    setMobileMenuOpen(false);
+                    onOpenCommandPalette();
+                  }}
+                  className="w-full mb-3 flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-slate-100/80 dark:bg-white/[0.05] border border-slate-200/80 dark:border-white/10 text-xs text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
+                >
+                  <div className="flex items-center gap-2">
+                    <Search className="w-3.5 h-3.5 text-violet-500" />
+                    <span>Search routes, apps & tools...</span>
+                  </div>
+                  <kbd className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white dark:bg-black/40 border border-slate-200 dark:border-white/10 text-slate-500">
+                    ⌘K
+                  </kbd>
+                </button>
+
+                {/* Navigation Links List */}
+                <div className="space-y-1">
+                  {/* Home */}
+                  <button
+                    onClick={() => handleNav('/')}
+                    className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl flex items-center justify-between cursor-pointer transition-colors ${
+                      currentPath === '/'
+                        ? 'bg-violet-50 dark:bg-violet-950/40 text-violet-600 dark:text-violet-300 border border-violet-200 dark:border-violet-800/40'
+                        : 'text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-white/5'
+                    }`}
+                  >
+                    <span>Home</span>
+                    <ArrowRight className="w-4 h-4 text-violet-600 dark:text-violet-400" />
+                  </button>
+
+                  {/* Company Accordion */}
+                  <div className="rounded-xl overflow-hidden">
+                    <button
+                      onClick={() => toggleMobileAccordion('company')}
+                      className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl flex items-center justify-between cursor-pointer transition-colors ${
+                        ['/about', '/philosophy', '/why-we-exist'].includes(currentPath)
+                          ? 'bg-violet-50 dark:bg-violet-950/30 text-violet-600 dark:text-violet-300'
+                          : 'text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-white/5'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Building2 className="w-4 h-4 text-violet-500" />
+                        <span>Company</span>
+                      </div>
+                      <ChevronDown
+                        className={`w-4 h-4 transition-transform duration-200 ${
+                          openMobileAccordion === 'company'
+                            ? 'rotate-180 text-violet-600 dark:text-violet-400'
+                            : 'text-slate-400'
+                        }`}
+                      />
+                    </button>
+                    {openMobileAccordion === 'company' && (
+                      <div className="pl-4 pr-2 py-1 space-y-1 border-l-2 border-violet-500/30 ml-4 my-1">
+                        <button
+                          onClick={() => handleNav('/about')}
+                          className={`w-full text-left text-xs font-semibold py-2 px-2.5 rounded-lg flex items-center gap-2 ${
+                            currentPath === '/about'
+                              ? 'text-violet-600 dark:text-violet-400 font-bold bg-violet-50 dark:bg-white/5'
+                              : 'text-slate-600 dark:text-zinc-300 hover:text-violet-600 dark:hover:text-violet-400'
+                          }`}
+                        >
+                          <Users className="w-3.5 h-3.5" />
+                          <span>About us</span>
+                        </button>
+                        <button
+                          onClick={() => handleNav('/philosophy')}
+                          className={`w-full text-left text-xs font-semibold py-2 px-2.5 rounded-lg flex items-center gap-2 ${
+                            currentPath === '/philosophy'
+                              ? 'text-violet-600 dark:text-violet-400 font-bold bg-violet-50 dark:bg-white/5'
+                              : 'text-slate-600 dark:text-zinc-300 hover:text-violet-600 dark:hover:text-violet-400'
+                          }`}
+                        >
+                          <Compass className="w-3.5 h-3.5" />
+                          <span>Philosophy</span>
+                        </button>
+                        <button
+                          onClick={() => handleNav('/why-we-exist')}
+                          className={`w-full text-left text-xs font-semibold py-2 px-2.5 rounded-lg flex items-center gap-2 ${
+                            currentPath === '/why-we-exist'
+                              ? 'text-violet-600 dark:text-violet-400 font-bold bg-violet-50 dark:bg-white/5'
+                              : 'text-slate-600 dark:text-zinc-300 hover:text-violet-600 dark:hover:text-violet-400'
+                          }`}
+                        >
+                          <Target className="w-3.5 h-3.5" />
+                          <span>Why we exist</span>
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Products Accordion */}
+                  <div className="rounded-xl overflow-hidden">
+                    <button
+                      onClick={() => toggleMobileAccordion('products')}
+                      className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl flex items-center justify-between cursor-pointer transition-colors ${
+                        ['/products', '/solutions'].includes(currentPath)
+                          ? 'bg-violet-50 dark:bg-violet-950/30 text-violet-600 dark:text-violet-300'
+                          : 'text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-white/5'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Sparkles className="w-4 h-4 text-violet-500" />
+                        <span>Products & Solutions</span>
+                      </div>
+                      <ChevronDown
+                        className={`w-4 h-4 transition-transform duration-200 ${
+                          openMobileAccordion === 'products'
+                            ? 'rotate-180 text-violet-600 dark:text-violet-400'
+                            : 'text-slate-400'
+                        }`}
+                      />
+                    </button>
+                    {openMobileAccordion === 'products' && (
+                      <div className="pl-4 pr-2 py-1 space-y-1 border-l-2 border-violet-500/30 ml-4 my-1">
+                        <button
+                          onClick={() => handleNav('/products')}
+                          className={`w-full text-left text-xs font-semibold py-2 px-2.5 rounded-lg flex items-center gap-2 ${
+                            currentPath === '/products'
+                              ? 'text-violet-600 dark:text-violet-400 font-bold bg-violet-50 dark:bg-white/5'
+                              : 'text-slate-600 dark:text-zinc-300 hover:text-violet-600 dark:hover:text-violet-400'
+                          }`}
+                        >
+                          <Cpu className="w-3.5 h-3.5" />
+                          <span>All Products (POS, AI, ERP)</span>
+                        </button>
+                        <button
+                          onClick={() => handleNav('/solutions')}
+                          className={`w-full text-left text-xs font-semibold py-2 px-2.5 rounded-lg flex items-center gap-2 ${
+                            currentPath === '/solutions'
+                              ? 'text-violet-600 dark:text-violet-400 font-bold bg-violet-50 dark:bg-white/5'
+                              : 'text-slate-600 dark:text-zinc-300 hover:text-violet-600 dark:hover:text-violet-400'
+                          }`}
+                        >
+                          <Layers className="w-3.5 h-3.5" />
+                          <span>Industry Solutions</span>
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Work & Track Record Accordion */}
+                  <div className="rounded-xl overflow-hidden">
+                    <button
+                      onClick={() => toggleMobileAccordion('work')}
+                      className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl flex items-center justify-between cursor-pointer transition-colors ${
+                        ['/portfolio', '/case-studies', '/clients'].includes(currentPath)
+                          ? 'bg-violet-50 dark:bg-violet-950/30 text-violet-600 dark:text-violet-300'
+                          : 'text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-white/5'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Briefcase className="w-4 h-4 text-violet-500" />
+                        <span>Work & Track Record</span>
+                      </div>
+                      <ChevronDown
+                        className={`w-4 h-4 transition-transform duration-200 ${
+                          openMobileAccordion === 'work'
+                            ? 'rotate-180 text-violet-600 dark:text-violet-400'
+                            : 'text-slate-400'
+                        }`}
+                      />
+                    </button>
+                    {openMobileAccordion === 'work' && (
+                      <div className="pl-4 pr-2 py-1 space-y-1 border-l-2 border-violet-500/30 ml-4 my-1">
+                        <button
+                          onClick={() => handleNav('/portfolio')}
+                          className={`w-full text-left text-xs font-semibold py-2 px-2.5 rounded-lg flex items-center gap-2 ${
+                            currentPath === '/portfolio' || currentPath === '/clients'
+                              ? 'text-violet-600 dark:text-violet-400 font-bold bg-violet-50 dark:bg-white/5'
+                              : 'text-slate-600 dark:text-zinc-300 hover:text-violet-600 dark:hover:text-violet-400'
+                          }`}
+                        >
+                          <Briefcase className="w-3.5 h-3.5" />
+                          <span>Portfolio & Clients (100+ Track)</span>
+                        </button>
+                        <button
+                          onClick={() => handleNav('/case-studies')}
+                          className={`w-full text-left text-xs font-semibold py-2 px-2.5 rounded-lg flex items-center gap-2 ${
+                            currentPath === '/case-studies'
+                              ? 'text-violet-600 dark:text-violet-400 font-bold bg-violet-50 dark:bg-white/5'
+                              : 'text-slate-600 dark:text-zinc-300 hover:text-violet-600 dark:hover:text-violet-400'
+                          }`}
+                        >
+                          <Award className="w-3.5 h-3.5" />
+                          <span>Case Studies & ROI</span>
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Blogs */}
+                  <button
+                    onClick={() => handleNav('/blogs')}
+                    className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl flex items-center justify-between cursor-pointer transition-colors ${
+                      currentPath === '/blogs'
+                        ? 'bg-violet-50 dark:bg-violet-950/40 text-violet-600 dark:text-violet-300 border border-violet-200 dark:border-violet-800/40'
+                        : 'text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-white/5'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <Laptop className="w-4 h-4 text-violet-500" />
+                      <span>Engineering Insights & Blogs</span>
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-violet-600 dark:text-violet-400" />
+                  </button>
+
+                  {/* Contact */}
+                  <button
+                    onClick={() => handleNav('/contact')}
+                    className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl flex items-center justify-between cursor-pointer transition-colors ${
+                      currentPath === '/contact'
+                        ? 'bg-violet-50 dark:bg-violet-950/40 text-violet-600 dark:text-violet-300 border border-violet-200 dark:border-violet-800/40'
+                        : 'text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-white/5'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <PhoneCall className="w-4 h-4 text-violet-500" />
+                      <span>Contact Us</span>
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-violet-600 dark:text-violet-400" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Bottom Actions: Theme Switcher + CTA + Direct Contact micro-chips */}
+              <div className="pt-4 border-t border-slate-200/90 dark:border-white/10 space-y-3 mt-4">
+                {/* Theme Switcher Row */}
+                <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-100 dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 text-xs">
+                  <span className="font-semibold text-slate-700 dark:text-zinc-300">Theme</span>
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => {
+                        if (theme !== 'light') onToggleTheme();
+                      }}
+                      className={`px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
+                        theme === 'light'
+                          ? 'bg-white text-slate-900 shadow-sm border border-slate-200 font-bold'
+                          : 'text-slate-500 dark:text-zinc-400 hover:text-slate-900'
+                      }`}
+                    >
+                      <Sun className="w-3.5 h-3.5 text-amber-500" />
+                      <span>Light</span>
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (theme !== 'dark') onToggleTheme();
+                      }}
+                      className={`px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
+                        theme === 'dark'
+                          ? 'bg-violet-600 text-white shadow-sm font-bold'
+                          : 'text-slate-500 dark:text-zinc-400 hover:text-slate-900'
+                      }`}
+                    >
+                      <Moon className="w-3.5 h-3.5" />
+                      <span>Dark</span>
+                    </button>
+                  </div>
+                </div>
+
+                <MagneticButton
+                  variant="primary"
+                  size="md"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    onOpenStrategyCall();
+                  }}
+                  icon={<Sparkles className="w-4 h-4 text-white" />}
+                  className="w-full justify-center shadow-lg shadow-violet-600/30"
+                >
+                  Claim Strategy Call
+                </MagneticButton>
+
+                {/* Direct Phone & WhatsApp Micro-chips */}
+                <div className="flex items-center gap-2 pt-1">
+                  <a
+                    href="tel:+917358163590"
+                    className="flex-1 py-2.5 px-2.5 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-[11px] font-mono font-semibold text-slate-700 dark:text-zinc-300 flex items-center justify-center gap-1.5 hover:text-violet-600 active:scale-95 transition-all"
+                  >
+                    <PhoneCall className="w-3.5 h-3.5 text-violet-600 dark:text-violet-400" />
+                    <span>+91 73581 63590</span>
+                  </a>
+                  <a
+                    href="https://wa.me/917358163590"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 py-2.5 px-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-[11px] font-mono font-semibold text-emerald-700 dark:text-emerald-400 flex items-center justify-center gap-1.5 hover:bg-emerald-500/20 active:scale-95 transition-all"
+                  >
+                    <MessageSquare className="w-3.5 h-3.5 text-emerald-500" />
+                    <span>WhatsApp</span>
+                  </a>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </>
   );
 };

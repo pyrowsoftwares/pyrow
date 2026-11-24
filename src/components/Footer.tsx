@@ -51,7 +51,8 @@ export const Footer: React.FC<FooterProps> = ({
   };
 
   return (
-    <footer className="relative bg-white/80 dark:bg-[#0B0F19]/80 backdrop-blur-md border-t border-slate-200/70 dark:border-slate-800 overflow-hidden transition-colors duration-300">
+    <footer className="relative bg-white/90 dark:bg-[#04030a] backdrop-blur-2xl border-t border-slate-200/80 dark:border-white/[0.08] overflow-hidden transition-colors duration-300">
+      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-400/20 to-transparent pointer-events-none" />
       {/* High-Impact Animated Call-To-Action Marquee Banner */}
       <motion.div
         initial={{ opacity: 0, y: 30, filter: 'blur(6px)' }}

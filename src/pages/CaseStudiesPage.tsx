@@ -80,7 +80,7 @@ export const CaseStudiesPage: React.FC<CaseStudiesPageProps> = ({ onOpenStrategy
         onPrimaryCtaClick={onOpenStrategyCall}
       />
 
-      {/* Impact Metric Bar */}
+      {/* Impact Metric Bar (MotionSites Standard) */}
       <QuantumSnapSection id="case-studies-metrics-section" className="py-12 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           {metrics.map((m, idx) => (
@@ -88,15 +88,16 @@ export const CaseStudiesPage: React.FC<CaseStudiesPageProps> = ({ onOpenStrategy
               key={idx}
               index={idx}
               columns={4}
-              className="p-6 rounded-3xl bg-white dark:bg-obsidian-900/60 border border-slate-200/80 dark:border-white/10 shadow-sm transition-all"
+              className="p-6 rounded-[28px] bg-white dark:bg-[#070512]/90 backdrop-blur-xl border border-slate-200/80 dark:border-white/[0.08] shadow-[0_8px_30px_rgb(0,0,0,0.25)] hover:border-violet-500/40 transition-all relative overflow-hidden group"
             >
-              <div className="text-3xl sm:text-4xl font-black font-display bg-gradient-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent">
+              <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-400/20 to-transparent pointer-events-none" />
+              <div className="text-3xl sm:text-4xl font-black font-display font-mono bg-gradient-to-r from-violet-600 via-purple-500 to-fuchsia-500 dark:from-violet-300 dark:via-purple-200 dark:to-indigo-300 bg-clip-text text-transparent">
                 {m.value}
               </div>
-              <div className="mt-1 text-xs sm:text-sm font-bold text-slate-800 dark:text-zinc-200">
+              <div className="mt-2 text-xs sm:text-sm font-bold text-slate-800 dark:text-zinc-200">
                 {m.label}
               </div>
-              <div className="mt-1 text-[11px] text-slate-500 dark:text-zinc-400">
+              <div className="mt-1 text-[11px] font-mono text-slate-500 dark:text-zinc-400">
                 {m.sub}
               </div>
             </LuxuryScrollCard>
@@ -118,8 +119,9 @@ export const CaseStudiesPage: React.FC<CaseStudiesPageProps> = ({ onOpenStrategy
               key={idx}
               index={idx}
               columns={2}
-              className="p-8 rounded-3xl bg-white dark:bg-obsidian-900/70 border border-slate-200/80 dark:border-white/10 shadow-sm flex flex-col justify-between group hover:border-violet-500/50 hover:shadow-xl transition-all"
+              className="p-8 rounded-[32px] bg-white dark:bg-[#070512]/90 backdrop-blur-xl border border-slate-200/80 dark:border-white/[0.08] shadow-[0_8px_30px_rgb(0,0,0,0.25)] flex flex-col justify-between group hover:border-violet-500/40 hover:shadow-[0_0_40px_rgba(124,58,237,0.18)] transition-all duration-300 relative overflow-hidden"
             >
+              <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-400/20 to-transparent pointer-events-none" />
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-xs font-semibold text-violet-600 dark:text-violet-400">

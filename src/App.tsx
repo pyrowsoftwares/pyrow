@@ -21,6 +21,9 @@ import { HomeHowWeWork } from './components/home/HomeHowWeWork';
 import { HomeIndustries } from './components/home/HomeIndustries';
 import { HomeAboutDeepDive } from './components/home/HomeAboutDeepDive';
 import { HomeCtaBanner } from './components/home/HomeCtaBanner';
+import { HomeInteractiveShowcase } from './components/home/HomeInteractiveShowcase';
+import { HomeConnectedSolutions } from './components/home/HomeConnectedSolutions';
+import { HomeImpactMarquee } from './components/home/HomeImpactMarquee';
 
 // Interior Sub-Pages (Z3Connect Full Architecture Recreation)
 import { AboutPage } from './pages/AboutPage';
@@ -198,62 +201,60 @@ function AppContent() {
       default:
         return (
           <>
-            {/* 1. Hero with Filament Untangling & Stats */}
+            {/* 1. Cinematic Ambient Hero with 3D Perspective Tilt & Editorial Serif */}
             <Hero onOpenStrategyCall={() => handleOpenStrategyCall()} />
 
-            {/* 2. Expertise: Software that solves real problems (6 cards) */}
-            <QuantumSnapSection id="services-section">
-              <HomeExpertise />
+            {/* 2. Interactive Product Showcase (Signature Live Software Consoles) */}
+            <QuantumSnapSection id="products-showcase">
+              <HomeInteractiveShowcase onOpenDemoRequest={handleOpenDemoRequest} />
             </QuantumSnapSection>
 
-            {/* 3. Featured Products: Tools we've built and shipped (4 flagship cards + link to /products) */}
-            <QuantumSnapSection id="products-section">
-              <HomeFeaturedProducts />
+            {/* 3. Connected Full-Stack Solutions & Revenue Alignment (Sticky Editorial Split) */}
+            <QuantumSnapSection id="connected-solutions">
+              <HomeConnectedSolutions onOpenStrategyCall={() => handleOpenStrategyCall()} />
             </QuantumSnapSection>
 
-            {/* 4. Architecture Standards: Core Molecules Alignment */}
+            {/* 4. Production Track Record & Enterprise Case Studies */}
+            <QuantumSnapSection id="track-record">
+              <CaseStudies onOpenStrategyCall={handleOpenStrategyCall} />
+            </QuantumSnapSection>
+
+            {/* 5. Architecture Standards: Core Molecules Alignment */}
             <QuantumSnapSection id="architecture-section">
               <EssentialMolecules />
             </QuantumSnapSection>
 
-            {/* 5. Impact & Testimonials: Real improvements for real businesses (4 metrics + 8 client testimonials) */}
-            <QuantumSnapSection id="case-studies-section">
-              <HomeImpactTestimonials />
+            {/* 5. Live Impact Numbers & Verified Client Testimonials */}
+            <QuantumSnapSection id="client-impact">
+              <HomeImpactMarquee />
             </QuantumSnapSection>
 
-            {/* 6. Production Engineering: Built to Scale */}
-            <QuantumSnapSection id="tech-radar-section">
-              <TechRadar />
-            </QuantumSnapSection>
-
-            {/* 7. How We Work: From idea to launch — and beyond */}
+            {/* 6. How We Work: From idea to launch — and beyond */}
             <QuantumSnapSection id="how-it-works-section">
               <HomeHowWeWork />
             </QuantumSnapSection>
 
-            {/* 8. Industries: We've worked across them all */}
+            {/* 7. Industries: We've worked across them all */}
             <QuantumSnapSection id="solutions-section">
               <HomeIndustries />
             </QuantumSnapSection>
 
-            {/* 9. Competitive Matrix: Why High-Growth Companies Choose Pyrow (Commented out as requested) */}
-            {/*
-            <QuantumSnapSection id="comparison-section">
-              <ComparisonMatrix />
-            </QuantumSnapSection>
-            */}
-
-            {/* 10. Our Expertise: What is Pyrow? Deep Dive & Capabilities */}
-            <QuantumSnapSection id="about-section">
-              <HomeAboutDeepDive />
+            {/* 8. Production Engineering: Built to Scale Stack Radar */}
+            <QuantumSnapSection id="tech-radar-section">
+              <TechRadar />
             </QuantumSnapSection>
 
-            {/* 11. Frequently Asked Questions */}
+            {/* 9. Interactive Scope Estimator Desk */}
+            <QuantumSnapSection id="estimator">
+              <ProjectEstimator onOpenStrategyCall={() => handleOpenStrategyCall()} />
+            </QuantumSnapSection>
+
+            {/* 10. Frequently Asked Questions */}
             <QuantumSnapSection id="faq-section">
               <FaqSection />
             </QuantumSnapSection>
 
-            {/* 12. Final CTA: Ready to automate your business? (Matching z3connect bottom section) */}
+            {/* 11. Final Cinematic Bottom CTA Banner */}
             <QuantumSnapSection id="cta-banner-section">
               <HomeCtaBanner onOpenStrategyCall={() => handleOpenStrategyCall()} />
             </QuantumSnapSection>
@@ -264,7 +265,7 @@ function AppContent() {
 
   return (
     <TooltipProvider>
-      <div className="relative min-h-screen bg-transparent text-slate-900 dark:text-zinc-100 selection:bg-violet-600 selection:text-white font-sans transition-colors duration-300">
+      <div className="relative min-h-screen w-full max-w-[100vw] overflow-x-clip bg-transparent text-slate-900 dark:text-zinc-100 selection:bg-violet-600 selection:text-white font-sans transition-colors duration-300">
         {/* Animated Global Atmospheric Cyber Matrix & Floating Starfield */}
         <AnimatedGlobalBackground />
 
@@ -286,7 +287,7 @@ function AppContent() {
         )}
 
         {/* Active Page View (Unified Stacking Context & Full Accessibility) */}
-        <main className="relative z-10 w-full min-h-screen">
+        <main className="relative z-10 w-full max-w-[100vw] overflow-x-clip min-h-screen">
           {renderCurrentRoute()}
         </main>
 

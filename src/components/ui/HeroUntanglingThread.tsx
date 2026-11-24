@@ -74,7 +74,8 @@ export const HeroUntanglingThread: React.FC = () => {
       if (!parent) return;
       const r = parent.getBoundingClientRect();
       const dpr = window.devicePixelRatio || 1;
-      const w = r.width, h = r.height;
+      const w = Math.min(r.width, window.innerWidth || document.documentElement.clientWidth || 360);
+      const h = r.height;
       canvas.width = w * dpr;
       canvas.height = h * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -165,7 +166,7 @@ export const HeroUntanglingThread: React.FC = () => {
       const line3Opacity =
         containerOpacity *
         (exitProgress > 0.70 ? Math.max(0, 1 - (exitProgress - 0.70) / 0.30) : 1);
-      const line3Scale = 1 + B * ((isMobile ? 3.4 : 4.6) - 1);
+      const line3Scale = 1 + B * ((isMobile ? 2.2 : 4.6) - 1);
       const line3Y = -exitProgress * (isMobile ? 36 : 52);
       const line3Glow = 32 * exitProgress;
 
@@ -285,41 +286,106 @@ export const HeroUntanglingThread: React.FC = () => {
     };
   }, []);
 
+  // Automatically transition from Untangling intro to Hero on initial website opening
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    // Only auto-scroll if opening at the very top of the page
+    if (window.scrollY > 40) return;
+    if (window.location.hash && window.location.hash !== '#hero' && window.location.hash !== '#hero-main') return;
+
+    let autoScrollRaf = 0;
+    let timerId: ReturnType<typeof setTimeout>;
+    let cancelled = false;
+
+    const cancelEvents = ['wheel', 'touchstart', 'touchmove', 'keydown', 'mousedown'];
+    const stopAutoScroll = () => {
+      cancelled = true;
+      if (autoScrollRaf) cancelAnimationFrame(autoScrollRaf);
+      cancelEvents.forEach((ev) => window.removeEventListener(ev, stopAutoScroll));
+    };
+
+    // If user touches, scrolls, or clicks anywhere, instantly hand them full control
+    cancelEvents.forEach((ev) => window.addEventListener(ev, stopAutoScroll, { passive: true }));
+
+    // Gentle initial pause: display tangled knot and "your idea" for 1100ms, then slowly and gracefully glide into Hero
+    timerId = setTimeout(() => {
+      if (cancelled) return;
+
+      const heroEl = document.getElementById('hero-main');
+      if (!heroEl) return;
+
+      const startY = window.scrollY;
+      const targetY = heroEl.getBoundingClientRect().top + window.scrollY;
+      const distance = targetY - startY;
+      if (distance <= 10) return;
+
+      const duration = 4400; // 4.4s slow, relaxed, cinematic progression
+      const startTime = performance.now();
+
+      // Ultra-gentle sine easing with steady continuous velocity (no sudden rush in the middle)
+      const easeInOutSine = (t: number) => -(Math.cos(Math.PI * t) - 1) / 2;
+
+      const step = (now: number) => {
+        if (cancelled) return;
+        const elapsed = now - startTime;
+        const progress = Math.min(1, elapsed / duration);
+        const eased = easeInOutSine(progress);
+
+        window.scrollTo(0, startY + distance * eased);
+
+        if (progress < 1) {
+          autoScrollRaf = requestAnimationFrame(step);
+        } else {
+          stopAutoScroll();
+        }
+      };
+
+      autoScrollRaf = requestAnimationFrame(step);
+    }, 1100);
+
+    return () => {
+      clearTimeout(timerId);
+      stopAutoScroll();
+    };
+  }, []);
+
   const handleScrollHint = () => {
     soundFX.playClick();
-    const el = document.getElementById('hero-main');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    } else if (containerRef.current) {
-      window.scrollTo({
-        top: window.scrollY + containerRef.current.getBoundingClientRect().height * 0.45,
-        behavior: 'smooth',
-      });
-    }
+    const heroEl = document.getElementById('hero-main');
+    if (!heroEl) return;
+
+    const startY = window.scrollY;
+    const targetY = heroEl.getBoundingClientRect().top + window.scrollY;
+    const distance = targetY - startY;
+
+    const duration = 3200; // Leisurely pace for manual hint click
+    const startTime = performance.now();
+    let raf = 0;
+
+    const easeInOutSine = (t: number) => -(Math.cos(Math.PI * t) - 1) / 2;
+
+    const step = (now: number) => {
+      const progress = Math.min(1, (now - startTime) / duration);
+      window.scrollTo(0, startY + distance * easeInOutSine(progress));
+      if (progress < 1) {
+        raf = requestAnimationFrame(step);
+      }
+    };
+    raf = requestAnimationFrame(step);
   };
 
   return (
     <div
       ref={containerRef}
-      className="relative w-full"
+      className="relative w-full max-w-[100vw] overflow-x-clip"
       style={{ height: '250vh' }}
       aria-label="Interactive Untangling Intro"
     >
-      {/* Sticky Stage: Pinned at top-0, 100svh tall */}
+      {/* Sticky Stage: Pinned at top-0, 100svh tall (Pure transparent backdrop to inherit site background) */}
       <div
-        className="sticky top-0 w-full bg-transparent overflow-hidden select-none"
+        className="sticky top-0 w-full max-w-[100vw] bg-transparent overflow-hidden select-none"
         style={{ height: '100svh' }}
       >
-        {/* Ambient Radial Gradients */}
-        <div
-          className="absolute inset-0 pointer-events-none transition-opacity duration-300"
-          style={{
-            background: isDark
-              ? 'radial-gradient(85% 65% at 50% 45%, rgba(124,58,237,0.25) 0%, transparent 68%), radial-gradient(75% 60% at 80% 85%, rgba(147,51,234,0.18) 0%, transparent 65%)'
-              : 'radial-gradient(85% 65% at 50% 45%, rgba(124,58,237,0.14) 0%, transparent 68%), radial-gradient(75% 60% at 80% 85%, rgba(147,51,234,0.08) 0%, transparent 65%)',
-          }}
-        />
-
         {/* 1. Canvas Filament */}
         <canvas
           ref={canvasRef}
@@ -448,24 +514,6 @@ export const HeroUntanglingThread: React.FC = () => {
           </span>
           <ChevronDown className="w-4 h-4 text-violet-600 dark:text-violet-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors animate-bounce" />
         </button>
-
-        {/* 5. Seamless Bottom Organic Curve Divider */}
-        <div
-          className="absolute bottom-0 left-0 right-0 w-full overflow-hidden pointer-events-none leading-none"
-          style={{ zIndex: 16 }}
-        >
-          <svg
-            viewBox="0 0 1440 64"
-            fill="none"
-            className="w-full h-6 sm:h-10 text-[#FAF8FF] dark:text-[#0B0F19] transition-colors duration-300"
-            preserveAspectRatio="none"
-          >
-            <path
-              d="M0,0 C480,64 960,64 1440,0 L1440,64 L0,64 Z"
-              fill="currentColor"
-            />
-          </svg>
-        </div>
       </div>
     </div>
   );

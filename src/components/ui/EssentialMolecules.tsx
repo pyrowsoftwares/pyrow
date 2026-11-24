@@ -117,21 +117,21 @@ export const EssentialMolecules: React.FC = () => {
               key={m.id}
               index={idx}
               columns={3}
-              className="group p-6 sm:p-7 rounded-3xl bg-white/90 dark:bg-[#130723]/90 hover:bg-white dark:hover:bg-[#190B2E] border border-slate-200/90 dark:border-violet-500/20 hover:border-violet-500/60 shadow-lg hover:shadow-[0_20px_45px_-10px_rgba(124,58,237,0.25)] dark:hover:shadow-[0_20px_45px_-10px_rgba(124,58,237,0.4)] transition-all duration-300 flex flex-col justify-between"
+              className="group p-6 sm:p-7 rounded-3xl bg-white/95 dark:bg-[#070512]/90 hover:bg-white dark:hover:bg-[#0e0922]/95 border border-slate-200/90 dark:border-white/[0.08] hover:border-violet-500/50 dark:hover:border-violet-500/50 shadow-sm dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)] hover:shadow-xl dark:hover:shadow-[0_20px_45px_-10px_rgba(124,58,237,0.35)] backdrop-blur-xl transition-all duration-300 flex flex-col justify-between"
             >
               <div>
                 {/* Header */}
-                <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-200 dark:border-white/10 transition-colors">
+                <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-200 dark:border-white/[0.06] transition-colors">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-2xl bg-slate-100 dark:bg-white/5 group-hover:bg-violet-50 dark:group-hover:bg-violet-500/20 border border-slate-200 dark:border-white/10 group-hover:border-violet-300 dark:group-hover:border-violet-500/40 flex items-center justify-center transition-colors">
+                    <div className="w-10 h-10 rounded-2xl bg-slate-100 dark:bg-white/[0.05] group-hover:bg-violet-50 dark:group-hover:bg-violet-500/20 border border-slate-200 dark:border-white/[0.08] group-hover:border-violet-300 dark:group-hover:border-violet-500/40 flex items-center justify-center transition-colors">
                       {m.icon}
                     </div>
-                    <span className="text-xs font-mono text-slate-500 dark:text-zinc-500 group-hover:text-violet-700 dark:group-hover:text-violet-300 transition-colors">
+                    <span className="text-xs font-mono font-semibold tracking-widest text-slate-500 dark:text-zinc-500 group-hover:text-violet-700 dark:group-hover:text-violet-300 transition-colors">
                       {m.number}
                     </span>
                   </div>
 
-                  <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-xs font-mono font-semibold text-slate-700 dark:text-zinc-300 transition-colors">
+                  <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-white/[0.05] border border-slate-200 dark:border-white/[0.08] text-[11px] font-mono uppercase tracking-wider font-semibold text-slate-700 dark:text-zinc-300 transition-colors">
                     {m.badge}
                   </span>
                 </div>
@@ -146,7 +146,7 @@ export const EssentialMolecules: React.FC = () => {
               </div>
 
               {/* Specs */}
-              <div className="pt-4 border-t border-slate-100 dark:border-white/5 space-y-1.5 transition-colors">
+              <div className="pt-4 border-t border-slate-100 dark:border-white/[0.06] space-y-1.5 transition-colors">
                 {m.specs.map((spec, sIdx) => (
                   <div key={sIdx} className="flex items-center gap-2 text-xs font-mono text-slate-700 dark:text-zinc-300 transition-colors">
                     <span className="w-1.5 h-1.5 rounded-full bg-violet-500 dark:bg-violet-400 flex-shrink-0" />

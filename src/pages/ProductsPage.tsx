@@ -233,29 +233,31 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
         onPrimaryCtaClick={() => onOpenDemoRequest()}
       />
 
-      {/* Filter Category Tabs */}
+      {/* Filter Category Tabs (MotionSites Glass Pill) */}
       <motion.section
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.2 }}
-        className="py-8 px-4 max-w-5xl mx-auto flex items-center justify-center gap-2 flex-wrap"
+        className="py-8 px-4 max-w-5xl mx-auto flex items-center justify-center"
       >
-        {categories.map((cat) => (
-          <button
-            key={cat.id}
-            onClick={() => {
-              soundFX.playClick();
-              setActiveTab(cat.id as any);
-            }}
-            className={`px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer hover:scale-105 active:scale-95 ${
-              activeTab === cat.id
-                ? 'bg-violet-600 text-white shadow-lg shadow-violet-600/25 font-bold scale-105'
-                : 'bg-white dark:bg-white/5 text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white border border-slate-200/80 dark:border-white/10'
-            }`}
-          >
-            {cat.label}
-          </button>
-        ))}
+        <div className="inline-flex items-center gap-1.5 p-1.5 rounded-full bg-white/90 dark:bg-[#070512]/90 backdrop-blur-2xl border border-slate-200/90 dark:border-white/[0.08] shadow-[0_4px_25px_rgba(0,0,0,0.25)] max-w-full overflow-x-auto scrollbar-none">
+          {categories.map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => {
+                soundFX.playClick();
+                setActiveTab(cat.id as any);
+              }}
+              className={`px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer whitespace-nowrap ${
+                activeTab === cat.id
+                  ? 'bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-lg shadow-violet-600/30 border border-violet-400/30 font-bold'
+                  : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/5'
+              }`}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </div>
       </motion.section>
 
       {/* Comprehensive Product Cards Grid */}
@@ -267,8 +269,9 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
                 key={prod.id}
                 index={idx}
                 columns={3}
-                className="p-8 rounded-3xl bg-white dark:bg-obsidian-850 border border-slate-200/80 dark:border-white/10 shadow-sm hover:shadow-xl hover:border-violet-500/50 transition-all flex flex-col justify-between"
+                className="p-8 rounded-[32px] bg-white dark:bg-[#070512]/90 backdrop-blur-xl border border-slate-200/80 dark:border-white/[0.08] shadow-[0_8px_30px_rgb(0,0,0,0.25)] hover:border-violet-500/40 hover:shadow-[0_0_40px_rgba(124,58,237,0.18)] transition-all duration-300 flex flex-col justify-between relative overflow-hidden group"
               >
+                <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-400/25 to-transparent pointer-events-none" />
                 <div>
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-[11px] font-mono font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-violet-600/10 text-violet-600 dark:text-violet-400 border border-violet-500/20">

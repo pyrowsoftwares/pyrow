@@ -84,9 +84,14 @@ export const HomeFeaturedProducts: React.FC = () => {
 
             <div>
               <div className="flex items-center justify-between mb-6">
-                <span className="text-[11px] font-mono font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-violet-600/10 text-violet-600 dark:text-violet-400 border border-violet-500/20">
-                  {item.badge}
-                </span>
+                <div className="flex items-center gap-2.5">
+                  <span className="text-[11px] font-mono tracking-widest text-slate-400 dark:text-zinc-500 font-semibold">
+                    {`0${idx + 1} / 04`}
+                  </span>
+                  <span className="text-[11px] font-mono font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-violet-600/10 text-violet-600 dark:text-violet-400 border border-violet-500/20">
+                    {item.badge}
+                  </span>
+                </div>
                 <div className="p-2.5 rounded-xl bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-zinc-300">
                   {item.icon}
                 </div>
