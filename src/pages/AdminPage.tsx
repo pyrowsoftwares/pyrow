@@ -1978,24 +1978,6 @@ export const AdminPage: React.FC = () => {
             >
               {loginSubmitting ? <span>Authenticating...</span> : <span>Log In to Command Center</span>}
             </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                soundFX.playChime();
-                setLoginEmail('support@pyrow.in');
-                setLoginPassword('pyrow2026');
-                setSession({
-                  user: { email: 'support@pyrow.in', id: 'pyrow-superadmin-001' },
-                  access_token: 'mock-session-token',
-                });
-                fetchAllData();
-              }}
-              className="w-full mt-2 py-2.5 px-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 hover:text-white font-mono text-xs tracking-wide transition-all cursor-pointer flex items-center justify-center gap-2"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-violet-400" />
-              <span>Instant Admin Demo Access</span>
-            </button>
           </form>
 
           <div className="mt-6 pt-5 border-t border-white/5 text-center text-[10px] text-zinc-500 font-mono">
