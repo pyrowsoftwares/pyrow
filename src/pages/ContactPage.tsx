@@ -79,7 +79,7 @@ export const ContactPage: React.FC = () => {
 
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-black font-display tracking-tight leading-tight">
             Let's build{' '}
-            <span className="font-serif italic font-normal tracking-wide underline decoration-violet-500/30 underline-offset-8 bg-gradient-to-r from-violet-600 via-purple-500 to-fuchsia-500 dark:from-violet-300 dark:via-purple-200 dark:to-indigo-300 bg-clip-text text-transparent">
+            <span className="font-black tracking-tight underline decoration-violet-500/30 underline-offset-8 bg-gradient-to-r from-violet-600 via-purple-500 to-fuchsia-500 dark:from-violet-300 dark:via-purple-200 dark:to-indigo-300 bg-clip-text text-transparent">
               Something Great.
             </span>
           </h1>

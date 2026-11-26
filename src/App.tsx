@@ -24,6 +24,7 @@ import { HomeCtaBanner } from './components/home/HomeCtaBanner';
 import { HomeInteractiveShowcase } from './components/home/HomeInteractiveShowcase';
 import { HomeConnectedSolutions } from './components/home/HomeConnectedSolutions';
 import { HomeImpactMarquee } from './components/home/HomeImpactMarquee';
+import { HomeServicesSection } from './components/home/HomeServicesSection';
 
 // Interior Sub-Pages (Z3Connect Full Architecture Recreation)
 import { AboutPage } from './pages/AboutPage';
@@ -41,6 +42,7 @@ import { CareersPage } from './pages/CareersPage';
 import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage';
 import { TermsPage } from './pages/TermsPage';
 import { AdminPage } from './pages/AdminPage';
+import { ServicesPage } from './pages/ServicesPage';
 
 // Interactive UI and Modals
 import { StrategyCallModal } from './components/Modals/StrategyCallModal';
@@ -166,6 +168,8 @@ function AppContent() {
         return <TeamPage onOpenStrategyCall={() => handleOpenStrategyCall()} />;
       case '/why-we-exist':
         return <WhyWeExistPage onOpenStrategyCall={() => handleOpenStrategyCall()} />;
+      case '/services':
+        return <ServicesPage onOpenStrategyCall={(topic) => handleOpenStrategyCall(topic)} />;
       case '/products':
         return (
           <ProductsPage
@@ -209,7 +213,12 @@ function AppContent() {
               <HomeInteractiveShowcase onOpenDemoRequest={handleOpenDemoRequest} />
             </QuantumSnapSection>
 
-            {/* 3. Connected Full-Stack Solutions & Revenue Alignment (Sticky Editorial Split) */}
+            {/* 3. Digital Marketing & Creative Growth Suite (Full 10-Service Navigator) */}
+            <QuantumSnapSection id="digital-services">
+              <HomeServicesSection onOpenStrategyCall={handleOpenStrategyCall} />
+            </QuantumSnapSection>
+
+            {/* 4. Connected Full-Stack Solutions & Revenue Alignment (Sticky Editorial Split) */}
             <QuantumSnapSection id="connected-solutions">
               <HomeConnectedSolutions onOpenStrategyCall={() => handleOpenStrategyCall()} />
             </QuantumSnapSection>

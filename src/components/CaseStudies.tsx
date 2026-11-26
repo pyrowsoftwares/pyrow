@@ -158,7 +158,7 @@ export const CaseStudies: React.FC<{
           title={
             <span>
               Production Track Record.{' '}
-              <span className="font-serif italic font-normal tracking-wide underline decoration-violet-500/30 underline-offset-8 bg-gradient-to-r from-violet-600 via-purple-500 to-fuchsia-500 dark:from-violet-400 dark:via-purple-300 dark:to-fuchsia-400 bg-clip-text text-transparent">
+              <span className="font-extrabold tracking-tight bg-gradient-to-r from-violet-600 via-purple-500 to-fuchsia-500 dark:from-violet-400 dark:via-purple-300 dark:to-fuchsia-400 bg-clip-text text-transparent">
                 Tested In Real Operations.
               </span>
             </span>

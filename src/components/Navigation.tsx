@@ -261,6 +261,18 @@ export const Navigation: React.FC<NavigationProps> = ({
                 </AnimatePresence>
               </div>
 
+              {/* Services */}
+              <button
+                onClick={() => handleNav('/services')}
+                className={`px-3.5 py-2 text-sm font-semibold rounded-full transition-colors cursor-pointer ${
+                  currentPath === '/services'
+                    ? 'text-violet-600 dark:text-violet-400 bg-violet-50/80 dark:bg-white/5'
+                    : 'text-slate-700 dark:text-zinc-300 hover:text-violet-600 dark:hover:text-white'
+                }`}
+              >
+                Services
+              </button>
+
               {/* Products Dropdown */}
               <div
                 className="relative"
@@ -648,6 +660,22 @@ export const Navigation: React.FC<NavigationProps> = ({
                       </div>
                     )}
                   </div>
+
+                  {/* Services */}
+                  <button
+                    onClick={() => handleNav('/services')}
+                    className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl flex items-center justify-between cursor-pointer transition-colors ${
+                      currentPath === '/services'
+                        ? 'bg-violet-50 dark:bg-violet-950/40 text-violet-600 dark:text-violet-300 border border-violet-200 dark:border-violet-800/40'
+                        : 'text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-white/5'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-violet-500" />
+                      <span>Services</span>
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-violet-600 dark:text-violet-400" />
+                  </button>
 
                   {/* Products Accordion */}
                   <div className="rounded-xl overflow-hidden">

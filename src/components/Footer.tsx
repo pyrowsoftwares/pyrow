@@ -237,6 +237,14 @@ export const Footer: React.FC<FooterProps> = ({
             <ul className="space-y-2 text-xs text-slate-600 dark:text-zinc-400 font-sans">
               <li>
                 <button
+                  onClick={() => handleLink('/services')}
+                  className="hover:text-violet-600 dark:hover:text-purple-400 transition-colors text-left font-semibold text-violet-600 dark:text-violet-400"
+                >
+                  Services & Marketing Suite
+                </button>
+              </li>
+              <li>
+                <button
                   onClick={() => handleLink('/products')}
                   className="hover:text-violet-600 dark:hover:text-purple-400 transition-colors text-left"
                 >

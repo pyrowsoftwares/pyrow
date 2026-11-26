@@ -77,9 +77,10 @@ interface SoftwarePackagePreset {
 }
 
 const SOFTWARE_PRESETS: Record<string, SoftwarePackagePreset> = {
+  // --- SOFTWARE & AI PRODUCTS ---
   'pyrow-assist': {
     name: 'Pyrow Assist (AI Assistant & Autonomous Workflow)',
-    category: 'AI Automation',
+    category: 'Software & AI',
     deliverables: [
       { description: '24/7 Autonomous WhatsApp Business Cloud API Integration', rate: 45000 },
       { description: 'Website AI Conversational Chat Widget with Multilingual NLP Routing', rate: 35000 },
@@ -90,7 +91,7 @@ const SOFTWARE_PRESETS: Record<string, SoftwarePackagePreset> = {
   },
   'pyrow-pos': {
     name: 'Pyrow POS (Offline-First Retail & Billing Suite)',
-    category: 'POS & Billing',
+    category: 'Software & AI',
     deliverables: [
       { description: 'Sub-Second 0.8s Offline-First POS Engine (Works without Internet)', rate: 55000 },
       { description: 'Barcode Scanner Integration & Multi-Store Inventory Auto-Sync', rate: 35000 },
@@ -101,7 +102,7 @@ const SOFTWARE_PRESETS: Record<string, SoftwarePackagePreset> = {
   },
   'contentflow-ai': {
     name: 'ContentFlow AI (Autonomous Marketing Engine)',
-    category: 'Growth Engine',
+    category: 'Software & AI',
     deliverables: [
       { description: 'Multi-Platform One-Prompt AI Content Generator (LinkedIn, IG, X, Blogs)', rate: 40000 },
       { description: 'Custom Brand Voice Fine-Tuned LLM Model Integration', rate: 35000 },
@@ -112,7 +113,7 @@ const SOFTWARE_PRESETS: Record<string, SoftwarePackagePreset> = {
   },
   'pyrow-flow-erp': {
     name: 'Pyrow Flow ERP (Enterprise Resource Planning)',
-    category: 'Enterprise SaaS',
+    category: 'Software & AI',
     deliverables: [
       { description: 'Multi-Warehouse Inventory & Automated Low-Stock Reorder Engine', rate: 85000 },
       { description: 'Biometric Attendance Integration & Automated Payroll Engine', rate: 65000 },
@@ -123,7 +124,7 @@ const SOFTWARE_PRESETS: Record<string, SoftwarePackagePreset> = {
   },
   'pyrow-zaloon': {
     name: 'Pyrow Zaloon Suite (Salon, Spa & Clinic Operating System)',
-    category: 'Industry Suite',
+    category: 'Software & AI',
     deliverables: [
       { description: 'Multi-Stylist / Doctor Appointment Slot Booking Calendar', rate: 35000 },
       { description: 'Automated WhatsApp & SMS Reminders (Zero No-Show Guarantee)', rate: 25000 },
@@ -134,7 +135,7 @@ const SOFTWARE_PRESETS: Record<string, SoftwarePackagePreset> = {
   },
   'custom-platform': {
     name: 'Custom Web & Mobile Architecture (High-Performance Bespoke)',
-    category: 'Custom Software',
+    category: 'Web & E-Commerce',
     deliverables: [
       { description: 'Ultra-Fast React / Vite / Next.js Web Application (99+ Core Web Vitals)', rate: 85000 },
       { description: 'Cross-Platform Mobile Application (iOS & Android)', rate: 95000 },
@@ -142,6 +143,129 @@ const SOFTWARE_PRESETS: Record<string, SoftwarePackagePreset> = {
       { description: 'Enterprise Cyber Security Hardening & Zero-Downtime Deployment Pipeline', rate: 45000 },
     ],
     defaultTerms: '100% intellectual property ownership transferred on Day 1. Full source code, Figma design files & documentation.',
+  },
+
+  // --- DIGITAL MARKETING & CREATIVE SERVICES ---
+  'social-media-management': {
+    name: 'Social Media Management (Make Your Brand Impossible to Ignore)',
+    category: 'Marketing & Ads',
+    deliverables: [
+      { description: 'Social Media Strategy & Multi-Channel Content Planning', rate: 25000 },
+      { description: 'Creative Post & High-Engagement Reel Design (20 Posts + 10 Reels/mo)', rate: 35000 },
+      { description: 'Content Scheduling, Publishing & Community Management', rate: 20000 },
+      { description: 'Audience Growth, Engagement & Performance Tracking Analytics', rate: 15000 },
+    ],
+    defaultTerms: 'Monthly growth retainer. Includes dedicated designer, 2 revisions per post, and bi-weekly performance reporting.',
+  },
+  'ad-campaign-management': {
+    name: 'Ad Campaign Management (Turn Clicks Into Customers)',
+    category: 'Marketing & Ads',
+    deliverables: [
+      { description: 'Campaign Strategy, Audience Research & Full-Funnel Targeting Architecture', rate: 30000 },
+      { description: 'High-Converting Ad Creative Production, Copywriting & Dynamic Hooks', rate: 25000 },
+      { description: 'Lead Generation & Conversion Funnel Tracking (Pixel / CAPI / GTM)', rate: 20000 },
+      { description: 'Budget Optimization, Weekly A/B Testing & ROAS Maximization', rate: 25000 },
+    ],
+    defaultTerms: 'Management fee excludes direct ad media spend paid to ad networks. Includes weekly performance check-ins.',
+  },
+  'google-ads': {
+    name: 'Google Ads (Be There When Your Customers Are Searching)',
+    category: 'Marketing & Ads',
+    deliverables: [
+      { description: 'Google Search & Performance Max Campaign Architecture', rate: 30000 },
+      { description: 'High-Intent Keyword Research, Negative Match Lists & Match Type Engineering', rate: 20000 },
+      { description: 'Conversion Tracking Setup (GA4, GTM, Enhanced Conversions)', rate: 20000 },
+      { description: 'Weekly Bid Optimization, Quality Score Lift & Click-Through CRO', rate: 25000 },
+    ],
+    defaultTerms: 'Google Premier Partner best practices applied. Direct ad spend billed directly to client card.',
+  },
+  'youtube-ads': {
+    name: 'YouTube Ads (Turn Every View Into an Opportunity)',
+    category: 'Marketing & Ads',
+    deliverables: [
+      { description: 'YouTube Video Ad Campaign Strategy & Storyboard Scripting', rate: 25000 },
+      { description: 'High-Impact Video Ad Editing (15s & 30s Skippable / Bumper Ads)', rate: 35000 },
+      { description: 'In-Market Audience Targeting with Negative Placement Exclusions', rate: 20000 },
+      { description: 'Brand Awareness, View-Through Attribution & Conversion Remarketing', rate: 20000 },
+    ],
+    defaultTerms: 'Videos delivered in 1080p/4K 60fps format with commercial licensing for all music & visual assets.',
+  },
+  'linkedin-ads': {
+    name: 'LinkedIn Ads (Reach Decision-Makers & B2B Opportunities)',
+    category: 'Marketing & Ads',
+    deliverables: [
+      { description: 'B2B Account-Based Marketing (ABM) Strategy & C-Suite Targeting', rate: 35000 },
+      { description: 'Sponsored Content & Native LinkedIn Lead Form Campaigns', rate: 30000 },
+      { description: 'High-Value Decision-Maker Retargeting & Matched Audiences', rate: 20000 },
+      { description: 'Performance Analytics & Cost-Per-Qualified-Lead (CPL) Optimization', rate: 25000 },
+    ],
+    defaultTerms: 'Targets verified executives, directors, and purchasing managers. Fortnightly pipeline sync meetings.',
+  },
+  'content-marketing': {
+    name: 'Content Marketing (Content That Connects. Stories That Convert)',
+    category: 'Marketing & Ads',
+    deliverables: [
+      { description: 'Content Strategy, Editorial Calendar & Audience Persona Blueprint', rate: 25000 },
+      { description: 'Brand Storytelling, Promotional Creatives & Ad Copywriting', rate: 30000 },
+      { description: 'Short-Form Reels, Motion Graphics & Visual Production (15 Assets/mo)', rate: 35000 },
+      { description: 'Creative Campaign Development & Cross-Platform Distribution', rate: 20000 },
+    ],
+    defaultTerms: '100% intellectual property handover. Includes audio licensing, branded font hierarchies, and raw source assets.',
+  },
+  'ecommerce-web-design': {
+    name: 'E-commerce & Web Design (Your Digital Storefront. Designed to Perform)',
+    category: 'Web & E-Commerce',
+    deliverables: [
+      { description: 'Custom Business / E-Commerce Website Development (Next.js / Shopify Plus)', rate: 65000 },
+      { description: 'Bespoke UI/UX Design Engineered for Sub-Second Page Load Speeds', rate: 40000 },
+      { description: 'Frictionless 1-Click Payment Gateway Integration (UPI, Cards, NetBanking)', rate: 20000 },
+      { description: 'Mobile-First Responsive Layout, SEO Schema & 90 Days Maintenance', rate: 25000 },
+    ],
+    defaultTerms: 'Includes 100% full source code handover, production deployment, SSL setup, and 90-day warranty.',
+  },
+  'seo-search-engine-optimization': {
+    name: 'Search Engine Optimization (Get Found. Get Noticed. Grow Organically)',
+    category: 'Marketing & Ads',
+    deliverables: [
+      { description: 'Full Technical SEO Audit, Core Web Vitals Optimization & Schema Markup', rate: 30000 },
+      { description: 'High-Intent Keyword Research, Search Intent Mapping & Content Plan', rate: 25000 },
+      { description: 'On-Page Content Optimization for 10 High-Priority Commercial Pages', rate: 25000 },
+      { description: 'White-Hat Authority Backlink Building & Monthly Keyword Rank Tracking', rate: 30000 },
+    ],
+    defaultTerms: '100% Google Search Essentials compliant. Monthly keyword ranking progress report and Google Search Console audits.',
+  },
+  'chatgpt-ads-ai-advertising': {
+    name: 'ChatGPT Ads & AI Advertising (Be Ready for the Next Era of Advertising)',
+    category: 'Marketing & Ads',
+    deliverables: [
+      { description: 'AI Advertising Strategy & Emerging AI Search Visibility Blueprint', rate: 35000 },
+      { description: 'Brand Discovery Optimization (ChatGPT, Perplexity & Gemini)', rate: 30000 },
+      { description: 'AI-Assisted Content Strategy & Knowledge Graph Injection Plan', rate: 25000 },
+      { description: 'Campaign Research, Early Adopter Access & Strategic Advisory', rate: 20000 },
+    ],
+    defaultTerms: 'ChatGPT advertising availability depends on OpenAI advertising platform rollouts. Strategic advisory & execution.',
+  },
+  'influencer-marketing': {
+    name: 'Influencer Marketing (Real People. Real Influence. Real Brand Impact)',
+    category: 'Marketing & Ads',
+    deliverables: [
+      { description: 'Influencer Discovery, Credibility Verification & Demographics Audit', rate: 25000 },
+      { description: 'Creator Outreach, Contract Negotiations & Product Seeding Logistics', rate: 30000 },
+      { description: 'Campaign Creative Direction & Co-Branded Content Approval Engine', rate: 25000 },
+      { description: 'Custom UTM Link Tracking, Influencer Performance & ROI Reporting', rate: 20000 },
+    ],
+    defaultTerms: 'Creator fee payouts billed at actuals. Agency management fee covers curation, negotiations, and tracking.',
+  },
+  'pyrow-360-growth-partner': {
+    name: 'PYROW 360° Growth Partner (Full Marketing + Web + Ads Retainer)',
+    category: 'All-in-One Growth',
+    deliverables: [
+      { description: 'Omnichannel Paid Ads Management (Google + Meta + LinkedIn)', rate: 55000 },
+      { description: 'Daily Social Media Management, Post Creatives & 12 Reels/mo', rate: 45000 },
+      { description: 'Continuous Technical SEO, Core Web Vitals & Weekly Link Building', rate: 35000 },
+      { description: 'Landing Page CRO & Continuous High-Performance Web Optimizations', rate: 25000 },
+    ],
+    defaultTerms: 'Dedicated growth manager, bi-weekly strategic sprint calls, 24/7 Slack support, and live executive dashboard.',
   },
 };
 
@@ -199,6 +323,7 @@ export const AdminPage: React.FC = () => {
   // Quotation Builder State
   const [showQuoteModal, setShowQuoteModal] = useState(false);
   const [selectedPresetKey, setSelectedPresetKey] = useState<string>('');
+  const [presetFilterCategory, setPresetFilterCategory] = useState<string>('all');
   const [activeQuotePreview, setActiveQuotePreview] = useState<QuotationRecord | null>(null);
   const [quoteFormData, setQuoteFormData] = useState<Partial<QuotationRecord>>({
     quote_number: `PYROW-Q-${new Date().getFullYear()}-101`,
@@ -966,6 +1091,76 @@ export const AdminPage: React.FC = () => {
     setShowQuoteModal(true);
   };
 
+  const handleQuickQuoteFromEnquiry = (item: EnquiryRecord) => {
+    soundFX.playClick();
+    const nextNum = generateNextQuoteNumber();
+    let matchingPresetKey = 'custom-platform';
+    const s = `${item.service || ''} ${item.software_requested || ''} ${item.message || ''}`.toLowerCase();
+
+    if (s.includes('social') || s.includes('instagram') || s.includes('reel')) {
+      matchingPresetKey = 'social-media-management';
+    } else if (s.includes('google')) {
+      matchingPresetKey = 'google-ads';
+    } else if (s.includes('youtube') || s.includes('video')) {
+      matchingPresetKey = 'youtube-ads';
+    } else if (s.includes('linkedin') || s.includes('b2b')) {
+      matchingPresetKey = 'linkedin-ads';
+    } else if (s.includes('ad') || s.includes('campaign') || s.includes('meta') || s.includes('roas')) {
+      matchingPresetKey = 'ad-campaign-management';
+    } else if (s.includes('content') || s.includes('story')) {
+      matchingPresetKey = 'content-marketing';
+    } else if (s.includes('ecommerce') || s.includes('e-commerce') || s.includes('storefront') || s.includes('web')) {
+      matchingPresetKey = 'ecommerce-web-design';
+    } else if (s.includes('seo') || s.includes('search') || s.includes('organic')) {
+      matchingPresetKey = 'seo-search-engine-optimization';
+    } else if (s.includes('chatgpt') || s.includes('ai ad')) {
+      matchingPresetKey = 'chatgpt-ads-ai-advertising';
+    } else if (s.includes('influencer') || s.includes('creator')) {
+      matchingPresetKey = 'influencer-marketing';
+    } else if (s.includes('pos') || s.includes('retail') || s.includes('billing')) {
+      matchingPresetKey = 'pyrow-pos';
+    } else if (s.includes('erp') || s.includes('inventory')) {
+      matchingPresetKey = 'pyrow-flow-erp';
+    } else if (s.includes('assist') || s.includes('bot') || s.includes('whatsapp')) {
+      matchingPresetKey = 'pyrow-assist';
+    } else if (s.includes('retainer') || s.includes('full') || s.includes('partner')) {
+      matchingPresetKey = 'pyrow-360-growth-partner';
+    }
+
+    const preset = SOFTWARE_PRESETS[matchingPresetKey] || SOFTWARE_PRESETS['custom-platform'];
+    const items: QuotationItem[] = preset.deliverables.map((d, i) => ({
+      id: String(i + 1),
+      description: d.description,
+      quantity: 1,
+      rate: d.rate,
+      amount: d.rate,
+    }));
+    const { subtotal, taxAmount, total } = calculateQuoteTotals(items, 0, 18);
+
+    setQuoteFormData({
+      quote_number: nextNum,
+      client_name: item.name || '',
+      client_company: item.company || '',
+      client_email: item.email || '',
+      client_phone: item.phone || '',
+      project_title: preset.name,
+      software_name: preset.name.split('(')[0].trim(),
+      items,
+      subtotal,
+      discount: 0,
+      tax_rate: 18,
+      tax_amount: taxAmount,
+      total_amount: total,
+      status: 'draft',
+      valid_until: new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10),
+      notes: preset.defaultTerms,
+      terms: '50% advance upon contract signing, 50% upon final staging approval and production go-live.',
+    });
+    setSelectedPresetKey(matchingPresetKey);
+    setEditingQuoteId(null);
+    setShowQuoteModal(true);
+  };
+
   const handleOpenCreateInvoice = () => {
     soundFX.playClick();
     setEditingInvoiceId(null);
@@ -1190,6 +1385,57 @@ export const AdminPage: React.FC = () => {
             notes: 'Includes 99.98% cloud uptime SLA, Meta Cloud API verification assistance, and 60 days dedicated warranty.',
             terms: '50% advance upon contract signing, 50% upon final staging approval and production go-live.',
             created_at: new Date(Date.now() - 86400000 * 1).toISOString(),
+          },
+          {
+            id: 'quote-mock-3',
+            quote_number: 'PYROW-Q-2026-103',
+            client_name: 'Kavitha Rajan',
+            client_company: 'Bloom Organic Skincare D2C',
+            client_email: 'kavitha@bloomskincare.in',
+            client_phone: '+91 98840 11223',
+            project_title: 'Social Media Management & Performance Ad Campaign Suite',
+            software_name: 'Social Media & Ad Campaigns',
+            items: [
+              { id: '1', description: 'Social Media Strategy & Multi-Channel Content Planning', quantity: 1, rate: 25000, amount: 25000 },
+              { id: '2', description: 'Creative Post & High-Engagement Reel Design (20 Posts + 10 Reels/mo)', quantity: 1, rate: 35000, amount: 35000 },
+              { id: '3', description: 'Meta Lead Gen & Conversion Funnel Ads Management', quantity: 1, rate: 30000, amount: 30000 },
+              { id: '4', description: 'Audience Growth & Bi-Weekly Executive ROAS Analytics', quantity: 1, rate: 15000, amount: 15000 },
+            ],
+            subtotal: 105000,
+            discount: 5000,
+            tax_rate: 18,
+            tax_amount: 18000,
+            total_amount: 118000,
+            status: 'accepted',
+            valid_until: '2026-12-25',
+            notes: 'Includes dedicated visual designer, ad copy testing, weekly ROAS optimization sprints, and monthly analytics reporting.',
+            terms: 'Monthly retainer billed at start of cycle. Direct media spend billed directly to client ad account.',
+            created_at: new Date(Date.now() - 3600000 * 12).toISOString(),
+          },
+          {
+            id: 'quote-mock-4',
+            quote_number: 'PYROW-Q-2026-104',
+            client_name: 'Deepak Verma',
+            client_company: 'Apex FinTech Solutions',
+            client_email: 'deepak@apexfintech.io',
+            client_phone: '+91 97110 55443',
+            project_title: 'LinkedIn B2B Ads & Next-Gen AI Advertising Strategy',
+            software_name: 'LinkedIn Ads & AI',
+            items: [
+              { id: '1', description: 'B2B Decision-Maker ABM Strategy & C-Suite Targeting', quantity: 1, rate: 35000, amount: 35000 },
+              { id: '2', description: 'Sponsored Content & Native LinkedIn Lead Form Campaigns', quantity: 1, rate: 30000, amount: 30000 },
+              { id: '3', description: 'Emerging AI Search Visibility Strategy (ChatGPT, Perplexity & Gemini)', quantity: 1, rate: 35000, amount: 35000 },
+            ],
+            subtotal: 100000,
+            discount: 0,
+            tax_rate: 18,
+            tax_amount: 18000,
+            total_amount: 118000,
+            status: 'sent',
+            valid_until: '2026-12-30',
+            notes: 'Decision-maker lead acquisition campaign targeting CXOs, Founders, and VPs. Fortnightly pipeline review syncs.',
+            terms: '50% onboarding fee upon kickoff, 50% upon deployment of live campaign and AI search blueprints.',
+            created_at: new Date(Date.now() - 3600000 * 6).toISOString(),
           },
         ]);
       }
@@ -1921,7 +2167,7 @@ export const AdminPage: React.FC = () => {
               />
             </div>
             <h1 className="text-2xl sm:text-3xl font-black font-display tracking-tight text-white">
-              Operations <span className="font-serif italic font-normal tracking-wide underline decoration-violet-500/30 underline-offset-8 bg-gradient-to-r from-violet-300 via-purple-200 to-indigo-300 bg-clip-text text-transparent">Control Panel</span>
+              Operations <span className="font-extrabold tracking-tight underline decoration-violet-500/30 underline-offset-8 bg-gradient-to-r from-violet-300 via-purple-200 to-indigo-300 bg-clip-text text-transparent">Control Panel</span>
             </h1>
             <p className="text-xs text-zinc-400 mt-3 font-mono flex items-center justify-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -2287,31 +2533,31 @@ export const AdminPage: React.FC = () => {
           <div>
             <h1 className="text-lg sm:text-xl font-bold font-display text-white tracking-tight flex items-center gap-2">
               {activeTab === 'dashboard' && (
-                <>Executive Operations <span className="font-serif italic font-normal tracking-wide text-violet-400 underline decoration-violet-500/30 underline-offset-4">Intelligence</span></>
+                <>Executive Operations <span className="font-bold text-violet-400">Intelligence</span></>
               )}
               {activeTab === 'enquiries' && (
-                <>Customer Pipeline & <span className="font-serif italic font-normal tracking-wide text-violet-400 underline decoration-violet-500/30 underline-offset-4">Inquiries</span></>
+                <>Customer Pipeline & <span className="font-bold text-violet-400">Inquiries</span></>
               )}
               {activeTab === 'quotations' && (
-                <>Software Quotation <span className="font-serif italic font-normal tracking-wide text-violet-400 underline decoration-violet-500/30 underline-offset-4">Studio</span></>
+                <>Software Quotation <span className="font-bold text-violet-400">Studio</span></>
               )}
               {activeTab === 'billing' && (
-                <>Billing & Invoicing <span className="font-serif italic font-normal tracking-wide text-emerald-400 underline decoration-emerald-500/30 underline-offset-4">Ledger</span></>
+                <>Billing & Invoicing <span className="font-bold text-emerald-400">Ledger</span></>
               )}
               {activeTab === 'whatsapp' && (
-                <>Meta WhatsApp Cloud <span className="font-serif italic font-normal tracking-wide text-emerald-400 underline decoration-emerald-500/30 underline-offset-4">Automations</span></>
+                <>Meta WhatsApp Cloud <span className="font-bold text-emerald-400">Automations</span></>
               )}
               {activeTab === 'traffic' && (
-                <>Visitor Geolocation & <span className="font-serif italic font-normal tracking-wide text-cyan-400 underline decoration-cyan-500/30 underline-offset-4">Analytics</span></>
+                <>Visitor Geolocation & <span className="font-bold text-cyan-400">Analytics</span></>
               )}
               {activeTab === 'database' && (
-                <>PostgreSQL Database & <span className="font-serif italic font-normal tracking-wide text-violet-400 underline decoration-violet-500/30 underline-offset-4">SQL Health</span></>
+                <>PostgreSQL Database & <span className="font-bold text-violet-400">SQL Health</span></>
               )}
               {activeTab === 'messages' && (
-                <>Direct Communication <span className="font-serif italic font-normal tracking-wide text-indigo-400 underline decoration-indigo-500/30 underline-offset-4">Inbox</span></>
+                <>Direct Communication <span className="font-bold text-indigo-400">Inbox</span></>
               )}
               {activeTab === 'settings' && (
-                <>System Environment & <span className="font-serif italic font-normal tracking-wide text-zinc-400 underline decoration-white/20 underline-offset-4">Security</span></>
+                <>System Environment & <span className="font-bold text-zinc-400">Security</span></>
               )}
             </h1>
             <p className="text-xs text-zinc-400 font-mono flex items-center gap-2 mt-0.5">
@@ -3061,7 +3307,7 @@ export const AdminPage: React.FC = () => {
                   />
                   <div>
                     <h3 className="text-base font-bold text-white">Commercial Quotations Studio</h3>
-                    <p className="text-xs text-zinc-400 font-mono">Create and dispatch custom proposals to clients</p>
+                    <p className="text-xs text-zinc-400 font-mono">Create, customize, and dispatch proposals for software & digital marketing suites</p>
                   </div>
                 </div>
                 <button
@@ -3069,7 +3315,7 @@ export const AdminPage: React.FC = () => {
                   className="px-4 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-bold text-xs font-mono flex items-center gap-1.5 cursor-pointer shadow-lg shadow-violet-600/25 self-start"
                 >
                   <Plus className="w-4 h-4" />
-                  <span>Create Software Quotation</span>
+                  <span>Create Commercial Quotation</span>
                 </button>
               </div>
 
@@ -3254,6 +3500,15 @@ export const AdminPage: React.FC = () => {
                               <span className="truncate max-w-[120px]">{item.email}</span>
                             </a>
                           )}
+                          <button
+                            type="button"
+                            onClick={() => handleQuickQuoteFromEnquiry(item)}
+                            className="px-3 py-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-bold text-xs font-mono flex items-center gap-1.5 shadow-md shadow-violet-600/30 border border-violet-400/30 cursor-pointer"
+                            title="Generate Instant Commercial Quotation"
+                          >
+                            <FileText className="w-3.5 h-3.5" />
+                            <span>Create Quote</span>
+                          </button>
                           <button
                             type="button"
                             onClick={() => handleOpenEditEnquiry(item)}
@@ -3543,28 +3798,58 @@ export const AdminPage: React.FC = () => {
                 <button onClick={() => setShowQuoteModal(false)} className="p-1.5 text-zinc-400 hover:text-white cursor-pointer">✕</button>
               </div>
 
-              {/* Preset Selector */}
-              <div className="p-4 rounded-2xl bg-black/40 border border-violet-500/30 space-y-2">
-                <label className="text-xs font-mono text-violet-400 uppercase font-bold flex items-center gap-1.5">
-                  <Package className="w-4 h-4" />
-                  <span>Choose Software Package Preset:</span>
-                </label>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  {Object.entries(SOFTWARE_PRESETS).map(([key, preset]) => (
-                    <button
-                      key={key}
-                      type="button"
-                      onClick={() => handleApplySoftwarePreset(key)}
-                      className={`p-2.5 rounded-xl text-left border text-xs font-mono transition-all ${
-                        selectedPresetKey === key
-                          ? 'border-violet-500 bg-violet-600/20 text-white font-bold'
-                          : 'border-white/10 bg-white/5 text-zinc-400 hover:text-white'
-                      }`}
-                    >
-                      <div className="font-bold">{preset.name.split('(')[0]}</div>
-                      <div className="text-[10px] text-zinc-500">{preset.category}</div>
-                    </button>
-                  ))}
+              {/* Preset Selector with Dynamic Category Filter */}
+              <div className="p-4 rounded-2xl bg-black/40 border border-violet-500/30 space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-1 border-b border-white/5">
+                  <label className="text-xs font-mono text-violet-400 uppercase font-bold flex items-center gap-1.5">
+                    <Package className="w-4 h-4" />
+                    <span>Choose Service / Software Package Preset:</span>
+                  </label>
+                  <div className="flex items-center gap-1 overflow-x-auto pb-1 scrollbar-none">
+                    {[
+                      { id: 'all', label: `All (${Object.keys(SOFTWARE_PRESETS).length})` },
+                      { id: 'Marketing & Ads', label: 'Marketing & Ads' },
+                      { id: 'Web & E-Commerce', label: 'Web & E-Com' },
+                      { id: 'Software & AI', label: 'Software & AI' },
+                      { id: 'All-in-One Growth', label: '360° Retainer' },
+                    ].map((cat) => (
+                      <button
+                        key={cat.id}
+                        type="button"
+                        onClick={() => setPresetFilterCategory(cat.id)}
+                        className={`px-2.5 py-1 rounded-lg text-[10px] font-mono whitespace-nowrap transition-colors cursor-pointer ${
+                          presetFilterCategory === cat.id
+                            ? 'bg-violet-600 text-white font-bold shadow-xs'
+                            : 'bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10'
+                        }`}
+                      >
+                        {cat.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-56 overflow-y-auto pr-1">
+                  {Object.entries(SOFTWARE_PRESETS)
+                    .filter(([_, preset]) => {
+                      if (presetFilterCategory === 'all') return true;
+                      return preset.category === presetFilterCategory;
+                    })
+                    .map(([key, preset]) => (
+                      <button
+                        key={key}
+                        type="button"
+                        onClick={() => handleApplySoftwarePreset(key)}
+                        className={`p-2.5 rounded-xl text-left border text-xs font-mono transition-all cursor-pointer ${
+                          selectedPresetKey === key
+                            ? 'border-violet-500 bg-violet-600/20 text-white font-bold shadow-md shadow-violet-600/20'
+                            : 'border-white/10 bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10'
+                        }`}
+                      >
+                        <div className="font-bold truncate">{preset.name.split('(')[0]}</div>
+                        <div className="text-[10px] text-zinc-500 truncate">{preset.category}</div>
+                      </button>
+                    ))}
                 </div>
               </div>
 
