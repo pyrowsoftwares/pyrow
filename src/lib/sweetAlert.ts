@@ -150,4 +150,24 @@ export async function showAlert(options: {
   });
 }
 
+/**
+ * Quick Validation Warning Toast / Alert
+ */
+export async function showValidationError(errorMessage: string, fieldTitle = 'Invalid Entry'): Promise<void> {
+  await Swal.fire({
+    title: fieldTitle,
+    text: errorMessage,
+    icon: 'warning',
+    confirmButtonText: 'Update Details',
+    background: '#0d0b1a',
+    color: '#ffffff',
+    iconColor: '#f59e0b',
+    customClass: {
+      popup: 'pyrow-sweetalert-modal',
+      confirmButton: 'pyrow-swal-confirm',
+    },
+    buttonsStyling: false,
+  });
+}
+
 export default Swal;

@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { sendEnquiryConfirmationEmail } from './hostingerMail';
+import { validateName, validatePhone, validateEmail } from './formValidation';
 
 export const SUPABASE_URL = 'https://dgpkfrkhmkvywsgezhxh.supabase.co';
 export const SUPABASE_ANON_KEY =
@@ -222,6 +223,32 @@ export async function submitEnquiry(
   data: Partial<EnquiryRecord>
 ): Promise<{ success: boolean; error?: string }> {
   try {
+    // 1. Anti-Spam & Format Validation
+    if (data.name && data.type !== 'newsletter') {
+      const nameCheck = validateName(data.name);
+      if (!nameCheck.isValid) {
+        return { success: false, error: nameCheck.error || 'Invalid name entry.' };
+      }
+    }
+
+    if (data.email) {
+      const emailCheck = validateEmail(data.email);
+      if (!emailCheck.isValid) {
+        return { success: false, error: emailCheck.error || 'Invalid email address.' };
+      }
+    }
+
+    if (data.phone) {
+      const phoneCheck = validatePhone(data.phone);
+      if (!phoneCheck.isValid) {
+        return { success: false, error: phoneCheck.error || 'Invalid phone number.' };
+      }
+      // Store clean formatted phone
+      if (phoneCheck.cleanedValue) {
+        data.phone = phoneCheck.cleanedValue;
+      }
+    }
+
     const geo = await getVisitorGeoInfo();
 
     // Generate client-side UUID so ID is known without needing a forbidden .select() call

@@ -18,6 +18,8 @@ import { MagneticButton } from './ui/MagneticButton';
 import { soundFX } from './ui/sound-effects';
 import { useRouter } from '../context/RouterContext';
 import { submitEnquiry } from '../lib/supabase';
+import { validateEmail } from '../lib/formValidation';
+import { showValidationError } from '../lib/sweetAlert';
 
 interface FooterProps {
   onOpenStrategyCall: () => void;
@@ -34,11 +36,16 @@ export const Footer: React.FC<FooterProps> = ({
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    const emailCheck = validateEmail(email);
+    if (!emailCheck.isValid) {
+      showValidationError(emailCheck.error || 'Please enter a valid email address.', 'Email Validation');
+      return;
+    }
+
     soundFX.playChime();
     await submitEnquiry({
       type: 'newsletter',
-      email,
+      email: emailCheck.cleanedValue || email.trim(),
       source_page: typeof window !== 'undefined' ? window.location.pathname : '/',
     });
     setSubscribed(true);
@@ -315,9 +322,11 @@ export const Footer: React.FC<FooterProps> = ({
                   <input
                     type="email"
                     required
+                    pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                    title="Please enter a valid email address (e.g. name@domain.com)"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter corporate email..."
+                    placeholder="Enter your email..."
                     className="w-full bg-slate-50 dark:bg-obsidian-850 border border-slate-200 dark:border-white/10 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:outline-none focus:border-violet-500"
                   />
                 </div>

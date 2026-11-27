@@ -4,6 +4,8 @@ import { useRouter } from '../context/RouterContext';
 import { Mail, Phone, MapPin, MessageSquare, Clock, Send, CheckCircle2, ChevronDown, Linkedin, Instagram, Globe } from 'lucide-react';
 import { soundFX } from '../components/ui/sound-effects';
 import { submitEnquiry } from '../lib/supabase';
+import { validateName, validatePhone, validateEmail, validateMessage, validateField } from '../lib/formValidation';
+import { showValidationError } from '../lib/sweetAlert';
 
 export const ContactPage: React.FC = () => {
   const { navigate } = useRouter();
@@ -18,9 +20,43 @@ export const ContactPage: React.FC = () => {
     currency: 'INR',
   });
 
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  // Real-time and On-Blur Validation Handlers
+  const handleBlur = (field: string) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+    const val = formData[field as keyof typeof formData] || '';
+    const res = validateField(field, val);
+    setErrors((prev) => ({ ...prev, [field]: res.isValid ? '' : (res.error || '') }));
+  };
+
+  const handleChange = (field: string, rawVal: string) => {
+    const value = field === 'contactNumber' ? rawVal.replace(/[^0-9+\s\-()]/g, '') : rawVal;
+    setFormData((prev) => ({ ...prev, [field]: value }));
+
+    // Instant check while typing:
+    if (field === 'fullName' && /\d/.test(value)) {
+      setErrors((prev) => ({ ...prev, fullName: 'Name cannot contain numbers.' }));
+      return;
+    }
+
+    if (touched[field] || errors[field]) {
+      const res = validateField(field, value);
+      setErrors((prev) => ({ ...prev, [field]: res.isValid ? '' : (res.error || '') }));
+    } else {
+      // If user typed 10 digits in phone, auto-validate and clear error
+      if (field === 'contactNumber' && value.replace(/\D/g, '').length >= 10) {
+        const res = validatePhone(value);
+        if (res.isValid) {
+          setErrors((prev) => ({ ...prev, contactNumber: '' }));
+        }
+      }
+    }
+  };
 
   const projectTypes = [
     { value: 'web_development', label: 'Website & Web App Development' },
@@ -37,23 +73,66 @@ export const ContactPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // 1. Validate Full Name
+    const nameCheck = validateName(formData.fullName);
+    if (!nameCheck.isValid) {
+      setErrors((prev) => ({ ...prev, fullName: nameCheck.error || '' }));
+      showValidationError(nameCheck.error || 'Please enter your real full name.', 'Name Validation');
+      return;
+    }
+
+    // 2. Validate Email
+    const emailCheck = validateEmail(formData.email);
+    if (!emailCheck.isValid) {
+      setErrors((prev) => ({ ...prev, email: emailCheck.error || '' }));
+      showValidationError(emailCheck.error || 'Please enter a valid email address.', 'Email Validation');
+      return;
+    }
+
+    // 3. Validate Phone Number
+    const phoneCheck = validatePhone(formData.contactNumber);
+    if (!phoneCheck.isValid) {
+      setErrors((prev) => ({ ...prev, contactNumber: phoneCheck.error || '' }));
+      showValidationError(phoneCheck.error || 'Please enter a valid active phone number.', 'Phone Number Validation');
+      return;
+    }
+
+    // 4. Validate Project Goals
+    const msgCheck = validateMessage(formData.projectDescription, true);
+    if (!msgCheck.isValid) {
+      setErrors((prev) => ({ ...prev, projectDescription: msgCheck.error || '' }));
+      showValidationError(msgCheck.error || 'Please describe your project goals.', 'Project Requirements');
+      return;
+    }
+
+    setErrors({});
     soundFX.playClick();
     setSubmitting(true);
 
-    await submitEnquiry({
+    const res = await submitEnquiry({
       type: 'contact',
-      name: formData.fullName,
-      email: formData.email,
-      phone: formData.contactNumber,
+      name: nameCheck.cleanedValue || formData.fullName.trim(),
+      email: emailCheck.cleanedValue || formData.email.trim(),
+      phone: phoneCheck.cleanedValue || formData.contactNumber.trim(),
       service: formData.projectType,
       budget: `${formData.currency} ${formData.budget}`,
-      message: formData.projectDescription,
+      message: msgCheck.cleanedValue || formData.projectDescription.trim(),
       source_page: '/contact',
-      raw_data: formData,
+      raw_data: {
+        ...formData,
+        fullName: nameCheck.cleanedValue || formData.fullName,
+        email: emailCheck.cleanedValue || formData.email,
+        contactNumber: phoneCheck.cleanedValue || formData.contactNumber,
+      },
     });
 
     setSubmitting(false);
-    setSubmitted(true);
+    if (res.success) {
+      setSubmitted(true);
+    } else {
+      showValidationError(res.error || 'Failed to submit inquiry. Please verify the information entered.', 'Submission Notice');
+    }
   };
 
   const contactFaqs = [
@@ -283,49 +362,79 @@ export const ContactPage: React.FC = () => {
                   </div>
                   */}
 
-                  {/* Two Column: Full Name & Business Email */}
+                  {/* Two Column: Full Name & Email */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-xs font-mono uppercase tracking-wider text-slate-600 dark:text-zinc-400 mb-2 font-semibold">
-                        Full Name *
+                        Your Name *
                       </label>
                       <input
                         type="text"
                         required
+                        pattern="^[a-zA-Z][a-zA-Z\s.'\-]{1,59}$"
+                        title="Name must contain at least 2 letters and no numbers or symbols."
                         value={formData.fullName}
-                        onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                        placeholder="John Doe"
-                        className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-obsidian-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-violet-500 transition-colors"
+                        onChange={(e) => handleChange('fullName', e.target.value)}
+                        onBlur={() => handleBlur('fullName')}
+                        placeholder="Rajesh"
+                        className={`w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-obsidian-900 border text-slate-900 dark:text-white text-sm focus:outline-none transition-colors ${
+                          errors.fullName
+                            ? 'border-red-500 focus:border-red-500'
+                            : touched.fullName && !errors.fullName && formData.fullName.trim().length >= 2
+                              ? 'border-emerald-500/60 dark:border-emerald-500/40 focus:border-emerald-500'
+                              : 'border-slate-200 dark:border-white/10 focus:border-violet-500'
+                        }`}
                       />
+                      {errors.fullName && <p className="text-[11px] text-red-500 font-medium mt-1">{errors.fullName}</p>}
                     </div>
                     <div>
                       <label className="block text-xs font-mono uppercase tracking-wider text-slate-600 dark:text-zinc-400 mb-2 font-semibold">
-                        Business Email *
+                        Email *
                       </label>
                       <input
                         type="email"
                         required
+                        pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                        title="Please enter a valid email address (e.g. name@domain.com)"
                         value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        onChange={(e) => handleChange('email', e.target.value)}
+                        onBlur={() => handleBlur('email')}
                         placeholder="john@example.com"
-                        className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-obsidian-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-violet-500 transition-colors"
+                        className={`w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-obsidian-900 border text-slate-900 dark:text-white text-sm focus:outline-none transition-colors ${
+                          errors.email
+                            ? 'border-red-500 focus:border-red-500'
+                            : touched.email && !errors.email && formData.email.trim().length >= 5
+                              ? 'border-emerald-500/60 dark:border-emerald-500/40 focus:border-emerald-500'
+                              : 'border-slate-200 dark:border-white/10 focus:border-violet-500'
+                        }`}
                       />
+                      {errors.email && <p className="text-[11px] text-red-500 font-medium mt-1">{errors.email}</p>}
                     </div>
                   </div>
 
-                  {/* Contact Number */}
+                  {/* Phone Number */}
                   <div>
                     <label className="block text-xs font-mono uppercase tracking-wider text-slate-600 dark:text-zinc-400 mb-2 font-semibold">
-                      Contact Number *
+                      Phone Number *
                     </label>
                     <input
                       type="tel"
                       required
+                      pattern="^[+]?[0-9\s\-()]{7,18}$"
+                      title="Please enter a valid mobile number (e.g. +91 98765 43210 or international +1 212 555 0199)"
                       value={formData.contactNumber}
-                      onChange={(e) => setFormData({ ...formData, contactNumber: e.target.value })}
-                      placeholder="+91 98765 43210"
-                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-obsidian-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-violet-500 transition-colors"
+                      onChange={(e) => handleChange('contactNumber', e.target.value)}
+                      onBlur={() => handleBlur('contactNumber')}
+                      placeholder="+91 98765 43210 / +1 202 555 0199"
+                      className={`w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-obsidian-900 border text-slate-900 dark:text-white text-sm focus:outline-none transition-colors ${
+                        errors.contactNumber
+                          ? 'border-red-500 focus:border-red-500'
+                          : touched.contactNumber && !errors.contactNumber && formData.contactNumber.trim().length >= 7
+                            ? 'border-emerald-500/60 dark:border-emerald-500/40 focus:border-emerald-500'
+                            : 'border-slate-200 dark:border-white/10 focus:border-violet-500'
+                      }`}
                     />
+                    {errors.contactNumber && <p className="text-[11px] text-red-500 font-medium mt-1">{errors.contactNumber}</p>}
                   </div>
 
                   {/* Project Type */}
@@ -363,10 +472,20 @@ export const ContactPage: React.FC = () => {
                       required
                       rows={5}
                       value={formData.projectDescription}
-                      onChange={(e) => setFormData({ ...formData, projectDescription: e.target.value })}
+                      onChange={(e) => handleChange('projectDescription', e.target.value)}
+                      onBlur={() => handleBlur('projectDescription')}
                       placeholder="Tell us what you want to build, current bottlenecks, required features, and timeline..."
-                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-obsidian-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-violet-500 transition-colors resize-none"
+                      className={`w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-obsidian-900 border text-slate-900 dark:text-white text-sm focus:outline-none transition-colors resize-none ${
+                        errors.projectDescription
+                          ? 'border-red-500 focus:border-red-500'
+                          : touched.projectDescription && !errors.projectDescription && formData.projectDescription.trim().length >= 10
+                            ? 'border-emerald-500/60 dark:border-emerald-500/40 focus:border-emerald-500'
+                            : 'border-slate-200 dark:border-white/10 focus:border-violet-500'
+                      }`}
                     />
+                    {errors.projectDescription && (
+                      <p className="text-[11px] text-red-500 font-medium mt-1">{errors.projectDescription}</p>
+                    )}
                   </div>
 
                   {/* Budget & Currency */}

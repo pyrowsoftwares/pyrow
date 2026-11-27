@@ -30,7 +30,7 @@ export const PrivacyPolicyPage: React.FC = () => {
             <span>1. Information We Collect</span>
           </h2>
           <p className="text-sm text-slate-600 dark:text-zinc-400 leading-relaxed">
-            When you visit our website, submit a project inquiry, or engage our services, we may collect information such as your name, corporate email address, phone number, company name, and project specifications. We also collect anonymized usage analytics (such as browser type, device information, and pages visited) to optimize our platform performance.
+            When you visit our website, submit a project inquiry, or engage our services, we may collect information such as your name, email address, phone number, company name, and project specifications. We also collect anonymized usage analytics (such as browser type, device information, and pages visited) to optimize our platform performance.
           </p>
         </section>
 

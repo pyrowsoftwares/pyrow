@@ -17,6 +17,8 @@ import {
 import { MagneticButton } from './ui/MagneticButton';
 import { soundFX } from './ui/sound-effects';
 import { submitEnquiry } from '../lib/supabase';
+import { validateName, validatePhone, validateEmail, validateField } from '../lib/formValidation';
+import { showValidationError } from '../lib/sweetAlert';
 
 interface ProjectEstimatorProps {
   onOpenStrategyCall: () => void;
@@ -37,7 +39,39 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
     company: '',
     message: '',
   });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [submitted, setSubmitted] = useState(false);
+
+  // Real-time and On-Blur Validation Handlers
+  const handleBlur = (field: string) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+    const val = contactForm[field as keyof typeof contactForm] || '';
+    const res = validateField(field, val);
+    setErrors((prev) => ({ ...prev, [field]: res.isValid ? '' : (res.error || '') }));
+  };
+
+  const handleChange = (field: string, rawVal: string) => {
+    const value = field === 'phone' ? rawVal.replace(/[^0-9+\s\-()]/g, '') : rawVal;
+    setContactForm((prev) => ({ ...prev, [field]: value }));
+
+    if (field === 'name' && /\d/.test(value)) {
+      setErrors((prev) => ({ ...prev, name: 'Name cannot contain numbers.' }));
+      return;
+    }
+
+    if (touched[field] || errors[field]) {
+      const res = validateField(field, value);
+      setErrors((prev) => ({ ...prev, [field]: res.isValid ? '' : (res.error || '') }));
+    } else {
+      if (field === 'phone' && value.replace(/\D/g, '').length >= 10) {
+        const res = validatePhone(value);
+        if (res.isValid) {
+          setErrors((prev) => ({ ...prev, phone: '' }));
+        }
+      }
+    }
+  };
 
   const disciplines = [
     'Website & E-Commerce Store',
@@ -72,26 +106,62 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // 1. Validate Your Name
+    const nameCheck = validateName(contactForm.name);
+    if (!nameCheck.isValid) {
+      setErrors((prev) => ({ ...prev, name: nameCheck.error || '' }));
+      showValidationError(nameCheck.error || 'Please enter your actual name.', 'Name Validation');
+      return;
+    }
+
+    // 2. Validate Email
+    const emailCheck = validateEmail(contactForm.email);
+    if (!emailCheck.isValid) {
+      setErrors((prev) => ({ ...prev, email: emailCheck.error || '' }));
+      showValidationError(emailCheck.error || 'Please enter a valid email address.', 'Email Validation');
+      return;
+    }
+
+    // 3. Validate Phone Number
+    const phoneCheck = validatePhone(contactForm.phone);
+    if (!phoneCheck.isValid) {
+      setErrors((prev) => ({ ...prev, phone: phoneCheck.error || '' }));
+      showValidationError(phoneCheck.error || 'Please enter a valid active phone number.', 'Phone Number Validation');
+      return;
+    }
+
+    setErrors({});
     setIsSubmitting(true);
     soundFX.playClick();
 
-    await submitEnquiry({
+    const res = await submitEnquiry({
       type: 'estimator',
-      name: contactForm.name,
-      email: contactForm.email,
-      phone: contactForm.phone,
+      name: nameCheck.cleanedValue || contactForm.name.trim(),
+      email: emailCheck.cleanedValue || contactForm.email.trim(),
+      phone: phoneCheck.cleanedValue || contactForm.phone.trim(),
       company: contactForm.company,
       service: selectedDisciplines.join(', '),
       budget: selectedBudget,
       timeline: selectedTimeline,
       message: contactForm.message,
       source_page: typeof window !== 'undefined' ? window.location.pathname : '/',
-      raw_data: { disciplines: selectedDisciplines, budget: selectedBudget, timeline: selectedTimeline, ...contactForm },
+      raw_data: {
+        disciplines: selectedDisciplines,
+        budget: selectedBudget,
+        timeline: selectedTimeline,
+        ...contactForm,
+        phone: phoneCheck.cleanedValue || contactForm.phone,
+      },
     });
 
     setIsSubmitting(false);
-    setSubmitted(true);
-    soundFX.playChime();
+    if (res.success) {
+      setSubmitted(true);
+      soundFX.playChime();
+    } else {
+      showValidationError(res.error || 'Unable to submit enquiry. Please verify your details.', 'Submission Notice');
+    }
   };
 
   const openWhatsApp = () => {
@@ -155,8 +225,8 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                             onClick={() => toggleDiscipline(d)}
                             aria-pressed={isSelected}
                             className={`p-3.5 rounded-2xl border text-xs font-bold cursor-pointer flex items-center justify-between transition-all focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none ${isSelected
-                                ? 'bg-violet-500/10 border-violet-500 text-violet-600 dark:text-white shadow-sm'
-                                : 'bg-slate-50 dark:bg-white/[0.03] text-slate-600 dark:text-zinc-400 border-slate-200/80 dark:border-white/[0.06] hover:border-slate-300 dark:hover:border-white/20'
+                              ? 'bg-violet-500/10 border-violet-500 text-violet-600 dark:text-white shadow-sm'
+                              : 'bg-slate-50 dark:bg-white/[0.03] text-slate-600 dark:text-zinc-400 border-slate-200/80 dark:border-white/[0.06] hover:border-slate-300 dark:hover:border-white/20'
                               }`}
                           >
                             <span>{d}</span>
@@ -189,8 +259,8 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                               setSelectedTimeline(time);
                             }}
                             className={`py-2 px-2 text-xs font-semibold rounded-xl border text-center transition-all cursor-pointer ${isSelected
-                                ? 'bg-purple-600 text-white font-bold border-purple-600 shadow-sm'
-                                : 'bg-slate-50 dark:bg-white/[0.03] text-slate-600 dark:text-zinc-400 border-slate-200/80 dark:border-white/[0.06] hover:text-slate-900 dark:hover:border-white/20'
+                              ? 'bg-purple-600 text-white font-bold border-purple-600 shadow-sm'
+                              : 'bg-slate-50 dark:bg-white/[0.03] text-slate-600 dark:text-zinc-400 border-slate-200/80 dark:border-white/[0.06] hover:text-slate-900 dark:hover:border-white/20'
                               }`}
                           >
                             {time}
@@ -217,8 +287,8 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                               setSelectedBudget(b);
                             }}
                             className={`py-2.5 px-3 text-xs font-mono rounded-xl border text-center transition-all cursor-pointer ${isSelected
-                                ? 'bg-violet-600 text-white font-bold border-violet-600 shadow-sm'
-                                : 'bg-slate-50 dark:bg-white/[0.03] text-slate-600 dark:text-zinc-400 border-slate-200/80 dark:border-white/[0.06] hover:text-slate-900 dark:hover:border-white/20'
+                              ? 'bg-violet-600 text-white font-bold border-violet-600 shadow-sm'
+                              : 'bg-slate-50 dark:bg-white/[0.03] text-slate-600 dark:text-zinc-400 border-slate-200/80 dark:border-white/[0.06] hover:text-slate-900 dark:hover:border-white/20'
                               }`}
                           >
                             {b}
@@ -236,48 +306,78 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <label className="text-xs text-slate-600 dark:text-zinc-400 block mb-1 font-medium">Full Name *</label>
+                        <label className="text-xs text-slate-600 dark:text-zinc-400 block mb-1 font-medium">Your Name *</label>
                         <input
                           required
                           type="text"
+                          pattern="^[a-zA-Z][a-zA-Z\s.'\-]{1,59}$"
+                          title="Name must contain at least 2 letters and no numbers or symbols."
                           value={contactForm.name}
-                          onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
-                          placeholder="e.g. Rajesh Kumar"
-                          className="w-full bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] rounded-xl px-3.5 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-violet-500 transition-colors"
+                          onChange={(e) => handleChange('name', e.target.value)}
+                          onBlur={() => handleBlur('name')}
+                          placeholder="Rajesh"
+                          className={`w-full bg-slate-50 dark:bg-white/[0.04] border rounded-xl px-3.5 py-2 text-sm text-slate-900 dark:text-white focus:outline-none transition-colors ${
+                            errors.name
+                              ? 'border-red-500 focus:border-red-500'
+                              : touched.name && !errors.name && contactForm.name.trim().length >= 2
+                                ? 'border-emerald-500/60 dark:border-emerald-500/40 focus:border-emerald-500'
+                                : 'border-slate-200 dark:border-white/[0.08] focus:border-violet-500'
+                          }`}
                         />
+                        {errors.name && <p className="text-[11px] text-red-500 font-medium mt-1">{errors.name}</p>}
                       </div>
                       <div>
-                        <label className="text-xs text-slate-600 dark:text-zinc-400 block mb-1 font-medium">Business Email *</label>
+                        <label className="text-xs text-slate-600 dark:text-zinc-400 block mb-1 font-medium">Email *</label>
                         <input
                           required
                           type="email"
+                          pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                          title="Please enter a valid email address (e.g. name@domain.com)"
                           value={contactForm.email}
-                          onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
+                          onChange={(e) => handleChange('email', e.target.value)}
+                          onBlur={() => handleBlur('email')}
                           placeholder="rajesh@company.com"
-                          className="w-full bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] rounded-xl px-3.5 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-violet-500 transition-colors"
+                          className={`w-full bg-slate-50 dark:bg-white/[0.04] border rounded-xl px-3.5 py-2 text-sm text-slate-900 dark:text-white focus:outline-none transition-colors ${
+                            errors.email
+                              ? 'border-red-500 focus:border-red-500'
+                              : touched.email && !errors.email && contactForm.email.trim().length >= 5
+                                ? 'border-emerald-500/60 dark:border-emerald-500/40 focus:border-emerald-500'
+                                : 'border-slate-200 dark:border-white/[0.08] focus:border-violet-500'
+                          }`}
                         />
+                        {errors.email && <p className="text-[11px] text-red-500 font-medium mt-1">{errors.email}</p>}
                       </div>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <label className="text-xs text-slate-600 dark:text-zinc-400 block mb-1 font-medium">Phone / WhatsApp Number *</label>
+                        <label className="text-xs text-slate-600 dark:text-zinc-400 block mb-1 font-medium">Phone Number *</label>
                         <input
                           required
                           type="tel"
+                          pattern="^[+]?[0-9\s\-()]{7,18}$"
+                          title="Please enter a valid mobile number (e.g. +91 98765 43210 or international +1 212 555 0199)"
                           value={contactForm.phone}
-                          onChange={(e) => setContactForm({ ...contactForm, phone: e.target.value })}
-                          placeholder="+91 98765 43210"
-                          className="w-full bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] rounded-xl px-3.5 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-violet-500 transition-colors"
+                          onChange={(e) => handleChange('phone', e.target.value)}
+                          onBlur={() => handleBlur('phone')}
+                          placeholder="+91 98765 43210 / +1 202 555 0199"
+                          className={`w-full bg-slate-50 dark:bg-white/[0.04] border rounded-xl px-3.5 py-2 text-sm text-slate-900 dark:text-white focus:outline-none transition-colors ${
+                            errors.phone
+                              ? 'border-red-500 focus:border-red-500'
+                              : touched.phone && !errors.phone && contactForm.phone.trim().length >= 7
+                                ? 'border-emerald-500/60 dark:border-emerald-500/40 focus:border-emerald-500'
+                                : 'border-slate-200 dark:border-white/[0.08] focus:border-violet-500'
+                          }`}
                         />
+                        {errors.phone && <p className="text-[11px] text-red-500 font-medium mt-1">{errors.phone}</p>}
                       </div>
                       <div>
-                        <label className="text-xs text-slate-600 dark:text-zinc-400 block mb-1 font-medium">Company Name</label>
+                        <label className="text-xs text-slate-600 dark:text-zinc-400 block mb-1 font-medium">Company & Title</label>
                         <input
                           type="text"
                           value={contactForm.company}
                           onChange={(e) => setContactForm({ ...contactForm, company: e.target.value })}
-                          placeholder="Your Brand / Company"
+                          placeholder="Pyrow Software, Founder"
                           className="w-full bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] rounded-xl px-3.5 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-violet-500 transition-colors"
                         />
                       </div>
