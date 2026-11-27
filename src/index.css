@@ -615,3 +615,95 @@ html:not(.dark) .admin-portal .border-white\/15,
 html:not(.dark) .admin-portal .border-white\/20 {
   border-color: #E2E8F0 !important;
 }
+
+/* Pyrow Bottom-Right SweetAlert Toast Styling */
+div:where(.swal2-container).swal2-bottom-end,
+div:where(.swal2-container).swal2-bottom-right {
+  bottom: 24px !important;
+  right: 24px !important;
+  z-index: 999999 !important;
+}
+
+div:where(.swal2-popup).pyrow-sweetalert-toast {
+  border-radius: 20px !important;
+  border: 1px solid rgba(139, 92, 246, 0.35) !important;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.7), 0 0 25px rgba(124, 58, 237, 0.25) !important;
+  backdrop-filter: blur(16px) !important;
+  padding: 14px 18px !important;
+}
+
+div:where(.swal2-popup).pyrow-sweetalert-toast .swal2-title {
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.01em !important;
+}
+
+div:where(.swal2-popup).pyrow-sweetalert-toast .swal2-timer-progress-bar {
+  background: linear-gradient(90deg, #10b981, #8b5cf6) !important;
+  height: 3px !important;
+}
+
+/* Pyrow UI SweetAlert Modal Styling */
+div:where(.swal2-popup).pyrow-sweetalert-modal {
+  border-radius: 28px !important;
+  border: 1px solid rgba(139, 92, 246, 0.3) !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 40px rgba(124, 58, 237, 0.25) !important;
+  backdrop-filter: blur(20px) !important;
+  padding: 28px !important;
+}
+
+div:where(.swal2-popup).pyrow-sweetalert-modal .swal2-title {
+  font-size: 18px !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  margin-bottom: 8px !important;
+}
+
+div:where(.swal2-popup).pyrow-sweetalert-modal .swal2-html-container {
+  font-size: 13px !important;
+  color: #a1a1aa !important;
+  line-height: 1.6 !important;
+}
+
+.pyrow-swal-confirm,
+.pyrow-swal-confirm-danger,
+.pyrow-swal-cancel {
+  padding: 10px 22px !important;
+  border-radius: 14px !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  margin: 0 6px !important;
+  border: none !important;
+}
+
+.pyrow-swal-confirm {
+  background: linear-gradient(135deg, #7c3aed, #4f46e5) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.4) !important;
+}
+.pyrow-swal-confirm:hover {
+  filter: brightness(1.15) !important;
+  transform: translateY(-1px) !important;
+}
+
+.pyrow-swal-confirm-danger {
+  background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(220, 38, 38, 0.4) !important;
+}
+.pyrow-swal-confirm-danger:hover {
+  filter: brightness(1.15) !important;
+  transform: translateY(-1px) !important;
+}
+
+.pyrow-swal-cancel {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #d4d4d8 !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+.pyrow-swal-cancel:hover {
+  background: rgba(255, 255, 255, 0.14) !important;
+  color: #ffffff !important;
+}

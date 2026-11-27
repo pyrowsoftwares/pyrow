@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { PageHeader } from '../components/common/PageHeader';
 import { PageCtaBanner } from '../components/common/PageCtaBanner';
-import { Mail, Linkedin, Compass, Target, Lightbulb, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Mail, Linkedin, Instagram, Compass, Target, Lightbulb, Sparkles, CheckCircle2 } from 'lucide-react';
 
 interface FounderPageProps {
   onOpenStrategyCall: () => void;
@@ -80,13 +80,22 @@ export const FounderPage: React.FC<FounderPageProps> = ({ onOpenStrategyCall }) 
                 <span>support@pyrow.in</span>
               </a>
               <a
-                href="https://linkedin.com"
+                href="https://www.linkedin.com/company/pyrow-in"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-xs font-semibold text-slate-700 dark:text-zinc-300 hover:text-violet-600 dark:hover:text-white transition-colors"
               >
-                <Linkedin className="w-3.5 h-3.5" />
+                <Linkedin className="w-3.5 h-3.5 text-[#0A66C2]" />
                 <span>LinkedIn</span>
+              </a>
+              <a
+                href="https://www.instagram.com/pyrow.in?gwpx=bXJ2ZzczemU3YWVu"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-xs font-semibold text-slate-700 dark:text-zinc-300 hover:text-pink-500 dark:hover:text-white transition-colors"
+              >
+                <Instagram className="w-3.5 h-3.5 text-[#E4405F]" />
+                <span>Instagram</span>
               </a>
             </div>
           </div>

@@ -5,8 +5,7 @@ import {
   ArrowRight,
   Mail,
   Linkedin,
-  Twitter,
-  Github,
+  Instagram,
   CheckCircle2,
   Lock,
   Globe,
@@ -135,31 +134,22 @@ export const Footer: React.FC<FooterProps> = ({
 
             <div className="flex items-center gap-3 pt-2">
               <a
-                href="https://linkedin.com"
+                href="https://www.linkedin.com/company/pyrow-in"
                 target="_blank"
                 rel="noreferrer"
                 className="p-2 rounded-xl bg-slate-100 dark:bg-obsidian-800 hover:bg-slate-200 dark:hover:bg-obsidian-700 text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white transition-colors"
                 aria-label="LinkedIn"
               >
-                <Linkedin className="w-4 h-4" />
+                <Linkedin className="w-4 h-4 text-[#0A66C2]" />
               </a>
               <a
-                href="https://x.com"
+                href="https://www.instagram.com/pyrow.in?gwpx=bXJ2ZzczemU3YWVu"
                 target="_blank"
                 rel="noreferrer"
                 className="p-2 rounded-xl bg-slate-100 dark:bg-obsidian-800 hover:bg-slate-200 dark:hover:bg-obsidian-700 text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white transition-colors"
-                aria-label="Twitter / X"
+                aria-label="Instagram"
               >
-                <Twitter className="w-4 h-4" />
-              </a>
-              <a
-                href="https://github.com"
-                target="_blank"
-                rel="noreferrer"
-                className="p-2 rounded-xl bg-slate-100 dark:bg-obsidian-800 hover:bg-slate-200 dark:hover:bg-obsidian-700 text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white transition-colors"
-                aria-label="GitHub"
-              >
-                <Github className="w-4 h-4" />
+                <Instagram className="w-4 h-4 text-[#E4405F]" />
               </a>
             </div>
           </div>

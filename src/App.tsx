@@ -157,6 +157,11 @@ function AppContent() {
       ? currentPath.slice(0, -1)
       : currentPath;
 
+    // Route any /admin or /admin/* to AdminPage
+    if (normalized.startsWith('/admin')) {
+      return <AdminPage />;
+    }
+
     switch (normalized) {
       case '/about':
         return <AboutPage onOpenStrategyCall={() => handleOpenStrategyCall()} />;
@@ -285,7 +290,7 @@ function AppContent() {
         <CustomCursor theme={theme} />
 
         {/* Global Navigation Bar */}
-        {currentPath !== '/admin' && (
+        {!currentPath.startsWith('/admin') && (
           <Navigation
             onOpenStrategyCall={() => handleOpenStrategyCall()}
             onOpenDemoRequest={handleOpenDemoRequest}
@@ -301,7 +306,7 @@ function AppContent() {
         </main>
 
         {/* Section 11: Global Footer */}
-        {currentPath !== '/admin' && (
+        {!currentPath.startsWith('/admin') && (
           <Footer
             onOpenStrategyCall={() => handleOpenStrategyCall()}
             onOpenDemoRequest={handleOpenDemoRequest}
@@ -309,7 +314,7 @@ function AppContent() {
         )}
 
         {/* Floating Scroll-To-Top & Quick Action Pill */}
-        {showScrollTop && (
+        {showScrollTop && !currentPath.startsWith('/admin') && (
           <div className="fixed bottom-6 right-6 z-40 flex items-center gap-2 animate-in fade-in slide-in-from-bottom-4 duration-200">
             <button
               onClick={() => {

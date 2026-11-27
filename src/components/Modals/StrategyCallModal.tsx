@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Calendar, Clock, Video, User, Mail, Building, CheckCircle2, ShieldCheck, PhoneCall } from 'lucide-react';
+import { X, Calendar, Clock, Video, User, Mail, Building, CheckCircle2, ShieldCheck, PhoneCall, TrendingUp, Sparkles, Megaphone } from 'lucide-react';
 import { soundFX } from '../ui/sound-effects';
 import { MagneticButton } from '../ui/MagneticButton';
 import { submitEnquiry } from '../../lib/supabase';
@@ -12,12 +12,20 @@ interface StrategyCallModalProps {
 
 export const StrategyCallModal: React.FC<StrategyCallModalProps> = ({ isOpen, onClose, initialTopic }) => {
   const [selectedTopic, setSelectedTopic] = useState('Enterprise Architecture & Custom Software');
+  const [selectedMarketingServices, setSelectedMarketingServices] = useState<string[]>([]);
 
   React.useEffect(() => {
     if (initialTopic && isOpen) {
       setSelectedTopic(initialTopic);
     }
   }, [initialTopic, isOpen]);
+
+  const toggleMarketingService = (service: string) => {
+    setSelectedMarketingServices((prev) =>
+      prev.includes(service) ? prev.filter((s) => s !== service) : [...prev, service]
+    );
+  };
+
   const [selectedTime, setSelectedTime] = useState('11:00 AM IST');
   const [selectedDay, setSelectedDay] = useState('Tomorrow');
   const [formData, setFormData] = useState({
@@ -33,10 +41,22 @@ export const StrategyCallModal: React.FC<StrategyCallModalProps> = ({ isOpen, on
 
   const topics = [
     'Enterprise Architecture & Custom Software',
-    'High-ROAS Meta & Google Ad Engine',
-    'Mobile Application (iOS/Android/Flutter)',
-    'Enterprise ERP & Multi-Branch Migration',
+    'Performance Marketing (Meta & Google High-ROAS)',
+    'SEO & Local Google Map Pack Dominance',
+    'Mobile Application (iOS / Android / Flutter)',
+    'Social Media, Video Reels & Creative Direction',
+    'Enterprise ERP & Multi-Branch POS Systems',
+    'Email Marketing & Automated Retention Funnels',
     'Web Modernization & Speed Optimization',
+  ];
+
+  const marketingPills = [
+    'Meta Ads (Facebook / Instagram)',
+    'Google Search & Performance Max',
+    'Technical & Local SEO',
+    'Social Media & Video Content',
+    'Email & WhatsApp Funnels',
+    'AI Search (ChatGPT/GEO) Engine',
   ];
 
   const times = ['10:30 AM IST', '02:00 PM IST', '04:30 PM IST', '06:00 PM IST', '08:30 PM IST'];
@@ -46,17 +66,31 @@ export const StrategyCallModal: React.FC<StrategyCallModalProps> = ({ isOpen, on
     e.preventDefault();
     soundFX.playChime();
 
+    const fullServiceDescription = selectedMarketingServices.length > 0
+      ? `${selectedTopic} [Marketing: ${selectedMarketingServices.join(', ')}]`
+      : selectedTopic;
+
     await submitEnquiry({
       type: 'strategy_call',
       name: formData.name,
       email: formData.email,
       phone: formData.phone,
       company: formData.company,
-      service: selectedTopic,
+      service: fullServiceDescription,
       preferred_time: `${selectedDay} at ${selectedTime}`,
-      message: formData.notes,
+      message: formData.notes
+        ? `${formData.notes} | Marketing Scope: ${selectedMarketingServices.join(', ')}`
+        : selectedMarketingServices.length > 0
+          ? `Selected Marketing Scope: ${selectedMarketingServices.join(', ')}`
+          : '',
       source_page: typeof window !== 'undefined' ? window.location.pathname : '/',
-      raw_data: { topic: selectedTopic, day: selectedDay, time: selectedTime, ...formData },
+      raw_data: {
+        topic: selectedTopic,
+        marketing_services: selectedMarketingServices,
+        day: selectedDay,
+        time: selectedTime,
+        ...formData,
+      },
     });
 
     setIsSuccess(true);
@@ -78,7 +112,7 @@ export const StrategyCallModal: React.FC<StrategyCallModalProps> = ({ isOpen, on
             </div>
             <div>
               <h3 className="text-lg font-bold text-slate-900 dark:text-white font-display">Schedule 30-Min Strategy Consultation</h3>
-              <p className="text-xs text-slate-500 dark:text-zinc-400">Directly with a Principal Solutions Architect • Free & Confidential</p>
+              <p className="text-xs text-slate-500 dark:text-zinc-400">Directly with a Principal Solutions Architect & Growth Strategist • Free & Confidential</p>
             </div>
           </div>
           <button
@@ -119,6 +153,45 @@ export const StrategyCallModal: React.FC<StrategyCallModalProps> = ({ isOpen, on
                       {t}
                     </button>
                   ))}
+                </div>
+              </div>
+
+              {/* Digital Marketing & Growth Scope */}
+              <div className="p-4 rounded-2xl bg-gradient-to-r from-violet-500/[0.08] via-purple-500/[0.04] to-transparent border border-violet-500/20 space-y-2.5">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                  <span className="text-xs font-mono font-bold text-violet-700 dark:text-violet-300 flex items-center gap-1.5">
+                    <TrendingUp className="w-3.5 h-3.5 text-violet-500" />
+                    <span>Digital Marketing & Growth Scope:</span>
+                  </span>
+                  <span className="text-[10px] font-mono text-slate-500 dark:text-zinc-400">Select any required services</span>
+                </div>
+                
+                <p className="text-[11px] text-slate-600 dark:text-zinc-400 leading-relaxed">
+                  We don't just write code—we scale real revenue with high-ROAS paid acquisition, SEO, and retention funnels.
+                </p>
+
+                <div className="flex flex-wrap gap-1.5 pt-1">
+                  {marketingPills.map((service) => {
+                    const isSelected = selectedMarketingServices.includes(service);
+                    return (
+                      <button
+                        key={service}
+                        type="button"
+                        onClick={() => {
+                          soundFX.playClick();
+                          toggleMarketingService(service);
+                        }}
+                        className={`text-[11px] font-mono px-3 py-1.5 rounded-xl border transition-all flex items-center gap-1.5 cursor-pointer ${
+                          isSelected
+                            ? 'bg-violet-600 text-white border-violet-600 font-bold shadow-sm shadow-violet-600/30'
+                            : 'bg-white/80 dark:bg-obsidian-800 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-white/10 hover:border-violet-400'
+                        }`}
+                      >
+                        <span className="font-bold text-[10px]">{isSelected ? '✓' : '+'}</span>
+                        <span>{service}</span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -241,9 +314,9 @@ export const StrategyCallModal: React.FC<StrategyCallModalProps> = ({ isOpen, on
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-zinc-400 bg-slate-50 dark:bg-obsidian-800/60 p-3 rounded-xl border border-slate-200 dark:border-white/5">
+              <div className="flex items-center gap-2.5 text-xs text-slate-600 dark:text-zinc-400 bg-slate-50 dark:bg-obsidian-800/60 p-3.5 rounded-xl border border-slate-200 dark:border-white/5">
                 <ShieldCheck className="w-4 h-4 text-violet-600 dark:text-purple-400 flex-shrink-0" />
-                <span>Google Meet / Zoom calendar link will be dispatched to your email automatically.</span>
+                <span>Includes a 30-min architecture roadmap + complimentary digital marketing & ad spend audit. Google Meet / Zoom link dispatched automatically.</span>
               </div>
 
               <div className="pt-2">
@@ -273,6 +346,14 @@ export const StrategyCallModal: React.FC<StrategyCallModalProps> = ({ isOpen, on
                   <span>Topic:</span>
                   <span className="text-slate-900 dark:text-white font-medium truncate max-w-[200px]">{selectedTopic}</span>
                 </div>
+                {selectedMarketingServices.length > 0 && (
+                  <div className="flex justify-between text-slate-500 dark:text-zinc-400">
+                    <span>Marketing:</span>
+                    <span className="text-violet-600 dark:text-purple-400 font-medium truncate max-w-[200px]">
+                      {selectedMarketingServices.join(', ')}
+                    </span>
+                  </div>
+                )}
                 <div className="flex justify-between text-slate-500 dark:text-zinc-400">
                   <span>Scheduled Time:</span>
                   <span className="text-purple-500 font-bold">{selectedDay} @ {selectedTime}</span>

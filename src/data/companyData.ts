@@ -7,11 +7,15 @@ export interface LeaderProfile {
   avatar: string;
   socials: {
     linkedin?: string;
-    twitter?: string;
-    github?: string;
+    instagram?: string;
   };
   metrics: { label: string; value: string }[];
 }
+
+export const companySocials = {
+  linkedin: 'https://www.linkedin.com/company/pyrow-in',
+  instagram: 'https://www.instagram.com/pyrow.in?gwpx=bXJ2ZzczemU3YWVu',
+};
 
 export const leadershipTeam: LeaderProfile[] = [
   {
@@ -23,7 +27,7 @@ export const leadershipTeam: LeaderProfile[] = [
     avatar: 'https://res.cloudinary.com/dltti9hiw/image/upload/v1781804262/Gemini_Generated_Image_61qmy561qmy561qm_opc41j.png',
     socials: {
       linkedin: 'https://www.linkedin.com/in/sbarathraj/',
-      github: 'https://github.com/sbarathraj',
+      instagram: 'https://www.instagram.com/pyrow.in?gwpx=bXJ2ZzczemU3YWVu',
     },
     metrics: [
       { label: 'Products Architected', value: '50+' },
@@ -39,8 +43,8 @@ export const leadershipTeam: LeaderProfile[] = [
     quote: 'Marketing is the lifeblood of scale. When you combine world-class software with razor-sharp acquisition campaigns, exponential business growth is the only outcome.',
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80',
     socials: {
-      linkedin: 'https://linkedin.com',
-      twitter: 'https://x.com',
+      linkedin: 'https://www.linkedin.com/company/pyrow-in',
+      instagram: 'https://www.instagram.com/pyrow.in?gwpx=bXJ2ZzczemU3YWVu',
     },
     metrics: [
       { label: 'Campaigns Scaled', value: '1,400+' },

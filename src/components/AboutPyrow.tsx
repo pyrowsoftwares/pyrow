@@ -3,8 +3,7 @@ import {
   ShieldCheck,
   Quote,
   Linkedin,
-  Twitter,
-  Github,
+  Instagram,
   Award,
   Sparkles,
   CheckCircle2,
@@ -221,29 +220,18 @@ export const AboutPyrow: React.FC<AboutPyrowProps> = ({ onOpenStrategyCall }) =>
                       className="p-1.5 rounded-md bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white transition-colors"
                       aria-label="LinkedIn"
                     >
-                      <Linkedin className="w-3.5 h-3.5" />
+                      <Linkedin className="w-3.5 h-3.5 text-[#0A66C2]" />
                     </a>
                   )}
-                  {leader.socials.twitter && (
+                  {leader.socials.instagram && (
                     <a
-                      href={leader.socials.twitter}
+                      href={leader.socials.instagram}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="p-1.5 rounded-md bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white transition-colors"
-                      aria-label="Twitter / X"
+                      aria-label="Instagram"
                     >
-                      <Twitter className="w-3.5 h-3.5" />
-                    </a>
-                  )}
-                  {leader.socials.github && (
-                    <a
-                      href={leader.socials.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-1.5 rounded-md bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white transition-colors"
-                      aria-label="GitHub"
-                    >
-                      <Github className="w-3.5 h-3.5" />
+                      <Instagram className="w-3.5 h-3.5 text-[#E4405F]" />
                     </a>
                   )}
                 </div>

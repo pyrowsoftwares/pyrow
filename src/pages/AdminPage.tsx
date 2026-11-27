@@ -54,7 +54,17 @@ import {
   Share2,
   Sun,
   Moon,
+  Loader2,
+  Zap,
+  MailCheck,
 } from 'lucide-react';
+import {
+  sendHostingerEmail,
+  buildPyrowEmailHtml,
+  sendEnquiryConfirmationEmail,
+  sendQuotationEmail,
+  sendInvoiceEmail,
+} from '../lib/hostingerMail';
 import {
   supabase,
   EnquiryRecord,
@@ -63,11 +73,16 @@ import {
   PageViewRecord,
   InvoiceRecord,
   WhatsAppLogRecord,
+  EmailLogRecord,
+  fetchEmailLogs,
+  deleteEmailLog,
+  clearAllEmailLogs,
 } from '../lib/supabase';
 import { useRouter } from '../context/RouterContext';
 import { soundFX } from '../components/ui/sound-effects';
+import { showEmailAlert, confirmAction, showAlert } from '../lib/sweetAlert';
 
-type AdminTab = 'dashboard' | 'enquiries' | 'traffic' | 'quotations' | 'whatsapp' | 'billing' | 'database' | 'messages' | 'settings';
+type AdminTab = 'dashboard' | 'enquiries' | 'traffic' | 'quotations' | 'whatsapp' | 'billing' | 'database' | 'messages' | 'emails' | 'settings';
 
 interface SoftwarePackagePreset {
   name: string;
@@ -269,11 +284,130 @@ const SOFTWARE_PRESETS: Record<string, SoftwarePackagePreset> = {
   },
 };
 
-export const AdminPage: React.FC = () => {
-  const { navigate } = useRouter();
+const TAB_ALIASES: Record<string, AdminTab> = {
+  dashboard: 'dashboard',
+  overview: 'dashboard',
+  enquiries: 'enquiries',
+  enquiry: 'enquiries',
+  leads: 'enquiries',
+  lead: 'enquiries',
+  quotations: 'quotations',
+  quotation: 'quotations',
+  quotes: 'quotations',
+  quote: 'quotations',
+  billing: 'billing',
+  invoices: 'billing',
+  invoice: 'billing',
+  messages: 'messages',
+  message: 'messages',
+  inbox: 'messages',
+  contact: 'messages',
+  emails: 'emails',
+  email: 'emails',
+  audit: 'emails',
+  whatsapp: 'whatsapp',
+  wa: 'whatsapp',
+  traffic: 'traffic',
+  visitors: 'traffic',
+  analytics: 'traffic',
+  database: 'database',
+  db: 'database',
+  sql: 'database',
+  settings: 'settings',
+  security: 'settings',
+};
 
-  // Navigation tab state
-  const [activeTab, setActiveTab] = useState<AdminTab>('dashboard');
+const resolveTabFromUrl = (path?: string): AdminTab => {
+  if (typeof window === 'undefined') return 'dashboard';
+
+  const checkPath = path || window.location.pathname;
+  const parts = checkPath.toLowerCase().split('/').filter(Boolean);
+
+  // 1. Primary: Sub-path URL routing (e.g. /admin/messages, /admin/quotations)
+  if (parts.length >= 2 && parts[0] === 'admin') {
+    const candidate = TAB_ALIASES[parts[1]];
+    if (candidate) return candidate;
+  }
+
+  // 2. Query param routing fallback (e.g. /admin?tab=messages)
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const tabParam = params.get('tab') || params.get('view') || params.get('page');
+    if (tabParam && TAB_ALIASES[tabParam.toLowerCase()]) {
+      return TAB_ALIASES[tabParam.toLowerCase()];
+    }
+  } catch { }
+
+  // 3. Hash routing fallback (e.g. /admin#messages)
+  try {
+    const hash = window.location.hash.replace(/^#\/?/, '').toLowerCase();
+    if (hash && TAB_ALIASES[hash]) {
+      return TAB_ALIASES[hash];
+    }
+  } catch { }
+
+  // 4. Session storage fallback for in-session refreshes
+  try {
+    const stored = sessionStorage.getItem('pyrow_admin_active_tab');
+    if (stored && TAB_ALIASES[stored.toLowerCase()]) {
+      return TAB_ALIASES[stored.toLowerCase()];
+    }
+  } catch { }
+
+  return 'dashboard';
+};
+
+export const AdminPage: React.FC = () => {
+  const { navigate, currentPath } = useRouter();
+
+  // Navigation tab state initialized dynamically from URL
+  const [activeTab, setActiveTab] = useState<AdminTab>(() => resolveTabFromUrl());
+
+  // Switch tabs with instant URL synchronization and browser history tracking
+  const handleTabChange = (tab: AdminTab) => {
+    soundFX.playClick();
+    setActiveTab(tab);
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('pyrow_admin_active_tab', tab);
+      const targetPath = tab === 'dashboard' ? '/admin' : `/admin/${tab}`;
+      if (window.location.pathname !== targetPath) {
+        window.history.pushState({ tab }, '', targetPath);
+      }
+    }
+  };
+
+  // Sync tab with browser back and forward history buttons
+  useEffect(() => {
+    const handlePopState = () => {
+      const tab = resolveTabFromUrl(window.location.pathname);
+      setActiveTab(tab);
+      sessionStorage.setItem('pyrow_admin_active_tab', tab);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  // Sync tab if currentPath changes from global router
+  useEffect(() => {
+    if (currentPath && currentPath.startsWith('/admin')) {
+      const tab = resolveTabFromUrl(currentPath);
+      if (tab !== activeTab) {
+        setActiveTab(tab);
+      }
+    }
+  }, [currentPath]);
+
+  // Keep browser address bar synchronized to dedicated URL on reload
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const targetPath = activeTab === 'dashboard' ? '/admin' : `/admin/${activeTab}`;
+      if (window.location.pathname !== targetPath && window.location.pathname.startsWith('/admin')) {
+        window.history.replaceState({ tab: activeTab }, '', targetPath);
+      }
+      sessionStorage.setItem('pyrow_admin_active_tab', activeTab);
+    }
+  }, [activeTab]);
 
   // Auth state
   const [session, setSession] = useState<any>(null);
@@ -309,9 +443,18 @@ export const AdminPage: React.FC = () => {
   const [quotations, setQuotations] = useState<QuotationRecord[]>([]);
   const [invoices, setInvoices] = useState<InvoiceRecord[]>([]);
   const [whatsappLogs, setWhatsappLogs] = useState<WhatsAppLogRecord[]>([]);
+  const [emailLogs, setEmailLogs] = useState<EmailLogRecord[]>([]);
   const [pageViews, setPageViews] = useState<PageViewRecord[]>([]);
   const [dataLoading, setDataLoading] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+
+  // Email audit ledger search & filter
+  const [emailNotice, setEmailNotice] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [emailSearchTerm, setEmailSearchTerm] = useState('');
+  const [emailFilterType, setEmailFilterType] = useState('all');
+  const [sendingQuoteMailId, setSendingQuoteMailId] = useState<string | null>(null);
+  const [sendingInvoiceMailId, setSendingInvoiceMailId] = useState<string | null>(null);
 
   // Enquiries filter & search
   const [searchTerm, setSearchTerm] = useState('');
@@ -911,28 +1054,9 @@ export const AdminPage: React.FC = () => {
 
     .footer-section {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: flex-start;
       margin-bottom: 20px;
-    }
-    .upi-box {
-      border: 1px solid #e2e8f0;
-      background: #f8fafc;
-      border-radius: 12px;
-      padding: 12px 14px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-family: monospace;
-      font-size: 11px;
-    }
-    .upi-box img {
-      width: 64px;
-      height: 64px;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      padding: 2px;
-      background: #ffffff;
     }
     .upi-title {
       font-weight: 700;
@@ -1007,8 +1131,8 @@ export const AdminPage: React.FC = () => {
       </thead>
       <tbody>
         ${((invoice.items && invoice.items.length > 0) ? invoice.items : [
-          { id: '1', description: 'Enterprise Custom Software & Cloud Engineering Services', quantity: 1, rate: subtotal, amount: subtotal }
-        ]).map((it, idx) => `
+        { id: '1', description: 'Enterprise Custom Software & Cloud Engineering Services', quantity: 1, rate: subtotal, amount: subtotal }
+      ]).map((it, idx) => `
           <tr>
             <td class="num">${idx + 1}</td>
             <td style="font-weight: 500;">${it.description}</td>
@@ -1020,15 +1144,6 @@ export const AdminPage: React.FC = () => {
     </table>
 
     <div class="footer-section">
-      <div class="upi-box">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=7358163590@upi&pn=Pyrow%20Technologies&am=${totalAmount}" alt="UPI QR" />
-        <div>
-          <div class="upi-title">Scan to Pay via UPI</div>
-          <div class="upi-vpa">VPA: 7358163590@upi</div>
-          <div style="font-size: 10px; color: #64748b; margin-top: 2px;">Instant GST Confirmation</div>
-        </div>
-      </div>
-
       <div class="totals-area">
         <div class="totals-row">
           <span>Subtotal:</span>
@@ -1220,6 +1335,93 @@ export const AdminPage: React.FC = () => {
   const [replySubject, setReplySubject] = useState('');
   const [replyBody, setReplyBody] = useState('');
   const [copiedMail, setCopiedMail] = useState(false);
+  const [mailSending, setMailSending] = useState(false);
+  const [mailSentStatus, setMailSentStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+
+  const handleSendHostingerMailDirect = async () => {
+    if (!replyRecipient?.email) return;
+    setMailSending(true);
+    setMailSentStatus(null);
+    soundFX.playClick();
+
+    const htmlBody = buildPyrowEmailHtml({
+      recipientName: replyRecipient.name || undefined,
+      headline: replySubject,
+      subheadline: 'Direct Communication from Pyrow Technical Lead',
+      primaryMessage: replyBody.replace(/\n/g, '<br />'),
+      detailsList: replyRecipient.service
+        ? [
+          { label: 'Related Service / Topic', value: replyRecipient.service },
+          { label: 'Inquiry Reference', value: replyRecipient.type || 'Direct' },
+        ]
+        : undefined,
+      noteText: 'Sent directly from Pyrow Support & Technical Architecture Desk (support@pyrow.in).',
+    });
+
+    const result = await sendHostingerEmail({
+      to: [replyRecipient.email],
+      displayName: 'Pyrow Software',
+      subject: replySubject,
+      text: replyBody,
+      html: htmlBody,
+      bcc: ['support@pyrow.in'],
+    });
+
+    setMailSending(false);
+    if (result.success) {
+      soundFX.playChime();
+      setMailSentStatus({
+        type: 'success',
+        message: `Dispatched successfully to ${replyRecipient.email} from support@pyrow.in!`,
+      });
+      setTimeout(() => {
+        setReplyRecipient(null);
+        setMailSentStatus(null);
+      }, 2500);
+    } else {
+      soundFX.playClick(200);
+      setMailSentStatus({ type: 'error', message: result.error || 'Failed to dispatch email' });
+    }
+  };
+
+  const [quickSendingMailId, setQuickSendingMailId] = useState<string | null>(null);
+
+  const handleQuickTriggerEmail = async (item: EnquiryRecord) => {
+    if (!item.email || !item.id) return;
+    setQuickSendingMailId(item.id);
+    soundFX.playClick();
+
+    try {
+      const res = await sendEnquiryConfirmationEmail(item);
+      if (res.success) {
+        soundFX.playChime();
+        const sentAt = new Date().toISOString();
+        const updatedRaw = {
+          ...(item.raw_data || {}),
+          mail_sent: true,
+          mail_sent_at: sentAt,
+          mail_sender: 'support@pyrow.in',
+        };
+
+        await supabase.from('enquiries').update({ raw_data: updatedRaw }).eq('id', item.id);
+
+        setEnquiries((prev) =>
+          prev.map((e) => (e.id === item.id ? { ...e, raw_data: updatedRaw } : e))
+        );
+        alert(`✓ Official confirmation email successfully dispatched from support@pyrow.in to ${item.email}! (Also copied to admin inbox)`);
+      } else {
+        soundFX.playClick(200);
+        alert(`Failed to send email: ${res.error || 'Unknown error'}`);
+      }
+    } catch (err: any) {
+      soundFX.playClick(200);
+      alert(`Error dispatching email: ${err?.message || 'Network exception'}`);
+    } finally {
+      setQuickSendingMailId(null);
+    }
+  };
+
+
 
   // Inactivity Timer Security (15 min)
   const inactivityTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -1282,196 +1484,18 @@ export const AdminPage: React.FC = () => {
         supabase.from('page_views').select('*').order('created_at', { ascending: false }).limit(200),
       ]);
 
-      if (enqRes.data && enqRes.data.length > 0) {
-        setEnquiries(enqRes.data);
-      } else {
-        setEnquiries([
-          {
-            id: 'enq-mock-1',
-            type: 'estimator',
-            name: 'Rajesh Kumar',
-            company: 'Horizon Retail Chain',
-            email: 'rajesh@horizonretail.in',
-            phone: '+91 98401 23456',
-            service: 'Billing & Barcode POS System, Custom ERP',
-            budget: 'Enterprise Scale (Multi-Branch)',
-            timeline: '1 - 3 Months',
-            status: 'in_progress',
-            created_at: new Date(Date.now() - 3600000 * 2).toISOString(),
-            notes: 'Requires offline-first POS for 3 retail branches in Chennai with central warehouse sync.',
-          },
-          {
-            id: 'enq-mock-2',
-            type: 'strategy_call',
-            name: 'Dr. Priya Sundaram',
-            company: 'CareFirst Healthcare',
-            email: 'priya@carefirstclinics.org',
-            phone: '+91 94440 98765',
-            service: 'WhatsApp AI Automation Bot, Custom Software',
-            budget: 'Growth Tier (Scaling Business)',
-            timeline: 'Urgent (< 1 Month)',
-            status: 'new',
-            created_at: new Date(Date.now() - 3600000 * 18).toISOString(),
-            notes: 'Automated patient booking calendar and WhatsApp meeting reminders.',
-          },
-          {
-            id: 'enq-mock-3',
-            type: 'demo_request',
-            name: 'Vikram Malhotra',
-            company: 'TechCraft Global',
-            email: 'v.malhotra@techcraft.io',
-            phone: '+91 97890 12345',
-            service: 'Cloud High-Availability & React 19 Platform',
-            budget: 'Full Ecosystem (Custom End-to-End)',
-            timeline: '3 - 6 Months',
-            status: 'contacted',
-            created_at: new Date(Date.now() - 86400000 * 2).toISOString(),
-            notes: 'Requested interactive architecture demo and SLA pricing.',
-          },
-        ]);
-      }
-
-      if (quoteRes.data && quoteRes.data.length > 0) {
-        setQuotations(quoteRes.data);
-      } else {
-        setQuotations([
-          {
-            id: 'quote-mock-1',
-            quote_number: 'PYROW-Q-2026-101',
-            client_name: 'Rajesh Kumar',
-            client_company: 'Horizon Retail Chain',
-            client_email: 'rajesh@horizonretail.in',
-            client_phone: '+91 98401 23456',
-            project_title: 'Pyrow POS (Offline-First Retail & Invoicing Suite)',
-            software_name: 'Pyrow POS',
-            items: [
-              { id: '1', description: 'Sub-Second 0.8s Offline-First POS Engine (Works without Internet)', quantity: 1, rate: 55000, amount: 55000 },
-              { id: '2', description: 'Barcode Scanner Integration & Multi-Store Inventory Auto-Sync', quantity: 1, rate: 35000, amount: 35000 },
-              { id: '3', description: 'GST Compliant Thermal (80mm) & A4 PDF Invoicing Engine', quantity: 1, rate: 20000, amount: 20000 },
-              { id: '4', description: 'Customer Khata / Credit Ledger & WhatsApp Digital Bill Dispatch', quantity: 1, rate: 25000, amount: 25000 },
-            ],
-            subtotal: 135000,
-            discount: 10000,
-            tax_rate: 18,
-            tax_amount: 22500,
-            total_amount: 147500,
-            status: 'accepted',
-            valid_until: '2026-12-15',
-            notes: 'Includes thermal printer driver configuration, offline SQLite sync engine, and lifetime data ownership.',
-            terms: '50% advance upon contract signing, 50% upon final staging approval and production go-live.',
-            created_at: new Date(Date.now() - 86400000 * 3).toISOString(),
-          },
-          {
-            id: 'quote-mock-2',
-            quote_number: 'PYROW-Q-2026-102',
-            client_name: 'Dr. Priya Sundaram',
-            client_company: 'CareFirst Healthcare',
-            client_email: 'priya@carefirstclinics.org',
-            client_phone: '+91 94440 98765',
-            project_title: 'Pyrow Assist (AI Assistant & WhatsApp Autonomous Engine)',
-            software_name: 'Pyrow Assist',
-            items: [
-              { id: '1', description: '24/7 Autonomous WhatsApp Business Cloud API Integration', quantity: 1, rate: 45000, amount: 45000 },
-              { id: '2', description: 'Website AI Conversational Chat Widget with Multilingual NLP Routing', quantity: 1, rate: 35000, amount: 35000 },
-              { id: '3', description: 'Automated Calendar Booking Engine & WhatsApp Meeting Reminders', quantity: 1, rate: 25000, amount: 25000 },
-            ],
-            subtotal: 105000,
-            discount: 5000,
-            tax_rate: 18,
-            tax_amount: 18000,
-            total_amount: 118000,
-            status: 'sent',
-            valid_until: '2026-12-20',
-            notes: 'Includes 99.98% cloud uptime SLA, Meta Cloud API verification assistance, and 60 days dedicated warranty.',
-            terms: '50% advance upon contract signing, 50% upon final staging approval and production go-live.',
-            created_at: new Date(Date.now() - 86400000 * 1).toISOString(),
-          },
-          {
-            id: 'quote-mock-3',
-            quote_number: 'PYROW-Q-2026-103',
-            client_name: 'Kavitha Rajan',
-            client_company: 'Bloom Organic Skincare D2C',
-            client_email: 'kavitha@bloomskincare.in',
-            client_phone: '+91 98840 11223',
-            project_title: 'Social Media Management & Performance Ad Campaign Suite',
-            software_name: 'Social Media & Ad Campaigns',
-            items: [
-              { id: '1', description: 'Social Media Strategy & Multi-Channel Content Planning', quantity: 1, rate: 25000, amount: 25000 },
-              { id: '2', description: 'Creative Post & High-Engagement Reel Design (20 Posts + 10 Reels/mo)', quantity: 1, rate: 35000, amount: 35000 },
-              { id: '3', description: 'Meta Lead Gen & Conversion Funnel Ads Management', quantity: 1, rate: 30000, amount: 30000 },
-              { id: '4', description: 'Audience Growth & Bi-Weekly Executive ROAS Analytics', quantity: 1, rate: 15000, amount: 15000 },
-            ],
-            subtotal: 105000,
-            discount: 5000,
-            tax_rate: 18,
-            tax_amount: 18000,
-            total_amount: 118000,
-            status: 'accepted',
-            valid_until: '2026-12-25',
-            notes: 'Includes dedicated visual designer, ad copy testing, weekly ROAS optimization sprints, and monthly analytics reporting.',
-            terms: 'Monthly retainer billed at start of cycle. Direct media spend billed directly to client ad account.',
-            created_at: new Date(Date.now() - 3600000 * 12).toISOString(),
-          },
-          {
-            id: 'quote-mock-4',
-            quote_number: 'PYROW-Q-2026-104',
-            client_name: 'Deepak Verma',
-            client_company: 'Apex FinTech Solutions',
-            client_email: 'deepak@apexfintech.io',
-            client_phone: '+91 97110 55443',
-            project_title: 'LinkedIn B2B Ads & Next-Gen AI Advertising Strategy',
-            software_name: 'LinkedIn Ads & AI',
-            items: [
-              { id: '1', description: 'B2B Decision-Maker ABM Strategy & C-Suite Targeting', quantity: 1, rate: 35000, amount: 35000 },
-              { id: '2', description: 'Sponsored Content & Native LinkedIn Lead Form Campaigns', quantity: 1, rate: 30000, amount: 30000 },
-              { id: '3', description: 'Emerging AI Search Visibility Strategy (ChatGPT, Perplexity & Gemini)', quantity: 1, rate: 35000, amount: 35000 },
-            ],
-            subtotal: 100000,
-            discount: 0,
-            tax_rate: 18,
-            tax_amount: 18000,
-            total_amount: 118000,
-            status: 'sent',
-            valid_until: '2026-12-30',
-            notes: 'Decision-maker lead acquisition campaign targeting CXOs, Founders, and VPs. Fortnightly pipeline review syncs.',
-            terms: '50% onboarding fee upon kickoff, 50% upon deployment of live campaign and AI search blueprints.',
-            created_at: new Date(Date.now() - 3600000 * 6).toISOString(),
-          },
-        ]);
-      }
-
-      if (invRes.data && invRes.data.length > 0) {
-        setInvoices(invRes.data);
-      } else {
-        setInvoices([
-          {
-            id: 'inv-mock-1',
-            invoice_number: 'INV-2026-001',
-            client_name: 'Horizon Retail Chain',
-            client_company: 'Horizon Retail Enterprises Pvt Ltd',
-            client_email: 'accounts@horizonretail.in',
-            client_phone: '+91 98401 23456',
-            client_gstin: '33AABCH1234F1Z5',
-            hsn_sac: '998314',
-            items: [
-              { id: '1', description: 'Enterprise Custom Software & Cloud Engineering Services (Milestone 1)', quantity: 1, rate: 70000, amount: 70000 },
-            ],
-            subtotal: 70000,
-            discount: 0,
-            tax_rate: 18,
-            tax_amount: 12600,
-            total_amount: 82600,
-            status: 'paid',
-            due_date: '2026-11-20',
-            payment_mode: 'UPI',
-            notes: 'Official GST invoice with 18% Input Tax Credit (ITC). Bank NEFT/RTGS details on invoice.',
-            created_at: new Date(Date.now() - 86400000 * 5).toISOString(),
-          },
-        ]);
-      }
+      // Set real live data strictly from Supabase without injecting any mock or sample records
+      setEnquiries(enqRes.data || []);
+      setQuotations(quoteRes.data || []);
+      setInvoices(invRes.data || []);
 
       if (waRes.data) setWhatsappLogs(waRes.data);
       if (pvRes.data) setPageViews(pvRes.data);
+
+      try {
+        const logs = await fetchEmailLogs();
+        if (logs) setEmailLogs(logs);
+      } catch (e) { }
     } catch (err) {
       console.error('Data fetch error:', err);
     } finally {
@@ -1486,34 +1510,32 @@ export const AdminPage: React.FC = () => {
     setLoginSubmitting(true);
     soundFX.playClick();
 
-    // Instant local admin demo credential check
-    if (
-      loginEmail.trim().toLowerCase() === 'support@pyrow.in' &&
-      (loginPassword === 'pyrow2026' || loginPassword === 'admin' || loginPassword === 'pyrow' || loginPassword === 'demo')
-    ) {
-      setSession({
-        user: { email: 'support@pyrow.in', id: 'pyrow-superadmin-001' },
-        access_token: 'mock-session-token',
-      });
-      soundFX.playChime();
-      fetchAllData();
-      setLoginSubmitting(false);
-      return;
-    }
-
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email: loginEmail.trim(),
         password: loginPassword,
       });
 
-      if (error) {
-        setLoginError(error.message || 'Invalid admin credentials');
-        soundFX.playClick(300);
-      } else {
+      if (!error && data?.session) {
         setSession(data.session);
         soundFX.playChime();
         fetchAllData();
+      } else {
+        // Fallback for offline demo credential check
+        if (
+          loginEmail.trim().toLowerCase() === 'support@pyrow.in' &&
+          (loginPassword === 'PyrowSoftware@12345' || loginPassword === 'pyrow2026' || loginPassword === 'admin')
+        ) {
+          setSession({
+            user: { email: 'support@pyrow.in', id: 'pyrow-superadmin-001' },
+            access_token: 'mock-session-token',
+          });
+          soundFX.playChime();
+          fetchAllData();
+        } else {
+          setLoginError(error?.message || 'Invalid admin credentials');
+          soundFX.playClick(300);
+        }
       }
     } catch (err: any) {
       setLoginError(err?.message || 'Login failed. Please check network.');
@@ -1525,6 +1547,9 @@ export const AdminPage: React.FC = () => {
   // Secure Logout
   const handleSecureLogout = async (message?: string) => {
     soundFX.playClick();
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem('pyrow_admin_active_tab');
+    }
     await supabase.auth.signOut();
     setSession(null);
     if (message) setLoginError(message);
@@ -1533,6 +1558,9 @@ export const AdminPage: React.FC = () => {
   // Exit to Portfolio
   const handleExitToPortfolio = async () => {
     soundFX.playClick();
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem('pyrow_admin_active_tab');
+    }
     await supabase.auth.signOut();
     setSession(null);
     navigate('/');
@@ -1709,7 +1737,11 @@ export const AdminPage: React.FC = () => {
     soundFX.playChime();
     const cleanPhone = (phone || '').replace(/[^0-9]/g, '');
     if (!cleanPhone) {
-      alert('Please enter a valid phone number with country code (e.g. 917358163590)');
+      showAlert({
+        title: 'Invalid Phone Number',
+        text: 'Please enter a valid phone number with country code (e.g. 917358163590).',
+        icon: 'warning',
+      });
       return;
     }
 
@@ -1749,7 +1781,11 @@ export const AdminPage: React.FC = () => {
 
     const cleanPhone = waTestNumber.replace(/[^0-9]/g, '');
     if (!cleanPhone) {
-      alert('Please enter a valid phone number with country code (e.g. 917358163590)');
+      showAlert({
+        title: 'Invalid Phone Number',
+        text: 'Please enter a valid phone number with country code (e.g. 917358163590).',
+        icon: 'warning',
+      });
       setWaSending(false);
       return;
     }
@@ -1778,7 +1814,11 @@ export const AdminPage: React.FC = () => {
 
       const json = await res.json();
       if (!res.ok) {
-        alert(`Meta Cloud API Error: ${json.error?.message || 'Failed to dispatch'}\n\nOpening Direct WhatsApp to send straight from your phone...`);
+        showAlert({
+          title: 'Meta API Gateway Notice',
+          text: `${json.error?.message || 'Failed to dispatch'}. Opening Direct WhatsApp...`,
+          icon: 'info',
+        });
         handleSendWhatsAppDirect(cleanPhone, waMessageText, waSelectedTemplate);
         return;
       }
@@ -1801,7 +1841,11 @@ export const AdminPage: React.FC = () => {
       setWaSuccessNotice(`Transmitted via Meta Cloud API to +${cleanPhone}!`);
       setTimeout(() => setWaSuccessNotice(null), 5000);
     } catch (err: any) {
-      alert('Meta connection error: ' + err.message + '. Opening Direct WhatsApp...');
+      showAlert({
+        title: 'Meta Connection Notice',
+        text: `${err.message}. Opening Direct WhatsApp...`,
+        icon: 'info',
+      });
       handleSendWhatsAppDirect(cleanPhone, waMessageText, waSelectedTemplate);
     } finally {
       setWaSending(false);
@@ -1824,7 +1868,7 @@ export const AdminPage: React.FC = () => {
         .eq('id', editingQuoteId)
         .select();
       if (error) {
-        alert('Error updating quotation: ' + error.message);
+        showAlert({ title: 'Error Updating Quotation', text: error.message, icon: 'error' });
       } else {
         setQuotations(quotations.map((q) => (q.id === editingQuoteId ? data[0] : q)));
         setShowQuoteModal(false);
@@ -1834,7 +1878,7 @@ export const AdminPage: React.FC = () => {
     } else {
       const { data, error } = await supabase.from('quotations').insert([payload]).select();
       if (error) {
-        alert('Error saving quotation: ' + error.message);
+        showAlert({ title: 'Error Saving Quotation', text: error.message, icon: 'error' });
       } else {
         setQuotations([data[0], ...quotations]);
         setShowQuoteModal(false);
@@ -1852,13 +1896,20 @@ export const AdminPage: React.FC = () => {
 
   // Delete Quotation
   const handleDeleteQuotation = async (id: string) => {
-    if (!window.confirm('Are you sure you want to delete this commercial quotation?')) return;
+    const confirmed = await confirmAction({
+      title: 'Delete Commercial Quotation?',
+      text: 'Are you sure you want to delete this commercial quotation? This action cannot be undone.',
+      confirmButtonText: 'Yes, Delete Quotation',
+      danger: true,
+    });
+    if (!confirmed) return;
     soundFX.playClick();
     const { error } = await supabase.from('quotations').delete().eq('id', id);
     if (error) {
-      alert('Error deleting quotation: ' + error.message);
+      showAlert({ title: 'Error Deleting Quotation', text: error.message, icon: 'error' });
     } else {
       setQuotations(quotations.filter((q) => q.id !== id));
+      soundFX.playChime();
     }
   };
 
@@ -1878,7 +1929,7 @@ export const AdminPage: React.FC = () => {
         .eq('id', editingInvoiceId)
         .select();
       if (error) {
-        alert('Error updating invoice: ' + error.message);
+        showAlert({ title: 'Error Updating Invoice', text: error.message, icon: 'error' });
       } else {
         setInvoices(invoices.map((i) => (i.id === editingInvoiceId ? data[0] : i)));
         setShowInvoiceModal(false);
@@ -1888,7 +1939,7 @@ export const AdminPage: React.FC = () => {
     } else {
       const { data, error } = await supabase.from('invoices').insert([payload]).select();
       if (error) {
-        alert('Error creating invoice: ' + error.message);
+        showAlert({ title: 'Error Creating Invoice', text: error.message, icon: 'error' });
       } else {
         setInvoices([data[0], ...invoices]);
         setShowInvoiceModal(false);
@@ -1900,19 +1951,36 @@ export const AdminPage: React.FC = () => {
   // Open Edit Invoice
   const handleOpenEditInvoice = (inv: InvoiceRecord) => {
     setEditingInvoiceId(inv.id || null);
-    setInvoiceFormData({ ...inv });
+    setInvoiceFormData({
+      ...inv,
+      client_email: inv.client_email || '',
+      client_phone: inv.client_phone || '',
+      client_company: inv.client_company || '',
+      client_gstin: inv.client_gstin || '',
+      due_date: inv.due_date || new Date().toISOString().slice(0, 10),
+      items: (inv.items && inv.items.length > 0)
+        ? inv.items
+        : [{ id: '1', description: 'Custom Software Architecture & Engineering Services', quantity: 1, rate: Number(inv.subtotal || 0), amount: Number(inv.subtotal || 0) }],
+    });
     setShowInvoiceModal(true);
   };
 
   // Delete Invoice
   const handleDeleteInvoice = async (id: string) => {
-    if (!window.confirm('Are you sure you want to delete this billing invoice?')) return;
+    const confirmed = await confirmAction({
+      title: 'Delete Billing Invoice?',
+      text: 'Are you sure you want to delete this GST tax invoice? This action cannot be undone.',
+      confirmButtonText: 'Yes, Delete Invoice',
+      danger: true,
+    });
+    if (!confirmed) return;
     soundFX.playClick();
     const { error } = await supabase.from('invoices').delete().eq('id', id);
     if (error) {
-      alert('Error deleting invoice: ' + error.message);
+      showAlert({ title: 'Error Deleting Invoice', text: error.message, icon: 'error' });
     } else {
       setInvoices(invoices.filter((i) => i.id !== id));
+      soundFX.playChime();
     }
   };
 
@@ -1944,21 +2012,134 @@ export const AdminPage: React.FC = () => {
       .eq('id', editingEnquiry.id);
 
     if (error) {
-      alert('Error updating inquiry: ' + error.message);
+      showAlert({ title: 'Error Updating Inquiry', text: error.message, icon: 'error' });
     } else {
       setEnquiries(enquiries.map((enq) => (enq.id === editingEnquiry.id ? editingEnquiry : enq)));
       setShowEditEnquiryModal(false);
+      soundFX.playChime();
     }
   };
 
   const handleDeleteEnquiry = async (id: string) => {
-    if (!window.confirm('Are you sure you want to delete this customer inquiry?')) return;
+    const confirmed = await confirmAction({
+      title: 'Delete Customer Inquiry?',
+      text: 'Are you sure you want to delete this customer inquiry? This action cannot be undone.',
+      confirmButtonText: 'Yes, Delete Inquiry',
+      danger: true,
+    });
+    if (!confirmed) return;
     soundFX.playClick();
     const { error } = await supabase.from('enquiries').delete().eq('id', id);
     if (error) {
-      alert('Error deleting inquiry: ' + error.message);
+      showAlert({ title: 'Error Deleting Inquiry', text: error.message, icon: 'error' });
     } else {
       setEnquiries(enquiries.filter((e) => e.id !== id));
+      soundFX.playChime();
+    }
+  };
+
+  const handleDeleteEmailLog = async (id?: string) => {
+    if (!id) return;
+    const confirmed = await confirmAction({
+      title: 'Delete Sent Email Log?',
+      text: 'Are you sure you want to delete this sent email record from the audit ledger? This cannot be undone.',
+      confirmButtonText: 'Yes, Delete Record',
+      danger: true,
+    });
+    if (!confirmed) return;
+    soundFX.playClick();
+    await deleteEmailLog(id);
+    setEmailLogs((prev) => prev.filter((l) => l.id !== id));
+    soundFX.playChime();
+  };
+
+  const handleClearAllEmailLogs = async () => {
+    const confirmed = await confirmAction({
+      title: 'Clear All Sent Email Logs?',
+      text: `Are you sure you want to delete all ${emailLogs.length} sent email audit records? This action cannot be undone.`,
+      confirmButtonText: 'Yes, Delete All',
+      danger: true,
+    });
+    if (!confirmed) return;
+    soundFX.playClick();
+    await clearAllEmailLogs();
+    setEmailLogs([]);
+    soundFX.playChime();
+  };
+
+  // --- HOSTINGER CLOUD EMAIL ACTIONS ---
+  const handleSendQuoteEmail = async (q: QuotationRecord) => {
+    if (!q.client_email) {
+      showEmailAlert.error(q.client_name || 'Client', 'Client email is missing on this quotation.');
+      return;
+    }
+    soundFX.playClick();
+    showEmailAlert.sending(q.client_email, `Dispatching proposal for ${q.project_title}...`);
+    setSendingQuoteMailId(q.id || q.quote_number);
+    try {
+      const res = await sendQuotationEmail(q);
+      if (res.success) {
+        soundFX.playChime();
+        setEmailNotice(`Quotation ${q.quote_number} dispatched to ${q.client_email} from support@pyrow.in!`);
+        setTimeout(() => setEmailNotice(null), 5000);
+        const updated = await fetchEmailLogs();
+        setEmailLogs(updated);
+      }
+    } catch (err: any) {
+      showEmailAlert.error(q.client_email, err?.message || 'Network exception while dispatching quotation');
+    } finally {
+      setSendingQuoteMailId(null);
+    }
+  };
+
+  const handleSendInvoiceEmail = async (inv: InvoiceRecord) => {
+    if (!inv.client_email) {
+      showEmailAlert.error(
+        inv.client_name || 'Client',
+        'Client email is missing on this invoice. Click "Edit" on the invoice to add an email address.'
+      );
+      return;
+    }
+    soundFX.playClick();
+    showEmailAlert.sending(inv.client_email, `Dispatching GST Invoice ${inv.invoice_number}...`);
+    setSendingInvoiceMailId(inv.id || inv.invoice_number);
+    try {
+      const res = await sendInvoiceEmail(inv);
+      if (res.success) {
+        soundFX.playChime();
+        setEmailNotice(`Invoice ${inv.invoice_number} dispatched to ${inv.client_email} from support@pyrow.in!`);
+        setTimeout(() => setEmailNotice(null), 5000);
+        const updated = await fetchEmailLogs();
+        setEmailLogs(updated);
+      }
+    } catch (err: any) {
+      showEmailAlert.error(inv.client_email, err?.message || 'Network exception while dispatching invoice');
+    } finally {
+      setSendingInvoiceMailId(null);
+    }
+  };
+
+  const handleQuickSendEnquiryMail = async (item: EnquiryRecord) => {
+    if (!item.email) {
+      showEmailAlert.error(item.name || 'Recipient', 'Recipient email address is missing.');
+      return;
+    }
+    soundFX.playClick();
+    showEmailAlert.sending(item.email, `Dispatching confirmation to ${item.name || 'lead'}...`);
+    setQuickSendingMailId(item.id || item.email);
+    try {
+      const res = await sendEnquiryConfirmationEmail(item);
+      if (res.success) {
+        soundFX.playChime();
+        setEmailNotice(`Confirmation dispatched to ${item.email}!`);
+        setTimeout(() => setEmailNotice(null), 5000);
+        const updated = await fetchEmailLogs();
+        setEmailLogs(updated);
+      }
+    } catch (err: any) {
+      showEmailAlert.error(item.email, err?.message || 'Network exception while dispatching email');
+    } finally {
+      setQuickSendingMailId(null);
     }
   };
 
@@ -1984,32 +2165,47 @@ export const AdminPage: React.FC = () => {
       .eq('id', editingWaLog.id);
 
     if (error) {
-      alert('Error updating WhatsApp log: ' + error.message);
+      showAlert({ title: 'Error Updating WhatsApp Log', text: error.message, icon: 'error' });
     } else {
       setWhatsappLogs(whatsappLogs.map((l) => (l.id === editingWaLog.id ? editingWaLog : l)));
       setShowEditWaLogModal(false);
+      soundFX.playChime();
     }
   };
 
   const handleDeleteWaLog = async (id: string) => {
-    if (!window.confirm('Delete this WhatsApp log entry?')) return;
+    const confirmed = await confirmAction({
+      title: 'Delete WhatsApp Communication Log?',
+      text: 'Are you sure you want to delete this WhatsApp log entry?',
+      confirmButtonText: 'Yes, Delete',
+      danger: true,
+    });
+    if (!confirmed) return;
     soundFX.playClick();
     const { error } = await supabase.from('whatsapp_logs').delete().eq('id', id);
     if (error) {
-      alert('Error deleting log: ' + error.message);
+      showAlert({ title: 'Error Deleting Log', text: error.message, icon: 'error' });
     } else {
       setWhatsappLogs(whatsappLogs.filter((l) => l.id !== id));
+      soundFX.playChime();
     }
   };
 
   const handleClearAllWaLogs = async () => {
-    if (!window.confirm('Are you sure you want to clear all WhatsApp logs?')) return;
+    const confirmed = await confirmAction({
+      title: 'Clear All WhatsApp Logs?',
+      text: 'This will purge all WhatsApp communication history from the database.',
+      confirmButtonText: 'Yes, Purge All Logs',
+      danger: true,
+    });
+    if (!confirmed) return;
     soundFX.playClick();
     const { error } = await supabase.from('whatsapp_logs').delete().neq('phone_number', '___none___');
     if (error) {
-      alert('Error clearing logs: ' + error.message);
+      showAlert({ title: 'Error Clearing Logs', text: error.message, icon: 'error' });
     } else {
       setWhatsappLogs([]);
+      soundFX.playChime();
     }
   };
 
@@ -2018,20 +2214,28 @@ export const AdminPage: React.FC = () => {
     soundFX.playClick();
     const { error } = await supabase.from('page_views').delete().eq('id', id);
     if (error) {
-      alert('Error deleting visitor log: ' + error.message);
+      showAlert({ title: 'Error Deleting Traffic Log', text: error.message, icon: 'error' });
     } else {
       setPageViews(pageViews.filter((p) => p.id !== id));
+      soundFX.playChime();
     }
   };
 
   const handleClearAllPageViews = async () => {
-    if (!window.confirm('Are you sure you want to clear all visitor analytics logs?')) return;
+    const confirmed = await confirmAction({
+      title: 'Clear Visitor Telemetry Logs?',
+      text: 'Are you sure you want to clear all visitor analytics and geolocation logs?',
+      confirmButtonText: 'Yes, Clear All Logs',
+      danger: true,
+    });
+    if (!confirmed) return;
     soundFX.playClick();
     const { error } = await supabase.from('page_views').delete().neq('page_path', '___none___');
     if (error) {
-      alert('Error clearing traffic logs: ' + error.message);
+      showAlert({ title: 'Error Clearing Traffic Logs', text: error.message, icon: 'error' });
     } else {
       setPageViews([]);
+      soundFX.playChime();
     }
   };
 
@@ -2081,8 +2285,9 @@ export const AdminPage: React.FC = () => {
     }, 400);
   };
 
-  // Filtered Enquiries
+  // Filtered Enquiries (Lead Pipeline only, strictly excluding general Contact Messages so tabs are independent)
   const filteredEnquiries = enquiries.filter((e) => {
+    if (e.type === 'contact') return false;
     const matchesSearch =
       !searchTerm ||
       (e.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -2096,6 +2301,18 @@ export const AdminPage: React.FC = () => {
   });
 
   const contactMessages = enquiries.filter((e) => e.type === 'contact');
+
+  // Filtered Email Logs for Audit Ledger
+  const filteredEmailLogs = emailLogs.filter((log) => {
+    const matchesSearch =
+      !emailSearchTerm ||
+      log.recipient_email.toLowerCase().includes(emailSearchTerm.toLowerCase()) ||
+      (log.recipient_name || '').toLowerCase().includes(emailSearchTerm.toLowerCase()) ||
+      log.subject.toLowerCase().includes(emailSearchTerm.toLowerCase()) ||
+      (log.preview_text || '').toLowerCase().includes(emailSearchTerm.toLowerCase());
+    const matchesType = emailFilterType === 'all' || log.email_type === emailFilterType;
+    return matchesSearch && matchesType;
+  });
 
   // Traffic metrics
   const totalViews = pageViews.length;
@@ -2283,6 +2500,7 @@ export const AdminPage: React.FC = () => {
           { id: 'quotations', label: `Quotes (${quotations.length})` },
           { id: 'billing', label: `Billing (${invoices.length})` },
           { id: 'messages', label: `Inbox (${contactMessages.length})` },
+          { id: 'emails', label: `Emails (${emailLogs.length})` },
           { id: 'whatsapp', label: 'WhatsApp' },
           { id: 'traffic', label: 'Traffic' },
           { id: 'database', label: 'Database' },
@@ -2293,15 +2511,13 @@ export const AdminPage: React.FC = () => {
             <button
               key={item.id}
               onClick={() => {
-                soundFX.playClick();
-                setActiveTab(item.id as AdminTab);
+                handleTabChange(item.id as AdminTab);
                 setMobileNavOpen(false);
               }}
-              className={`px-3 py-1.5 rounded-full text-xs font-mono whitespace-nowrap cursor-pointer transition-all ${
-                isActive
-                  ? 'bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-bold shadow-md shadow-violet-600/30'
-                  : 'bg-white/[0.04] text-zinc-400 hover:text-white border border-white/[0.06]'
-              }`}
+              className={`px-3 py-1.5 rounded-full text-xs font-mono whitespace-nowrap cursor-pointer transition-all ${isActive
+                ? 'bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-bold shadow-md shadow-violet-600/30'
+                : 'bg-white/[0.04] text-zinc-400 hover:text-white border border-white/[0.06]'
+                }`}
             >
               {item.label}
             </button>
@@ -2326,10 +2542,11 @@ export const AdminPage: React.FC = () => {
               <div className="space-y-1">
                 {[
                   { id: 'dashboard', label: 'Overview Intelligence', icon: <LayoutDashboard className="w-4 h-4" /> },
-                  { id: 'enquiries', label: 'Inquiries & Leads', icon: <Inbox className="w-4 h-4" />, count: enquiries.length },
+                  { id: 'enquiries', label: 'Inquiries & Leads', icon: <Inbox className="w-4 h-4" />, count: filteredEnquiries.length },
                   { id: 'quotations', label: 'Quotation Studio', icon: <FileText className="w-4 h-4" />, count: quotations.length },
                   { id: 'billing', label: 'Billing & GST Invoices', icon: <Receipt className="w-4 h-4" />, count: invoices.length },
                   { id: 'messages', label: 'Contact Messages', icon: <Mail className="w-4 h-4" />, count: contactMessages.length },
+                  { id: 'emails', label: 'Sent Email Audit Ledger', icon: <MailCheck className="w-4 h-4 text-violet-400" />, count: emailLogs.length },
                   { id: 'whatsapp', label: 'WhatsApp Cloud API', icon: <MessageSquare className="w-4 h-4 text-emerald-400" /> },
                   { id: 'traffic', label: 'Traffic & Geolocation', icon: <BarChart3 className="w-4 h-4 text-cyan-400" /> },
                   { id: 'database', label: 'Database & SQL Health', icon: <Database className="w-4 h-4 text-violet-400" /> },
@@ -2338,15 +2555,13 @@ export const AdminPage: React.FC = () => {
                   <button
                     key={item.id}
                     onClick={() => {
-                      soundFX.playClick();
-                      setActiveTab(item.id as AdminTab);
+                      handleTabChange(item.id as AdminTab);
                       setMobileNavOpen(false);
                     }}
-                    className={`w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-mono transition-all ${
-                      activeTab === item.id
-                        ? 'bg-gradient-to-r from-violet-600/40 via-violet-600/20 to-transparent text-white font-bold border border-violet-500/40'
-                        : 'text-zinc-400 hover:text-white bg-white/[0.02]'
-                    }`}
+                    className={`w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-mono transition-all ${activeTab === item.id
+                      ? 'bg-gradient-to-r from-violet-600/40 via-violet-600/20 to-transparent text-white font-bold border border-violet-500/40'
+                      : 'text-zinc-400 hover:text-white bg-white/[0.02]'
+                      }`}
                   >
                     <div className="flex items-center gap-3">
                       {item.icon}
@@ -2420,34 +2635,30 @@ export const AdminPage: React.FC = () => {
             </div>
             {[
               { id: 'dashboard', label: 'Overview Intelligence', icon: <LayoutDashboard className="w-4 h-4" />, count: null },
-              { id: 'enquiries', label: 'Inquiries & Leads', icon: <Inbox className="w-4 h-4" />, count: enquiries.length },
+              { id: 'enquiries', label: 'Inquiries & Leads', icon: <Inbox className="w-4 h-4" />, count: filteredEnquiries.length },
               { id: 'quotations', label: 'Quotation Studio', icon: <FileText className="w-4 h-4" />, count: quotations.length },
               { id: 'billing', label: 'Billing & GST Invoices', icon: <Receipt className="w-4 h-4" />, count: invoices.length },
               { id: 'messages', label: 'Contact Messages', icon: <Mail className="w-4 h-4" />, count: contactMessages.length },
+              { id: 'emails', label: 'Email Audit Ledger', icon: <MailCheck className="w-4 h-4 text-violet-400" />, count: emailLogs.length },
             ].map((item) => (
               <button
                 key={item.id}
-                onClick={() => {
-                  soundFX.playClick();
-                  setActiveTab(item.id as AdminTab);
-                }}
-                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-mono transition-all cursor-pointer relative group ${
-                  activeTab === item.id
-                    ? 'bg-gradient-to-r from-violet-600/30 via-violet-600/15 to-transparent text-white font-bold border border-violet-500/40 shadow-[0_0_20px_-3px_rgba(124,58,237,0.3)]'
-                    : 'text-zinc-400 hover:text-white hover:bg-white/[0.04]'
-                }`}
+                onClick={() => handleTabChange(item.id as AdminTab)}
+                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-mono transition-all cursor-pointer relative group ${activeTab === item.id
+                  ? 'bg-gradient-to-r from-violet-600/15 via-violet-600/10 to-transparent dark:from-violet-600/30 dark:via-violet-600/15 dark:to-transparent text-violet-700 dark:text-white font-bold border border-violet-400/40 dark:border-violet-500/40 shadow-xs dark:shadow-[0_0_20px_-3px_rgba(124,58,237,0.3)]'
+                  : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.04]'
+                  }`}
               >
                 <div className="flex items-center gap-3">
-                  <span className={activeTab === item.id ? 'text-violet-300' : 'text-zinc-400 group-hover:text-zinc-200'}>
+                  <span className={activeTab === item.id ? 'text-violet-600 dark:text-violet-300' : 'text-slate-400 dark:text-zinc-400 group-hover:text-slate-700 dark:group-hover:text-zinc-200'}>
                     {item.icon}
                   </span>
                   <span>{item.label}</span>
                 </div>
                 {item.count !== null && (
                   <span
-                    className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-                      activeTab === item.id ? 'bg-violet-500/30 text-violet-200 border border-violet-400/30' : 'bg-white/5 text-zinc-500'
-                    }`}
+                    className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${activeTab === item.id ? 'bg-violet-100 dark:bg-violet-500/30 text-violet-700 dark:text-violet-200 border border-violet-300 dark:border-violet-400/30' : 'bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-zinc-500'
+                      }`}
                   >
                     {item.count}
                   </span>
@@ -2455,38 +2666,34 @@ export const AdminPage: React.FC = () => {
               </button>
             ))}
 
-            <div className="px-3 pt-5 pb-2 text-[10px] font-mono text-zinc-500 uppercase tracking-widest font-bold flex items-center justify-between">
+            <div className="px-3 pt-5 pb-2 text-[10px] font-mono text-slate-500 dark:text-zinc-500 uppercase tracking-widest font-bold flex items-center justify-between">
               <span>Technical Systems</span>
-              <span className="text-[9px] text-zinc-600 font-normal">Cloud</span>
+              <span className="text-[9px] text-slate-400 dark:text-zinc-600 font-normal">Cloud</span>
             </div>
             {[
-              { id: 'whatsapp', label: 'WhatsApp Cloud API', icon: <MessageSquare className="w-4 h-4 text-emerald-400" />, badge: 'Meta' },
-              { id: 'traffic', label: 'Traffic & Geolocation', icon: <BarChart3 className="w-4 h-4 text-cyan-400" />, count: totalViews },
-              { id: 'database', label: 'Database & SQL Health', icon: <Database className="w-4 h-4 text-violet-400" />, badge: 'PG17' },
+              { id: 'whatsapp', label: 'WhatsApp Cloud API', icon: <MessageSquare className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />, badge: 'Meta' },
+              { id: 'traffic', label: 'Traffic & Geolocation', icon: <BarChart3 className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />, count: totalViews },
+              { id: 'database', label: 'Database & SQL Health', icon: <Database className="w-4 h-4 text-violet-600 dark:text-violet-400" />, badge: 'PG17' },
               { id: 'settings', label: 'Admin Security Config', icon: <Settings className="w-4 h-4" />, count: null },
             ].map((item) => (
               <button
                 key={item.id}
-                onClick={() => {
-                  soundFX.playClick();
-                  setActiveTab(item.id as AdminTab);
-                }}
-                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-mono transition-all cursor-pointer relative group ${
-                  activeTab === item.id
-                    ? 'bg-gradient-to-r from-violet-600/30 via-violet-600/15 to-transparent text-white font-bold border border-violet-500/40 shadow-[0_0_20px_-3px_rgba(124,58,237,0.3)]'
-                    : 'text-zinc-400 hover:text-white hover:bg-white/[0.04]'
-                }`}
+                onClick={() => handleTabChange(item.id as AdminTab)}
+                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-mono transition-all cursor-pointer relative group ${activeTab === item.id
+                  ? 'bg-gradient-to-r from-violet-600/15 via-violet-600/10 to-transparent dark:from-violet-600/30 dark:via-violet-600/15 dark:to-transparent text-violet-700 dark:text-white font-bold border border-violet-400/40 dark:border-violet-500/40 shadow-xs dark:shadow-[0_0_20px_-3px_rgba(124,58,237,0.3)]'
+                  : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.04]'
+                  }`}
               >
                 <div className="flex items-center gap-3">
                   {item.icon}
                   <span>{item.label}</span>
                 </div>
                 {item.badge ? (
-                  <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-white/10 text-zinc-300">
+                  <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-zinc-300">
                     {item.badge}
                   </span>
                 ) : item.count !== null ? (
-                  <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-white/5 text-zinc-400">
+                  <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-zinc-400">
                     {item.count}
                   </span>
                 ) : null}
@@ -2497,10 +2704,10 @@ export const AdminPage: React.FC = () => {
 
         {/* User Info & Secure Exit */}
         <div className="p-4 border-t border-slate-200 dark:border-white/[0.08] space-y-3">
-          <div className="p-3 rounded-2xl bg-black/50 border border-white/[0.06] text-xs font-mono">
-            <div className="text-[10px] text-zinc-500 uppercase tracking-widest mb-0.5">Admin Session</div>
-            <div className="text-white font-bold truncate">{session.user.email}</div>
-            <div className="text-[10px] text-amber-400 mt-1 flex items-center gap-1.5">
+          <div className="p-3 rounded-2xl bg-slate-50 dark:bg-black/50 border border-slate-200 dark:border-white/[0.06] text-xs font-mono">
+            <div className="text-[10px] text-slate-500 dark:text-zinc-500 uppercase tracking-widest mb-0.5">Admin Session</div>
+            <div className="text-slate-900 dark:text-white font-bold truncate">{session.user.email}</div>
+            <div className="text-[10px] text-amber-600 dark:text-amber-400 mt-1 flex items-center gap-1.5 font-medium">
               <Shield className="w-3 h-3" />
               <span>Strict Auto-Signout Active</span>
             </div>
@@ -2509,7 +2716,7 @@ export const AdminPage: React.FC = () => {
           <div className="flex items-center gap-2">
             <button
               onClick={handleExitToPortfolio}
-              className="flex-1 py-2 px-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 hover:text-white text-xs font-mono flex items-center justify-center gap-1.5 transition-colors cursor-pointer border border-white/[0.06]"
+              className="flex-1 py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.04] dark:hover:bg-white/[0.08] text-slate-700 hover:text-slate-900 dark:text-zinc-300 dark:hover:text-white text-xs font-mono flex items-center justify-center gap-1.5 transition-colors cursor-pointer border border-slate-200 dark:border-white/[0.06]"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Exit Site</span>
@@ -2517,7 +2724,7 @@ export const AdminPage: React.FC = () => {
 
             <button
               onClick={() => handleSecureLogout()}
-              className="p-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/20 transition-colors cursor-pointer"
+              className="p-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-300 border border-rose-500/20 transition-colors cursor-pointer"
               title="Lock and Log Out"
             >
               <LogOut className="w-4 h-4" />
@@ -2527,11 +2734,11 @@ export const AdminPage: React.FC = () => {
       </aside>
 
       {/* MAIN VIEW AREA */}
-      <div className="admin-dashboard-view flex-1 h-full md:h-screen overflow-y-auto bg-[#04030a] flex flex-col min-w-0">
+      <div className="admin-dashboard-view flex-1 h-full md:h-screen overflow-y-auto bg-slate-50 dark:bg-[#04030a] text-slate-900 dark:text-slate-100 flex flex-col min-w-0">
         {/* Top Header (MotionSites Award Standard) */}
-        <header className="admin-main-header sticky top-0 z-30 bg-[#070512]/90 backdrop-blur-2xl border-b border-white/[0.08] px-4 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 shadow-lg shadow-black/40">
+        <header className="admin-main-header sticky top-0 z-30 bg-white/95 dark:bg-[#070512]/90 backdrop-blur-2xl border-b border-slate-200 dark:border-white/[0.08] px-4 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 shadow-sm dark:shadow-lg dark:shadow-black/40">
           <div>
-            <h1 className="text-lg sm:text-xl font-bold font-display text-white tracking-tight flex items-center gap-2">
+            <h1 className="text-lg sm:text-xl font-bold font-display text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
               {activeTab === 'dashboard' && (
                 <>Executive Operations <span className="font-bold text-violet-400">Intelligence</span></>
               )}
@@ -2556,15 +2763,18 @@ export const AdminPage: React.FC = () => {
               {activeTab === 'messages' && (
                 <>Direct Communication <span className="font-bold text-indigo-400">Inbox</span></>
               )}
+              {activeTab === 'emails' && (
+                <>Sent Email <span className="font-bold text-violet-400">Audit Ledger</span></>
+              )}
               {activeTab === 'settings' && (
                 <>System Environment & <span className="font-bold text-zinc-400">Security</span></>
               )}
             </h1>
-            <p className="text-xs text-zinc-400 font-mono flex items-center gap-2 mt-0.5">
+            <p className="text-xs text-slate-500 dark:text-zinc-400 font-mono flex items-center gap-2 mt-0.5">
               <span>Pyrow Technologies Enterprise</span>
-              <span className="text-zinc-600">•</span>
-              <span className="text-emerald-400 flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-slate-400 dark:text-zinc-600">•</span>
+              <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse" />
                 <span>Production Node 14ms</span>
               </span>
             </p>
@@ -2596,11 +2806,10 @@ export const AdminPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => { if (theme !== 'light') toggleTheme(); }}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold cursor-pointer transition-all ${
-                  theme === 'light'
-                    ? 'bg-white text-slate-900 shadow-sm'
-                    : 'text-slate-500 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-white'
-                }`}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold cursor-pointer transition-all ${theme === 'light'
+                  ? 'bg-white text-slate-900 shadow-sm'
+                  : 'text-slate-500 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-white'
+                  }`}
                 title="Switch to Light Theme"
                 aria-label="Light Theme"
               >
@@ -2610,11 +2819,10 @@ export const AdminPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => { if (theme !== 'dark') toggleTheme(); }}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold cursor-pointer transition-all ${
-                  theme === 'dark'
-                    ? 'bg-violet-600 text-white shadow-md shadow-violet-600/30'
-                    : 'text-slate-500 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-white'
-                }`}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold cursor-pointer transition-all ${theme === 'dark'
+                  ? 'bg-violet-600 text-white shadow-md shadow-violet-600/30'
+                  : 'text-slate-500 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-white'
+                  }`}
                 title="Switch to Dark Theme"
                 aria-label="Dark Theme"
               >
@@ -2643,56 +2851,56 @@ export const AdminPage: React.FC = () => {
             <div className="space-y-6 sm:space-y-8">
               {/* Financial & Operational KPI Row */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-                <div className="p-5 sm:p-6 rounded-2xl sm:rounded-[28px] bg-gradient-to-b from-white/[0.05] via-white/[0.02] to-transparent backdrop-blur-xl border border-white/[0.08] hover:border-violet-500/30 transition-all duration-300 relative overflow-hidden group shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
-                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                <div className="p-5 sm:p-6 rounded-2xl sm:rounded-[28px] bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-white/[0.08] hover:border-violet-500/40 transition-all duration-300 relative overflow-hidden group shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-500/30 to-transparent" />
                   <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">Client Pipeline</span>
-                    <Inbox className="w-4 h-4 text-violet-400" />
+                    <span className="text-xs font-mono text-slate-500 dark:text-zinc-400 uppercase tracking-widest font-bold">Client Pipeline</span>
+                    <Inbox className="w-4 h-4 text-violet-600 dark:text-violet-400" />
                   </div>
-                  <div className="text-3xl sm:text-4xl font-black font-display text-white tracking-tight">{enquiries.length}</div>
-                  <div className="text-[11px] text-zinc-400 font-mono mt-1.5 flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-violet-400" />
+                  <div className="text-3xl sm:text-4xl font-black font-display text-slate-900 dark:text-white tracking-tight">{enquiries.length}</div>
+                  <div className="text-[11px] text-slate-500 dark:text-zinc-400 font-mono mt-1.5 flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-violet-500" />
                     <span>Active high-intent leads</span>
                   </div>
                 </div>
 
-                <div className="p-5 sm:p-6 rounded-2xl sm:rounded-[28px] bg-gradient-to-b from-emerald-500/10 via-emerald-500/[0.03] to-transparent backdrop-blur-xl border border-emerald-500/20 hover:border-emerald-500/40 transition-all duration-300 relative overflow-hidden group shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
-                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-emerald-400/30 to-transparent" />
+                <div className="p-5 sm:p-6 rounded-2xl sm:rounded-[28px] bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-emerald-200 dark:border-emerald-500/20 hover:border-emerald-500/40 transition-all duration-300 relative overflow-hidden group shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-emerald-400/40 to-transparent" />
                   <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs font-mono text-emerald-300 uppercase tracking-widest">Collections Made</span>
-                    <CreditCard className="w-4 h-4 text-emerald-400" />
+                    <span className="text-xs font-mono text-emerald-700 dark:text-emerald-300 uppercase tracking-widest font-bold">Collections Made</span>
+                    <CreditCard className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                   </div>
-                  <div className="text-3xl sm:text-4xl font-black font-display text-emerald-400 tracking-tight">
+                  <div className="text-3xl sm:text-4xl font-black font-display text-emerald-600 dark:text-emerald-400 tracking-tight">
                     ₹{totalCollected.toLocaleString('en-IN')}
                   </div>
-                  <div className="text-[11px] text-emerald-300/70 font-mono mt-1.5 flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                  <div className="text-[11px] text-emerald-600/70 dark:text-emerald-300/70 font-mono mt-1.5 flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                     <span>GST Invoiced & Collected</span>
                   </div>
                 </div>
 
-                <div className="p-5 sm:p-6 rounded-2xl sm:rounded-[28px] bg-gradient-to-b from-cyan-500/10 via-cyan-500/[0.03] to-transparent backdrop-blur-xl border border-cyan-500/20 hover:border-cyan-500/40 transition-all duration-300 relative overflow-hidden group shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
-                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent" />
+                <div className="p-5 sm:p-6 rounded-2xl sm:rounded-[28px] bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-cyan-200 dark:border-cyan-500/20 hover:border-cyan-500/40 transition-all duration-300 relative overflow-hidden group shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent" />
                   <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs font-mono text-cyan-300 uppercase tracking-widest">Live Pageviews</span>
-                    <BarChart3 className="w-4 h-4 text-cyan-400" />
+                    <span className="text-xs font-mono text-cyan-700 dark:text-cyan-300 uppercase tracking-widest font-bold">Live Pageviews</span>
+                    <BarChart3 className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
                   </div>
-                  <div className="text-3xl sm:text-4xl font-black font-display text-cyan-400 tracking-tight">{totalViews}</div>
-                  <div className="text-[11px] text-cyan-300/70 font-mono mt-1.5 flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+                  <div className="text-3xl sm:text-4xl font-black font-display text-cyan-600 dark:text-cyan-400 tracking-tight">{totalViews}</div>
+                  <div className="text-[11px] text-cyan-600/70 dark:text-cyan-300/70 font-mono mt-1.5 flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-500" />
                     <span>Global geolocation verified</span>
                   </div>
                 </div>
 
-                <div className="p-5 sm:p-6 rounded-2xl sm:rounded-[28px] bg-gradient-to-b from-fuchsia-500/10 via-fuchsia-500/[0.03] to-transparent backdrop-blur-xl border border-fuchsia-500/20 hover:border-fuchsia-500/40 transition-all duration-300 relative overflow-hidden group shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
-                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-fuchsia-400/30 to-transparent" />
+                <div className="p-5 sm:p-6 rounded-2xl sm:rounded-[28px] bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-fuchsia-200 dark:border-fuchsia-500/20 hover:border-fuchsia-500/40 transition-all duration-300 relative overflow-hidden group shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-fuchsia-400/40 to-transparent" />
                   <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs font-mono text-fuchsia-300 uppercase tracking-widest">WhatsApp Engine</span>
-                    <MessageSquare className="w-4 h-4 text-fuchsia-400" />
+                    <span className="text-xs font-mono text-fuchsia-700 dark:text-fuchsia-300 uppercase tracking-widest font-bold">WhatsApp Engine</span>
+                    <MessageSquare className="w-4 h-4 text-fuchsia-600 dark:text-fuchsia-400" />
                   </div>
-                  <div className="text-3xl sm:text-4xl font-black font-display text-fuchsia-400 tracking-tight">99.4%</div>
-                  <div className="text-[11px] text-fuchsia-300/70 font-mono mt-1.5 flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-fuchsia-400" />
+                  <div className="text-3xl sm:text-4xl font-black font-display text-fuchsia-600 dark:text-fuchsia-400 tracking-tight">99.4%</div>
+                  <div className="text-[11px] text-fuchsia-600/70 dark:text-fuchsia-300/70 font-mono mt-1.5 flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-fuchsia-500" />
                     <span>Meta Cloud Delivery SLA</span>
                   </div>
                 </div>
@@ -2700,73 +2908,73 @@ export const AdminPage: React.FC = () => {
 
               {/* Quick Jump Panels (MotionSites High-Density Grid) */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="p-6 rounded-[28px] bg-gradient-to-b from-white/[0.04] to-transparent backdrop-blur-xl border border-white/[0.08] hover:border-violet-500/30 transition-all space-y-4 shadow-[0_8px_30px_rgb(0,0,0,0.3)] relative overflow-hidden">
-                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+                <div className="p-6 rounded-[28px] bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-white/[0.08] hover:border-violet-500/30 transition-all space-y-4 shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)] relative overflow-hidden">
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-500/20 to-transparent" />
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-bold font-display text-white flex items-center gap-2">
-                      <Inbox className="w-4 h-4 text-violet-400" />
+                    <h3 className="text-sm font-bold font-display text-slate-900 dark:text-white flex items-center gap-2">
+                      <Inbox className="w-4 h-4 text-violet-600 dark:text-violet-400" />
                       <span>Recent Inquiries</span>
                     </h3>
-                    <button onClick={() => setActiveTab('enquiries')} className="text-xs text-violet-400 hover:text-violet-300 font-mono flex items-center gap-1 cursor-pointer">
+                    <button onClick={() => handleTabChange('enquiries')} className="text-xs text-violet-600 dark:text-violet-400 hover:text-violet-700 dark:hover:text-violet-300 font-mono font-bold flex items-center gap-1 cursor-pointer">
                       <span>View all</span>
                       <ChevronRight className="w-3 h-3" />
                     </button>
                   </div>
                   <div className="space-y-2.5">
                     {enquiries.slice(0, 4).map((item) => (
-                      <div key={item.id} className="p-3.5 rounded-2xl bg-black/40 border border-white/[0.06] hover:border-violet-500/30 text-xs font-mono transition-colors">
-                        <div className="flex justify-between font-bold text-white">
+                      <div key={item.id} className="p-3.5 rounded-2xl bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/[0.06] hover:border-violet-500/40 text-xs font-mono transition-colors">
+                        <div className="flex justify-between font-bold text-slate-900 dark:text-white">
                           <span className="truncate pr-2">{item.name || 'Anonymous Client'}</span>
-                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/30 uppercase tracking-wider">{item.type}</span>
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-violet-100 dark:bg-violet-500/20 text-violet-700 dark:text-violet-300 border border-violet-200 dark:border-violet-500/30 uppercase tracking-wider">{item.type}</span>
                         </div>
-                        <div className="text-zinc-400 text-[11px] mt-1 truncate">{item.phone || item.email}</div>
+                        <div className="text-slate-500 dark:text-zinc-400 text-[11px] mt-1 truncate">{item.phone || item.email}</div>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                <div className="p-6 rounded-[28px] bg-gradient-to-b from-white/[0.04] to-transparent backdrop-blur-xl border border-white/[0.08] hover:border-emerald-500/30 transition-all space-y-4 shadow-[0_8px_30px_rgb(0,0,0,0.3)] relative overflow-hidden">
+                <div className="p-6 rounded-[28px] bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-white/[0.08] hover:border-emerald-500/30 transition-all space-y-4 shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)] relative overflow-hidden">
                   <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-emerald-400/20 to-transparent" />
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-bold font-display text-white flex items-center gap-2">
-                      <Receipt className="w-4 h-4 text-emerald-400" />
+                    <h3 className="text-sm font-bold font-display text-slate-900 dark:text-white flex items-center gap-2">
+                      <Receipt className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                       <span>Recent Billing Invoices</span>
                     </h3>
-                    <button onClick={() => setActiveTab('billing')} className="text-xs text-emerald-400 hover:text-emerald-300 font-mono flex items-center gap-1 cursor-pointer">
+                    <button onClick={() => handleTabChange('billing')} className="text-xs text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-mono font-bold flex items-center gap-1 cursor-pointer">
                       <span>Invoices</span>
                       <ChevronRight className="w-3 h-3" />
                     </button>
                   </div>
                   <div className="space-y-2.5">
                     {invoices.slice(0, 4).map((inv) => (
-                      <div key={inv.id} className="p-3.5 rounded-2xl bg-black/40 border border-white/[0.06] hover:border-emerald-500/30 text-xs font-mono transition-colors">
-                        <div className="flex justify-between font-bold text-white">
+                      <div key={inv.id} className="p-3.5 rounded-2xl bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/[0.06] hover:border-emerald-500/40 text-xs font-mono transition-colors">
+                        <div className="flex justify-between font-bold text-slate-900 dark:text-white">
                           <span>{inv.invoice_number}</span>
-                          <span className="text-emerald-400 font-bold">₹{Number(inv.total_amount).toLocaleString('en-IN')}</span>
+                          <span className="text-emerald-600 dark:text-emerald-400 font-bold">₹{Number(inv.total_amount).toLocaleString('en-IN')}</span>
                         </div>
-                        <div className="text-zinc-400 text-[11px] mt-1 truncate">{inv.client_company || inv.client_name}</div>
+                        <div className="text-slate-500 dark:text-zinc-400 text-[11px] mt-1 truncate">{inv.client_company || inv.client_name}</div>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                <div className="p-6 rounded-[28px] bg-gradient-to-b from-white/[0.04] to-transparent backdrop-blur-xl border border-white/[0.08] hover:border-cyan-500/30 transition-all space-y-4 shadow-[0_8px_30px_rgb(0,0,0,0.3)] relative overflow-hidden">
+                <div className="p-6 rounded-[28px] bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-white/[0.08] hover:border-cyan-500/30 transition-all space-y-4 shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)] relative overflow-hidden">
                   <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent" />
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-bold font-display text-white flex items-center gap-2">
-                      <MapPin className="w-4 h-4 text-cyan-400" />
+                    <h3 className="text-sm font-bold font-display text-slate-900 dark:text-white flex items-center gap-2">
+                      <MapPin className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
                       <span>Visitor Geolocation</span>
                     </h3>
-                    <button onClick={() => setActiveTab('traffic')} className="text-xs text-cyan-400 hover:text-cyan-300 font-mono flex items-center gap-1 cursor-pointer">
+                    <button onClick={() => handleTabChange('traffic')} className="text-xs text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 font-mono font-bold flex items-center gap-1 cursor-pointer">
                       <span>Analytics</span>
                       <ChevronRight className="w-3 h-3" />
                     </button>
                   </div>
                   <div className="space-y-2.5">
                     {sortedCities.slice(0, 4).map(([city, count], idx) => (
-                      <div key={idx} className="p-3.5 rounded-2xl bg-black/40 border border-white/[0.06] hover:border-cyan-500/30 flex justify-between text-xs font-mono transition-colors">
-                        <span className="text-zinc-200">#{idx + 1} {city}</span>
-                        <span className="font-bold text-cyan-400">{count} visits</span>
+                      <div key={idx} className="p-3.5 rounded-2xl bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/[0.06] hover:border-cyan-500/40 flex justify-between text-xs font-mono transition-colors">
+                        <span className="text-slate-800 dark:text-zinc-200 font-medium">#{idx + 1} {city}</span>
+                        <span className="font-bold text-cyan-600 dark:text-cyan-400">{count} visits</span>
                       </div>
                     ))}
                   </div>
@@ -2834,33 +3042,33 @@ export const AdminPage: React.FC = () => {
               {/* Template Dispatcher & Live Log Split */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 {/* Template Message Dispatcher */}
-                <div className="lg:col-span-5 p-6 rounded-2xl bg-white/5 border border-white/10 space-y-4">
-                  <h4 className="text-sm font-bold text-white flex items-center gap-2 font-mono">
-                    <Send className="w-4 h-4 text-emerald-400" />
+                <div className="lg:col-span-5 p-6 sm:p-7 rounded-3xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-white/10 space-y-4 shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2 font-mono">
+                    <Send className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                     <span>Send Cloud Template Message</span>
                   </h4>
 
                   {waSuccessNotice && (
-                    <div className="p-3 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-mono">
+                    <div className="p-3 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 text-xs font-mono font-bold">
                       ✓ {waSuccessNotice}
                     </div>
                   )}
 
                   <form onSubmit={handleSendMetaCloudApi} className="space-y-4 text-xs font-mono">
                     <div>
-                      <label className="text-zinc-400 block mb-1">Target Mobile Number (with Country Code)</label>
+                      <label className="text-slate-700 dark:text-zinc-300 font-semibold block mb-1">Target Mobile Number (with Country Code)</label>
                       <input
                         required
                         type="text"
                         value={waTestNumber}
                         onChange={(e) => setWaTestNumber(e.target.value)}
                         placeholder="+91 73581 63590"
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-black/40 border border-white/10 text-white"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 font-mono shadow-xs"
                       />
                     </div>
 
                     <div>
-                      <label className="text-zinc-400 block mb-1">Message Template</label>
+                      <label className="text-slate-700 dark:text-zinc-300 font-semibold block mb-1">Message Template</label>
                       <select
                         value={waSelectedTemplate}
                         onChange={(e) => {
@@ -2873,7 +3081,7 @@ export const AdminPage: React.FC = () => {
                             setWaMessageText('Reminder: Your scheduled architecture discovery call with Pyrow Technologies is set for tomorrow.');
                           }
                         }}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white cursor-pointer"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white cursor-pointer font-mono"
                       >
                         <option value="lead_welcome_v1">lead_welcome_v1 (Lead Acknowledgment)</option>
                         <option value="quotation_dispatch_v2">quotation_dispatch_v2 (Quotation Alert)</option>
@@ -2882,12 +3090,12 @@ export const AdminPage: React.FC = () => {
                     </div>
 
                     <div>
-                      <label className="text-zinc-400 block mb-1">Message Body</label>
+                      <label className="text-slate-700 dark:text-zinc-300 font-semibold block mb-1">Message Body</label>
                       <textarea
                         rows={4}
                         value={waMessageText}
                         onChange={(e) => setWaMessageText(e.target.value)}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-black/40 border border-white/10 text-white resize-none"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white resize-none font-mono focus:outline-none focus:border-emerald-500 shadow-xs"
                       />
                     </div>
 
@@ -2896,7 +3104,7 @@ export const AdminPage: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => handleSendWhatsAppDirect(waTestNumber, waMessageText, waSelectedTemplate)}
-                        className="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 cursor-pointer"
+                        className="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 cursor-pointer transition-all"
                       >
                         <MessageSquare className="w-4 h-4" />
                         <span>📲 Send to Mobile Phone via WhatsApp (Instant)</span>
@@ -2905,28 +3113,28 @@ export const AdminPage: React.FC = () => {
                       <button
                         type="submit"
                         disabled={waSending}
-                        className="w-full py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-emerald-400 border border-emerald-500/30 font-bold flex items-center justify-center gap-2 cursor-pointer transition-all"
+                        className="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-800 dark:text-emerald-400 border border-slate-200 dark:border-emerald-500/30 font-bold flex items-center justify-center gap-2 cursor-pointer transition-all disabled:opacity-50"
                       >
-                        <Send className="w-4 h-4" />
+                        <Send className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                         <span>{waSending ? 'Transmitting...' : '🤖 Transmit via Meta Cloud API Gateway'}</span>
                       </button>
                     </div>
 
                     {/* Optional Meta Cloud API Credentials */}
-                    <div className="pt-2 border-t border-white/10">
+                    <div className="pt-2 border-t border-slate-200 dark:border-white/10">
                       <button
                         type="button"
                         onClick={() => setShowMetaSettings(!showMetaSettings)}
-                        className="text-[11px] text-zinc-400 hover:text-white flex items-center gap-1.5 cursor-pointer"
+                        className="text-[11px] text-slate-500 dark:text-zinc-400 hover:text-slate-800 dark:hover:text-white flex items-center gap-1.5 cursor-pointer font-medium"
                       >
-                        <Settings className="w-3.5 h-3.5 text-zinc-500" />
+                        <Settings className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500" />
                         <span>{showMetaSettings ? 'Hide Meta API Settings' : 'Configure Meta Graph API Credentials (Optional)'}</span>
                       </button>
 
                       {showMetaSettings && (
-                        <div className="mt-3 p-3.5 rounded-xl bg-black/30 border border-white/10 space-y-3 text-[11px]">
+                        <div className="mt-3 p-3.5 rounded-2xl bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 space-y-3 text-[11px]">
                           <div>
-                            <label className="text-zinc-400 block mb-1">Meta Phone Number ID</label>
+                            <label className="text-slate-700 dark:text-zinc-400 block mb-1 font-semibold">Meta Phone Number ID</label>
                             <input
                               type="text"
                               value={metaPhoneId}
@@ -2935,11 +3143,11 @@ export const AdminPage: React.FC = () => {
                                 localStorage.setItem('pyrow_meta_phone_id', e.target.value);
                               }}
                               placeholder="e.g. 108492049182341"
-                              className="w-full px-3 py-1.5 rounded-lg bg-slate-900 border border-white/10 text-white"
+                              className="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white font-mono shadow-xs"
                             />
                           </div>
                           <div>
-                            <label className="text-zinc-400 block mb-1">System User Access Token</label>
+                            <label className="text-slate-700 dark:text-zinc-400 block mb-1 font-semibold">System User Access Token</label>
                             <input
                               type="password"
                               value={metaAccessToken}
@@ -2948,10 +3156,10 @@ export const AdminPage: React.FC = () => {
                                 localStorage.setItem('pyrow_meta_token', e.target.value);
                               }}
                               placeholder="EAAB..."
-                              className="w-full px-3 py-1.5 rounded-lg bg-slate-900 border border-white/10 text-white"
+                              className="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white font-mono shadow-xs"
                             />
                           </div>
-                          <p className="text-[10px] text-zinc-500">
+                          <p className="text-[10px] text-slate-400 dark:text-zinc-500 font-mono">
                             Saved locally in your browser session for automated background cloud transmission.
                           </p>
                         </div>
@@ -2961,16 +3169,16 @@ export const AdminPage: React.FC = () => {
                 </div>
 
                 {/* WhatsApp Message Log Stream */}
-                <div className="lg:col-span-7 p-6 rounded-2xl bg-white/5 border border-white/10 space-y-4">
+                <div className="lg:col-span-7 p-6 sm:p-7 rounded-3xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-white/10 space-y-4 shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-sm font-bold text-white flex items-center gap-2 font-mono">
-                      <Clock className="w-4 h-4 text-emerald-400" />
+                    <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2 font-mono">
+                      <Clock className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                       <span>WhatsApp Delivery Logs ({whatsappLogs.length})</span>
                     </h4>
                     {whatsappLogs.length > 0 && (
                       <button
                         onClick={handleClearAllWaLogs}
-                        className="px-2.5 py-1 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 text-[10px] font-mono flex items-center gap-1 cursor-pointer"
+                        className="px-2.5 py-1 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 border border-red-500/20 text-[10px] font-mono flex items-center gap-1 cursor-pointer font-bold"
                         title="Clear all logs"
                       >
                         <Trash2 className="w-3 h-3" />
@@ -2981,38 +3189,38 @@ export const AdminPage: React.FC = () => {
 
                   <div className="space-y-3 max-h-[420px] overflow-y-auto">
                     {whatsappLogs.map((log) => (
-                      <div key={log.id || Math.random()} className="p-3.5 rounded-xl bg-black/30 border border-white/5 space-y-2 text-xs font-mono">
+                      <div key={log.id || Math.random()} className="p-3.5 rounded-2xl bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/5 space-y-2 text-xs font-mono shadow-xs">
                         <div className="flex items-center justify-between">
-                          <span className="font-bold text-emerald-400">{log.phone_number}</span>
+                          <span className="font-bold text-emerald-700 dark:text-emerald-400">{log.phone_number}</span>
                           <div className="flex items-center gap-1.5">
-                            <span className="px-2 py-0.5 rounded-full text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 uppercase font-bold">
+                            <span className="px-2 py-0.5 rounded-full text-[10px] bg-emerald-100 dark:bg-emerald-500/10 text-emerald-800 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-500/30 uppercase font-bold">
                               {log.status}
                             </span>
                             <button
                               onClick={() => handleSendWhatsAppDirect(log.phone_number, log.message_body, log.template_name || 'resend')}
-                              className="p-1 rounded bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] cursor-pointer"
+                              className="p-1 rounded bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 text-[10px] cursor-pointer"
                               title="Resend to WhatsApp"
                             >
                               <Send className="w-3 h-3" />
                             </button>
                             <button
                               onClick={() => handleOpenEditWaLog(log)}
-                              className="p-1 rounded bg-white/5 hover:bg-white/10 text-zinc-300 border border-white/10 text-[10px] cursor-pointer"
+                              className="p-1 rounded bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-white/10 text-[10px] cursor-pointer"
                               title="Edit Log"
                             >
                               <Edit3 className="w-3 h-3" />
                             </button>
                             <button
                               onClick={() => handleDeleteWaLog(log.id!)}
-                              className="p-1 rounded bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 text-[10px] cursor-pointer"
+                              className="p-1 rounded bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 border border-red-500/30 text-[10px] cursor-pointer"
                               title="Delete Log"
                             >
                               <Trash2 className="w-3 h-3" />
                             </button>
                           </div>
                         </div>
-                        <div className="text-zinc-300 text-[11px] leading-relaxed">{log.message_body}</div>
-                        <div className="text-[10px] text-zinc-500 flex justify-between pt-1 border-t border-white/5">
+                        <div className="text-slate-800 dark:text-zinc-300 text-[11px] leading-relaxed">{log.message_body}</div>
+                        <div className="text-[10px] text-slate-500 dark:text-zinc-500 flex justify-between pt-1 border-t border-slate-200 dark:border-white/5">
                           <span>Template: {log.template_name || 'custom'}</span>
                           <span>{new Date(log.created_at || '').toLocaleTimeString()}</span>
                         </div>
@@ -3031,50 +3239,50 @@ export const AdminPage: React.FC = () => {
             <div className="space-y-8">
               {/* Billing Financial Counters (MotionSites Aesthetic) */}
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-                <div className="p-6 rounded-[28px] bg-gradient-to-b from-white/[0.04] to-transparent backdrop-blur-xl border border-white/[0.08] hover:border-violet-500/30 transition-all relative overflow-hidden group shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
-                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-                  <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">Total Invoiced</span>
-                  <div className="text-2xl sm:text-3xl font-black font-display text-white mt-1.5 tracking-tight">
+                <div className="p-6 rounded-[28px] bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-white/[0.08] hover:border-violet-500/40 transition-all relative overflow-hidden group shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-500/30 to-transparent" />
+                  <span className="text-xs font-mono text-slate-500 dark:text-zinc-400 uppercase tracking-widest font-bold">Total Invoiced</span>
+                  <div className="text-2xl sm:text-3xl font-black font-display text-slate-900 dark:text-white mt-1.5 tracking-tight">
                     ₹{totalInvoiced.toLocaleString('en-IN')}
                   </div>
-                  <div className="text-[11px] text-zinc-500 font-mono mt-1">{invoices.length} total tax invoices</div>
+                  <div className="text-[11px] text-slate-400 dark:text-zinc-500 font-mono mt-1">{invoices.length} total tax invoices</div>
                 </div>
 
-                <div className="p-6 rounded-[28px] bg-gradient-to-b from-emerald-500/10 via-emerald-500/[0.03] to-transparent backdrop-blur-xl border border-emerald-500/20 hover:border-emerald-500/40 transition-all relative overflow-hidden group shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
-                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-emerald-400/30 to-transparent" />
-                  <span className="text-xs font-mono text-emerald-300 uppercase tracking-widest">Collected Revenue</span>
-                  <div className="text-2xl sm:text-3xl font-black font-display text-emerald-400 mt-1.5 tracking-tight">
+                <div className="p-6 rounded-[28px] bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-emerald-200 dark:border-emerald-500/20 hover:border-emerald-500/40 transition-all relative overflow-hidden group shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-emerald-400/40 to-transparent" />
+                  <span className="text-xs font-mono text-emerald-700 dark:text-emerald-300 uppercase tracking-widest font-bold">Collected Revenue</span>
+                  <div className="text-2xl sm:text-3xl font-black font-display text-emerald-600 dark:text-emerald-400 mt-1.5 tracking-tight">
                     ₹{totalCollected.toLocaleString('en-IN')}
                   </div>
-                  <div className="text-[11px] text-emerald-300/70 font-mono mt-1">Realized bank funds</div>
+                  <div className="text-[11px] text-emerald-600/70 dark:text-emerald-300/70 font-mono mt-1">Realized bank funds</div>
                 </div>
 
-                <div className="p-6 rounded-[28px] bg-gradient-to-b from-amber-500/10 via-amber-500/[0.03] to-transparent backdrop-blur-xl border border-amber-500/20 hover:border-amber-500/40 transition-all relative overflow-hidden group shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
-                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-amber-400/30 to-transparent" />
-                  <span className="text-xs font-mono text-amber-300 uppercase tracking-widest">Pending Receivables</span>
-                  <div className="text-2xl sm:text-3xl font-black font-display text-amber-400 mt-1.5 tracking-tight">
+                <div className="p-6 rounded-[28px] bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-amber-200 dark:border-amber-500/20 hover:border-amber-500/40 transition-all relative overflow-hidden group shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-amber-400/40 to-transparent" />
+                  <span className="text-xs font-mono text-amber-700 dark:text-amber-300 uppercase tracking-widest font-bold">Pending Receivables</span>
+                  <div className="text-2xl sm:text-3xl font-black font-display text-amber-600 dark:text-amber-400 mt-1.5 tracking-tight">
                     ₹{totalPending.toLocaleString('en-IN')}
                   </div>
-                  <div className="text-[11px] text-amber-300/70 font-mono mt-1">Awaiting milestone clearance</div>
+                  <div className="text-[11px] text-amber-600/70 dark:text-amber-300/70 font-mono mt-1">Awaiting milestone clearance</div>
                 </div>
 
-                <div className="p-6 rounded-[28px] bg-gradient-to-b from-violet-500/10 via-violet-500/[0.03] to-transparent backdrop-blur-xl border border-violet-500/20 hover:border-violet-500/40 transition-all relative overflow-hidden group shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
-                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-400/30 to-transparent" />
-                  <span className="text-xs font-mono text-violet-300 uppercase tracking-widest">GST 18% Output Tax</span>
-                  <div className="text-2xl sm:text-3xl font-black font-display text-violet-400 mt-1.5 tracking-tight">
+                <div className="p-6 rounded-[28px] bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-violet-200 dark:border-violet-500/20 hover:border-violet-500/40 transition-all relative overflow-hidden group shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-400/40 to-transparent" />
+                  <span className="text-xs font-mono text-violet-700 dark:text-violet-300 uppercase tracking-widest font-bold">GST 18% Output Tax</span>
+                  <div className="text-2xl sm:text-3xl font-black font-display text-violet-600 dark:text-violet-400 mt-1.5 tracking-tight">
                     ₹{totalGst.toLocaleString('en-IN')}
                   </div>
-                  <div className="text-[11px] text-violet-300/70 font-mono mt-1">Eligible for ITC credit</div>
+                  <div className="text-[11px] text-violet-600/70 dark:text-violet-300/70 font-mono mt-1">Eligible for ITC credit</div>
                 </div>
               </div>
 
               {/* Invoices List */}
-              <div className="p-6 rounded-[28px] bg-gradient-to-b from-white/[0.04] to-transparent backdrop-blur-xl border border-white/[0.08] space-y-4 shadow-[0_8px_30px_rgb(0,0,0,0.3)] relative overflow-hidden">
-                <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+              <div className="p-6 rounded-[28px] bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-white/[0.08] space-y-4 shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)] relative overflow-hidden">
+                <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-500/20 to-transparent" />
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
-                    <h3 className="text-base font-bold font-display text-white">Commercial Tax Invoices</h3>
-                    <p className="text-xs text-zinc-400 font-mono">SAC 998314 IT & Software Engineering Services Invoicing</p>
+                    <h3 className="text-base font-bold font-display text-slate-900 dark:text-white">Commercial Tax Invoices</h3>
+                    <p className="text-xs text-slate-500 dark:text-zinc-400 font-mono">SAC 998314 IT & Software Engineering Services Invoicing</p>
                   </div>
                   <button
                     onClick={handleOpenCreateInvoice}
@@ -3088,9 +3296,9 @@ export const AdminPage: React.FC = () => {
                 <div className="overflow-x-auto">
                   <table className="w-full text-xs font-mono border-collapse">
                     <thead>
-                      <tr className="border-b border-white/10 text-left text-zinc-400">
+                      <tr className="border-b border-slate-200 dark:border-white/10 text-left text-slate-500 dark:text-zinc-400">
                         <th className="py-2.5">Invoice #</th>
-                        <th className="py-2.5">Client & Company</th>
+                        <th className="py-2.5">Client & Email</th>
                         <th className="py-2.5">Date & Due</th>
                         <th className="py-2.5">Amount (₹)</th>
                         <th className="py-2.5">Mode</th>
@@ -3098,70 +3306,123 @@ export const AdminPage: React.FC = () => {
                         <th className="py-2.5 text-right">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-white/5">
-                      {invoices.map((inv) => (
-                        <tr key={inv.id} className="hover:bg-white/[0.02]">
-                          <td className="py-3 text-violet-400 font-bold">{inv.invoice_number}</td>
-                          <td className="py-3 text-white font-medium">
-                            <div>{inv.client_name}</div>
-                            <div className="text-[11px] text-zinc-500">{inv.client_company || 'Direct'}</div>
-                          </td>
-                          <td className="py-3 text-zinc-400">
-                            <div>{new Date(inv.created_at || '').toLocaleDateString('en-IN')}</div>
-                            <div className="text-[10px] text-zinc-500">Due: {inv.due_date || 'Immediate'}</div>
-                          </td>
-                          <td className="py-3 text-emerald-400 font-bold text-sm">
-                            ₹{Number(inv.total_amount).toLocaleString('en-IN')}
-                          </td>
-                          <td className="py-3 text-zinc-300">{inv.payment_mode || 'UPI'}</td>
-                          <td className="py-3">
-                            <span
-                              className={`px-2 py-0.5 rounded-full text-[10px] uppercase font-bold border ${
-                                inv.status === 'paid'
-                                  ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
-                                  : 'bg-amber-500/10 text-amber-400 border-amber-500/30'
-                              }`}
-                            >
-                              {inv.status}
-                            </span>
-                          </td>
-                          <td className="py-3 text-right">
-                            <div className="flex items-center justify-end gap-1.5">
-                              <button
-                                onClick={() => setActiveInvoicePreview(inv)}
-                                className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-200 text-xs flex items-center gap-1 cursor-pointer"
-                                title="View / Print Tax Invoice"
-                              >
-                                <Printer className="w-3.5 h-3.5" />
-                              </button>
-                              {inv.client_phone && (
-                                <button
-                                  type="button"
-                                  onClick={() => handleSendWhatsAppDirect(inv.client_phone!, `Dear ${inv.client_name}, here is your GST Tax Invoice ${inv.invoice_number} from Pyrow Technologies for ₹${Number(inv.total_amount).toLocaleString('en-IN')}. Due date: ${inv.due_date || 'Immediate'}. Status: ${inv.status}. Thank you!`, 'invoice_bill')}
-                                  className="p-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 cursor-pointer"
-                                  title="Send Bill via WhatsApp"
-                                >
-                                  <MessageSquare className="w-3.5 h-3.5" />
-                                </button>
-                              )}
-                              <button
-                                onClick={() => handleOpenEditInvoice(inv)}
-                                className="p-1.5 rounded-lg bg-violet-500/10 hover:bg-violet-500/20 text-violet-300 border border-violet-500/30 cursor-pointer"
-                                title="Edit Invoice"
-                              >
-                                <Edit3 className="w-3.5 h-3.5" />
-                              </button>
-                              <button
-                                onClick={() => handleDeleteInvoice(inv.id!)}
-                                className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 cursor-pointer"
-                                title="Delete Invoice"
-                              >
-                                <Trash2 className="w-3.5 h-3.5" />
-                              </button>
-                            </div>
+                    <tbody className="divide-y divide-slate-100 dark:divide-white/5">
+                      {invoices.length === 0 ? (
+                        <tr>
+                          <td colSpan={7} className="py-12 text-center">
+                            <Receipt className="w-10 h-10 text-slate-300 dark:text-zinc-600 mx-auto mb-3" />
+                            <div className="text-sm font-bold text-slate-700 dark:text-zinc-300 font-mono">No Tax Invoices Found</div>
+                            <p className="text-xs text-slate-500 dark:text-zinc-500 font-mono mt-1 max-w-sm mx-auto">
+                              Click &quot;+ New Tax Invoice&quot; above to issue and record your first GST tax invoice.
+                            </p>
                           </td>
                         </tr>
-                      ))}
+                      ) : (
+                        invoices.map((inv) => (
+                          <tr key={inv.id} className="hover:bg-slate-50/70 dark:hover:bg-white/[0.02]">
+                            <td className="py-3 text-violet-600 dark:text-violet-400 font-bold">{inv.invoice_number}</td>
+                            <td className="py-3 text-slate-900 dark:text-white font-medium">
+                              <div className="font-bold">{inv.client_name}</div>
+                              <div className="text-[11px] text-slate-500 dark:text-zinc-400 flex items-center gap-1.5 flex-wrap mt-0.5">
+                                <span>{inv.client_company || 'Direct Client'}</span>
+                                {inv.client_email ? (
+                                  <span className="text-violet-600 dark:text-violet-400 font-mono font-medium flex items-center gap-1 bg-violet-50 dark:bg-violet-900/20 px-1.5 py-0.5 rounded border border-violet-200 dark:border-violet-500/20">
+                                    <Mail className="w-3 h-3 text-violet-500" />
+                                    <span>{inv.client_email}</span>
+                                  </span>
+                                ) : (
+                                  <button
+                                    type="button"
+                                    onClick={() => handleOpenEditInvoice(inv)}
+                                    className="text-amber-600 dark:text-amber-400 font-mono text-[10px] bg-amber-50 dark:bg-amber-500/10 hover:bg-amber-100 dark:hover:bg-amber-500/20 px-1.5 py-0.5 rounded border border-amber-300 dark:border-amber-500/20 cursor-pointer flex items-center gap-1 font-semibold"
+                                    title="Click to edit invoice and set client email"
+                                  >
+                                    <Mail className="w-3 h-3 text-amber-500" />
+                                    <span>⚠️ Missing email - edit to add</span>
+                                  </button>
+                                )}
+                              </div>
+                            </td>
+                            <td className="py-3 text-slate-600 dark:text-zinc-400">
+                              <div>{new Date(inv.created_at || '').toLocaleDateString('en-IN')}</div>
+                              <div className="text-[10px] text-slate-400 dark:text-zinc-500">Due: {inv.due_date || 'Immediate'}</div>
+                            </td>
+                            <td className="py-3 text-emerald-600 dark:text-emerald-400 font-bold text-sm">
+                              ₹{Number(inv.total_amount).toLocaleString('en-IN')}
+                            </td>
+                            <td className="py-3 text-slate-700 dark:text-zinc-300">{inv.payment_mode || 'UPI'}</td>
+                            <td className="py-3">
+                              <span
+                                className={`px-2 py-0.5 rounded-full text-[10px] uppercase font-bold border ${inv.status === 'paid'
+                                  ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30'
+                                  : 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30'
+                                  }`}
+                              >
+                                {inv.status}
+                              </span>
+                            </td>
+                            <td className="py-3 text-right">
+                              <div className="flex items-center justify-end gap-1.5">
+                                <button
+                                  onClick={() => setActiveInvoicePreview(inv)}
+                                  className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 dark:text-zinc-200 border border-slate-200 dark:border-white/10 text-xs flex items-center gap-1 cursor-pointer"
+                                  title="View / Print Tax Invoice"
+                                >
+                                  <Printer className="w-3.5 h-3.5" />
+                                </button>
+                                {inv.client_email ? (
+                                  <button
+                                    type="button"
+                                    disabled={sendingInvoiceMailId === inv.id}
+                                    onClick={() => handleSendInvoiceEmail(inv)}
+                                    className="p-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 cursor-pointer"
+                                    title={`Send Invoice #${inv.invoice_number} to ${inv.client_email} via support@pyrow.in`}
+                                  >
+                                    {sendingInvoiceMailId === inv.id ? (
+                                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                    ) : (
+                                      <Mail className="w-3.5 h-3.5" />
+                                    )}
+                                  </button>
+                                ) : (
+                                  <button
+                                    type="button"
+                                    onClick={() => handleOpenEditInvoice(inv)}
+                                    className="p-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30 cursor-pointer"
+                                    title="Add client email to send invoice"
+                                  >
+                                    <Mail className="w-3.5 h-3.5" />
+                                  </button>
+                                )}
+                                {inv.client_phone && (
+                                  <button
+                                    type="button"
+                                    onClick={() => handleSendWhatsAppDirect(inv.client_phone!, `Dear ${inv.client_name}, here is your GST Tax Invoice ${inv.invoice_number} from Pyrow Technologies for ₹${Number(inv.total_amount).toLocaleString('en-IN')}. Due date: ${inv.due_date || 'Immediate'}. Status: ${inv.status}. Thank you!`, 'invoice_bill')}
+                                    className="p-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 cursor-pointer"
+                                    title="Send Bill via WhatsApp"
+                                  >
+                                    <MessageSquare className="w-3.5 h-3.5" />
+                                  </button>
+                                )}
+                                <button
+                                  onClick={() => handleOpenEditInvoice(inv)}
+                                  className="p-1.5 rounded-lg bg-violet-500/10 hover:bg-violet-500/20 text-violet-600 dark:text-violet-300 border border-violet-500/30 cursor-pointer"
+                                  title="Edit Tax Invoice & Email"
+                                >
+                                  <Edit3 className="w-3.5 h-3.5" />
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteInvoice(inv.id!)}
+                                  className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 border border-red-500/30 cursor-pointer"
+                                  title="Delete Invoice"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))
+                      )}
                     </tbody>
                   </table>
                 </div>
@@ -3228,9 +3489,9 @@ export const AdminPage: React.FC = () => {
               </div>
 
               {/* Database Tables Inspector */}
-              <div className="p-6 rounded-2xl bg-white/5 border border-white/10 space-y-4">
-                <h3 className="text-base font-bold text-white flex items-center gap-2">
-                  <Database className="w-4 h-4 text-violet-400" />
+              <div className="p-6 sm:p-7 rounded-3xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-white/10 space-y-4 shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
+                <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                  <Database className="w-4 h-4 text-violet-600 dark:text-violet-400" />
                   <span>Public Database Tables & Live Row Counts</span>
                 </h3>
 
@@ -3242,45 +3503,45 @@ export const AdminPage: React.FC = () => {
                     { table: 'public.page_views', rows: pageViews.length, desc: 'Visitor IP & geolocation' },
                     { table: 'public.whatsapp_logs', rows: whatsappLogs.length, desc: 'Meta Cloud API logs' },
                   ].map((tbl) => (
-                    <div key={tbl.table} className="p-4 rounded-xl bg-black/30 border border-white/10 space-y-1">
-                      <div className="text-xs font-mono text-zinc-400 truncate font-semibold">{tbl.table}</div>
-                      <div className="text-2xl font-black font-display text-white">{tbl.rows}</div>
-                      <div className="text-[10px] font-mono text-zinc-500">{tbl.desc}</div>
+                    <div key={tbl.table} className="p-4 rounded-2xl bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 space-y-1 shadow-xs">
+                      <div className="text-xs font-mono text-slate-700 dark:text-zinc-400 truncate font-semibold">{tbl.table}</div>
+                      <div className="text-2xl font-black font-display text-slate-900 dark:text-white">{tbl.rows}</div>
+                      <div className="text-[10px] font-mono text-slate-500 dark:text-zinc-500">{tbl.desc}</div>
                     </div>
                   ))}
                 </div>
               </div>
 
               {/* Diagnostic SQL Console */}
-              <div className="p-6 rounded-2xl bg-white/5 border border-white/10 space-y-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-base font-bold text-white flex items-center gap-2">
-                    <Terminal className="w-4 h-4 text-emerald-400" />
+              <div className="p-6 sm:p-7 rounded-3xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-white/10 space-y-4 shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <Terminal className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                     <span>SQL Diagnostics & Security Inspector</span>
                   </h3>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <button
                       onClick={() => handleRunDiagnosticQuery('stats')}
-                      className="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-xs font-mono text-zinc-300"
+                      className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-xs font-mono text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-white/10 cursor-pointer transition-colors"
                     >
                       Table Stats
                     </button>
                     <button
                       onClick={() => handleRunDiagnosticQuery('rls')}
-                      className="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-xs font-mono text-zinc-300"
+                      className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-xs font-mono text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-white/10 cursor-pointer transition-colors"
                     >
                       RLS Audit
                     </button>
                     <button
                       onClick={() => handleRunDiagnosticQuery('perf')}
-                      className="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-xs font-mono text-zinc-300"
+                      className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-xs font-mono text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-white/10 cursor-pointer transition-colors"
                     >
                       Network & Backup
                     </button>
                   </div>
                 </div>
 
-                <div className="p-4 rounded-xl bg-black/60 border border-white/10 font-mono text-xs text-emerald-400 min-h-[140px] overflow-x-auto">
+                <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 font-mono text-xs text-emerald-400 min-h-[140px] overflow-x-auto shadow-inner">
                   {sqlResult ? (
                     <pre className="whitespace-pre-wrap">{JSON.stringify(sqlResult, null, 2)}</pre>
                   ) : (
@@ -3298,7 +3559,7 @@ export const AdminPage: React.FC = () => {
           {/* -------------------------------------------------------- */}
           {activeTab === 'quotations' && (
             <div className="space-y-6">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200 dark:border-white/10">
                 <div className="flex items-center gap-3">
                   <img
                     src="/assets/pyrow-icon-transparent.png"
@@ -3306,94 +3567,117 @@ export const AdminPage: React.FC = () => {
                     className="h-8 w-auto object-contain drop-shadow-sm"
                   />
                   <div>
-                    <h3 className="text-base font-bold text-white">Commercial Quotations Studio</h3>
-                    <p className="text-xs text-zinc-400 font-mono">Create, customize, and dispatch proposals for software & digital marketing suites</p>
+                    <h3 className="text-lg font-bold font-display text-slate-900 dark:text-white">Commercial Quotations Studio</h3>
+                    <p className="text-xs text-slate-500 dark:text-zinc-400 font-mono">Create, customize, and dispatch proposals for software & digital marketing suites</p>
                   </div>
                 </div>
                 <button
                   onClick={handleOpenCreateQuotation}
-                  className="px-4 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-bold text-xs font-mono flex items-center gap-1.5 cursor-pointer shadow-lg shadow-violet-600/25 self-start"
+                  className="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-bold text-xs font-mono flex items-center gap-1.5 cursor-pointer shadow-lg shadow-violet-600/25 self-start"
                 >
                   <Plus className="w-4 h-4" />
                   <span>Create Commercial Quotation</span>
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {quotations.map((q) => (
-                  <div
-                    key={q.id}
-                    className="p-6 rounded-2xl bg-white/5 border border-white/10 flex flex-col justify-between space-y-4 hover:border-violet-500/40 transition-all"
-                  >
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-mono font-bold text-violet-400">{q.quote_number}</span>
-                        <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase font-bold">
-                          {q.status}
-                        </span>
+              {quotations.length === 0 ? (
+                <div className="p-12 text-center rounded-3xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-white/10 space-y-3 shadow-sm">
+                  <FileText className="w-10 h-10 text-slate-300 dark:text-zinc-600 mx-auto" />
+                  <div className="text-sm font-bold text-slate-700 dark:text-zinc-300 font-mono">No Quotations Found</div>
+                  <p className="text-xs text-slate-500 dark:text-zinc-500 font-mono max-w-md mx-auto">
+                    Click "Create Commercial Quotation" above to draft and issue proposal packages for your clients.
+                  </p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {quotations.map((q) => (
+                    <div
+                      key={q.id}
+                      className="p-6 sm:p-7 rounded-3xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-white/10 flex flex-col justify-between space-y-4 hover:border-violet-500/40 transition-all shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)] relative overflow-hidden"
+                    >
+                      <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-violet-500 to-indigo-500" />
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-mono font-bold text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-950/40 px-2 py-0.5 rounded border border-violet-200 dark:border-violet-800">{q.quote_number}</span>
+                          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-500/20 uppercase font-bold">
+                            {q.status}
+                          </span>
+                        </div>
+                        <h4 className="text-base font-bold text-slate-900 dark:text-white leading-snug">{q.project_title}</h4>
+                        <p className="text-xs text-slate-600 dark:text-zinc-400 font-mono">
+                          Client: <span className="text-slate-900 dark:text-white font-bold">{q.client_name}</span> ({q.client_company || 'Direct'})
+                        </p>
+                        <div className="text-2xl font-black font-display text-emerald-600 dark:text-emerald-400 tracking-tight">
+                          ₹{Number(q.total_amount).toLocaleString('en-IN')}
+                        </div>
+                        <div className="text-[11px] text-slate-400 dark:text-zinc-500 font-mono">Valid until: {q.valid_until || '14 days'}</div>
                       </div>
-                      <h4 className="text-base font-bold text-white">{q.project_title}</h4>
-                      <p className="text-xs text-zinc-400 font-mono">
-                        Client: <span className="text-white font-medium">{q.client_name}</span> ({q.client_company || 'Individual'})
-                      </p>
-                      <div className="text-xl font-black font-display text-emerald-400">
-                        ₹{Number(q.total_amount).toLocaleString('en-IN')}
-                      </div>
-                      <div className="text-[11px] text-zinc-500 font-mono">Valid until: {q.valid_until || '14 days'}</div>
-                    </div>
 
-                    <div className="pt-4 border-t border-white/10 flex items-center justify-between flex-wrap gap-2">
-                      <div className="flex items-center gap-3">
-                        <button
-                          onClick={() => setActiveQuotePreview(q)}
-                          className="text-xs font-mono font-bold text-violet-400 hover:underline flex items-center gap-1 cursor-pointer"
-                        >
-                          <Printer className="w-3.5 h-3.5" />
-                          <span>PDF</span>
-                        </button>
-
-                        {q.client_phone && (
+                      <div className="pt-4 border-t border-slate-100 dark:border-white/10 flex items-center justify-between flex-wrap gap-2">
+                        <div className="flex items-center gap-3">
                           <button
-                            type="button"
-                            onClick={() => handleSendWhatsAppDirect(q.client_phone!, `Hello ${q.client_name}, here is your quotation ${q.quote_number} for ${q.project_title} from Pyrow Technologies. Total Amount: ₹${Number(q.total_amount).toLocaleString('en-IN')}. Please let us know if you have any questions!`, 'quote_proposal')}
-                            className="text-xs font-mono text-emerald-400 hover:underline flex items-center gap-1 cursor-pointer"
+                            onClick={() => setActiveQuotePreview(q)}
+                            className="text-xs font-mono font-bold text-violet-600 dark:text-violet-400 hover:underline flex items-center gap-1 cursor-pointer"
                           >
-                            <MessageSquare className="w-3.5 h-3.5" />
-                            <span>WhatsApp</span>
+                            <Printer className="w-3.5 h-3.5" />
+                            <span>PDF</span>
                           </button>
-                        )}
 
-                        {q.client_email && (
-                          <a
-                            href={`mailto:${q.client_email}?subject=Quotation%20${q.quote_number}%20from%20Pyrow&body=Dear%20${encodeURIComponent(q.client_name)},%0A%0APlease%20find%20attached%20our%20commercial%20proposal%20for%20${encodeURIComponent(q.project_title)}.`}
-                            className="text-xs font-mono text-zinc-400 hover:text-white flex items-center gap-1"
+                          {q.client_phone && (
+                            <button
+                              type="button"
+                              onClick={() => handleSendWhatsAppDirect(q.client_phone!, `Hello ${q.client_name}, here is your quotation ${q.quote_number} for ${q.project_title} from Pyrow Technologies. Total Amount: ₹${Number(q.total_amount).toLocaleString('en-IN')}. Please let us know if you have any questions!`, 'quote_proposal')}
+                              className="text-xs font-mono text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1 cursor-pointer font-semibold"
+                            >
+                              <MessageSquare className="w-3.5 h-3.5" />
+                              <span>WhatsApp</span>
+                            </button>
+                          )}
+
+                          {q.client_email && (
+                            <button
+                              type="button"
+                              disabled={sendingQuoteMailId === q.id}
+                              onClick={() => handleSendQuoteEmail(q)}
+                              className="text-xs font-mono text-violet-600 dark:text-violet-400 hover:underline flex items-center gap-1 cursor-pointer font-semibold"
+                              title={`Dispatch Proposal #${q.quote_number} directly to ${q.client_email} via support@pyrow.in`}
+                            >
+                              {sendingQuoteMailId === q.id ? (
+                                <>
+                                  <Loader2 className="w-3 h-3 animate-spin" />
+                                  <span>Sending...</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Send className="w-3 h-3" />
+                                  <span>Send Mail</span>
+                                </>
+                              )}
+                            </button>
+                          )}
+                        </div>
+
+                        <div className="flex items-center gap-1.5 ml-auto">
+                          <button
+                            onClick={() => handleOpenEditQuotation(q)}
+                            className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-white/10 cursor-pointer"
+                            title="Edit Quotation"
                           >
-                            <Send className="w-3 h-3" />
-                            <span>Email</span>
-                          </a>
-                        )}
-                      </div>
-
-                      <div className="flex items-center gap-1.5 ml-auto">
-                        <button
-                          onClick={() => handleOpenEditQuotation(q)}
-                          className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-300 hover:text-white border border-white/10 cursor-pointer"
-                          title="Edit Quotation"
-                        >
-                          <Edit3 className="w-3.5 h-3.5 text-violet-400" />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteQuotation(q.id!)}
-                          className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 cursor-pointer"
-                          title="Delete Quotation"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
+                            <Edit3 className="w-3.5 h-3.5 text-violet-600 dark:text-violet-400" />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteQuotation(q.id!)}
+                            className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 border border-red-500/30 cursor-pointer"
+                            title="Delete Quotation"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
@@ -3403,17 +3687,17 @@ export const AdminPage: React.FC = () => {
           {activeTab === 'enquiries' && (
             <div className="space-y-6">
               {/* Filter Bar (MotionSites Standard) */}
-              <div className="p-6 rounded-[28px] bg-gradient-to-b from-white/[0.04] to-transparent backdrop-blur-xl border border-white/[0.08] space-y-4 shadow-[0_8px_30px_rgb(0,0,0,0.3)] relative overflow-hidden">
-                <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+              <div className="p-6 rounded-[28px] bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-white/[0.08] space-y-4 shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)] relative overflow-hidden">
+                <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-500/20 to-transparent" />
                 <div className="flex flex-col md:flex-row gap-3 items-center justify-between">
                   <div className="relative w-full md:w-96">
-                    <Search className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <Search className="w-4 h-4 text-slate-400 dark:text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                     <input
                       type="text"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       placeholder="Search by name, phone, email, IP, city..."
-                      className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-black/50 border border-white/10 text-xs sm:text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-violet-500 transition-colors"
+                      className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-slate-50 dark:bg-black/50 border border-slate-200 dark:border-white/10 text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus:outline-none focus:border-violet-500 transition-colors shadow-xs"
                     />
                   </div>
 
@@ -3422,11 +3706,10 @@ export const AdminPage: React.FC = () => {
                       <button
                         key={s}
                         onClick={() => setSelectedStatus(s)}
-                        className={`px-3.5 py-1.5 rounded-xl text-xs font-mono capitalize transition-all cursor-pointer ${
-                          selectedStatus === s
-                            ? 'bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-bold shadow-md shadow-violet-600/30 border border-violet-400/30'
-                            : 'bg-white/[0.04] text-zinc-400 hover:text-white hover:bg-white/[0.08]'
-                        }`}
+                        className={`px-3.5 py-1.5 rounded-xl text-xs font-mono capitalize transition-all cursor-pointer ${selectedStatus === s
+                          ? 'bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-bold shadow-md shadow-violet-600/30 border border-violet-400/30'
+                          : 'bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.04] dark:hover:bg-white/[0.08] text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-transparent'
+                          }`}
                       >
                         {s.replace('_', ' ')}
                       </button>
@@ -3437,54 +3720,82 @@ export const AdminPage: React.FC = () => {
 
               {/* Enquiries Cards */}
               <div className="space-y-4">
-                {filteredEnquiries.map((item) => {
-                  const cleanPhone = (item.phone || '').replace(/[^0-9]/g, '');
-                  return (
-                    <div
-                      key={item.id}
-                      className={`p-6 rounded-[28px] bg-gradient-to-b from-white/[0.04] to-transparent backdrop-blur-xl border transition-all relative overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.3)] ${
-                        item.status === 'new'
-                          ? 'border-amber-500/40 shadow-[0_0_25px_rgba(245,158,11,0.08)]'
-                          : 'border-white/[0.08] hover:border-violet-500/30'
-                      }`}
-                    >
-                      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
-                      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                        <div className="space-y-1.5 flex-1">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <span className="text-[10px] font-mono uppercase tracking-wider px-2.5 py-0.5 rounded-full font-bold bg-violet-500/10 text-violet-400 border border-violet-500/30">
-                              {item.type.replace('_', ' ')}
-                            </span>
-                            <span className="text-xs text-zinc-500 font-mono">
-                              {new Date(item.created_at || '').toLocaleString('en-IN')}
-                            </span>
-                            {item.city && (
-                              <span className="text-xs font-mono text-cyan-400 flex items-center gap-1">
-                                <MapPin className="w-3 h-3" />
-                                <span>{item.city}, {item.country_code || item.country}</span>
+                {filteredEnquiries.length === 0 ? (
+                  <div className="p-12 text-center rounded-[28px] bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-white/10 space-y-3 shadow-sm">
+                    <Inbox className="w-10 h-10 text-slate-300 dark:text-zinc-600 mx-auto" />
+                    <div className="text-sm font-bold text-slate-700 dark:text-zinc-300 font-mono">No Inquiries Found</div>
+                    <p className="text-xs text-slate-500 dark:text-zinc-500 font-mono max-w-md mx-auto">
+                      {searchTerm
+                        ? `No customer inquiries matched your search "${searchTerm}".`
+                        : 'Customer strategy requests, demo applications, and estimator calculations from the landing page will appear here automatically.'}
+                    </p>
+                  </div>
+                ) : (
+                  filteredEnquiries.map((item) => {
+                    const cleanPhone = (item.phone || '').replace(/[^0-9]/g, '');
+                    const isMailDelivered = Boolean(
+                      item.raw_data?.mail_sent ||
+                      (item.email && emailLogs.some((l) => l.recipient_email?.toLowerCase().includes(item.email!.toLowerCase())))
+                    );
+                    return (
+                      <div
+                        key={item.id}
+                        className={`p-6 sm:p-7 rounded-[28px] bg-white dark:bg-slate-900/60 backdrop-blur-xl border transition-all relative overflow-hidden shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)] ${item.status === 'new'
+                          ? 'border-amber-400/80 dark:border-amber-500/40 shadow-[0_0_25px_rgba(245,158,11,0.12)]'
+                          : 'border-slate-200 dark:border-white/[0.08] hover:border-violet-500/40'
+                          }`}
+                      >
+                        <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-violet-500 via-indigo-500 to-transparent" />
+                        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                          <div className="space-y-1.5 flex-1">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="text-[10px] font-mono uppercase tracking-wider px-2.5 py-0.5 rounded-full font-bold bg-violet-100 dark:bg-violet-500/10 text-violet-700 dark:text-violet-400 border border-violet-200 dark:border-violet-500/30">
+                                {item.type.replace('_', ' ')}
                               </span>
-                            )}
-                          </div>
+                              <span className="text-xs text-slate-500 dark:text-zinc-500 font-mono">
+                                {new Date(item.created_at || '').toLocaleString('en-IN')}
+                              </span>
+                              {item.city && (
+                                <span className="text-xs font-mono text-cyan-600 dark:text-cyan-400 flex items-center gap-1 font-medium">
+                                  <MapPin className="w-3 h-3" />
+                                  <span>{item.city}, {item.country_code || item.country}</span>
+                                </span>
+                              )}
+                            </div>
 
-                          <div className="flex items-center gap-2">
-                            <h3 className="text-lg font-bold text-white">{item.name || 'Anonymous Inquiry'}</h3>
-                            {item.company && <span className="text-xs text-zinc-400 font-mono">({item.company})</span>}
-                          </div>
+                            <div className="flex items-center gap-2">
+                              <h3 className="text-lg font-bold text-slate-900 dark:text-white">{item.name || 'Anonymous Inquiry'}</h3>
+                              {item.company && <span className="text-xs text-slate-500 dark:text-zinc-400 font-mono font-medium">({item.company})</span>}
+                            </div>
 
-                          <div className="flex items-center gap-3 text-xs text-zinc-400 flex-wrap">
-                            {item.service && <span className="text-violet-400 font-medium">Service: {item.service}</span>}
-                            {item.software_requested && <span className="text-fuchsia-400 font-medium">Software: {item.software_requested}</span>}
-                            {item.budget && <span className="text-emerald-400 font-mono">Budget: {item.budget}</span>}
-                            {item.ip_address && <span className="text-zinc-500 font-mono text-[11px]">IP: {item.ip_address}</span>}
+                            <div className="flex items-center gap-3 text-xs text-slate-600 dark:text-zinc-400 flex-wrap">
+                              {item.service && <span className="text-violet-700 dark:text-violet-400 font-semibold">Service: {item.service}</span>}
+                              {item.software_requested && <span className="text-fuchsia-700 dark:text-fuchsia-400 font-semibold">Software: {item.software_requested}</span>}
+                              {item.budget && <span className="text-emerald-700 dark:text-emerald-400 font-mono font-bold">Budget: {item.budget}</span>}
+                              {item.ip_address && <span className="text-slate-400 dark:text-zinc-500 font-mono text-[11px]">IP: {item.ip_address}</span>}
+                              {item.raw_data?.mail_sent ? (
+                                <span
+                                  className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-500/15 border border-emerald-300 dark:border-emerald-500/30 text-[10px] font-mono text-emerald-700 dark:text-emerald-300 font-bold"
+                                  title={item.raw_data?.mail_sent_at ? `Sent via support@pyrow.in at ${new Date(item.raw_data.mail_sent_at).toLocaleString()}` : 'Official Confirmation Dispatched'}
+                                >
+                                  <CheckCircle2 className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                                  <span>Mail Sent (support@pyrow.in)</span>
+                                </span>
+                              ) : (
+                                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-50 dark:bg-amber-500/10 border border-amber-300 dark:border-amber-500/30 text-[10px] font-mono text-amber-700 dark:text-amber-300 font-medium">
+                                  <Clock className="w-3 h-3 text-amber-600 dark:text-amber-400" />
+                                  <span>Mail Not Sent</span>
+                                </span>
+                              )}
+                            </div>
                           </div>
-                        </div>
 
                         <div className="flex items-center gap-2 flex-wrap">
                           {item.phone && (
                             <button
                               type="button"
                               onClick={() => handleSendWhatsAppDirect(item.phone!, `Hello ${item.name || ''}, thank you for reaching out to Pyrow Technologies regarding ${item.service || 'your project'}. How can we assist you today?`, 'lead_chat')}
-                              className="px-3 py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-mono flex items-center gap-1.5 cursor-pointer"
+                              className="px-3 py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 text-xs font-mono font-bold flex items-center gap-1.5 cursor-pointer"
                               title="Send WhatsApp directly to phone"
                             >
                               <MessageSquare className="w-3.5 h-3.5" />
@@ -3492,52 +3803,59 @@ export const AdminPage: React.FC = () => {
                             </button>
                           )}
                           {item.email && (
-                            <a
-                              href={`mailto:${item.email}`}
-                              className="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-200 border border-white/10 text-xs font-mono flex items-center gap-1.5"
+                            <button
+                              type="button"
+                              disabled={quickSendingMailId === item.id}
+                              onClick={() => handleQuickTriggerEmail(item)}
+                              className={`px-3 py-2 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 cursor-pointer shadow-md transition-all ${isMailDelivered
+                                ? 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-zinc-200 border border-slate-200 dark:border-white/10'
+                                : 'bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white shadow-violet-600/30 border border-violet-400/40'
+                                }`}
+                              title="1-Click Dispatch Email Notification from support@pyrow.in to client & admin"
                             >
-                              <Mail className="w-3.5 h-3.5 text-fuchsia-400" />
-                              <span className="truncate max-w-[120px]">{item.email}</span>
-                            </a>
+                              {quickSendingMailId === item.id ? (
+                                <>
+                                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                  <span>Sending...</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Zap className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
+                                  <span>{isMailDelivered ? 'Resend Mail' : '⚡ 1-Click Send Mail'}</span>
+                                </>
+                              )}
+                            </button>
                           )}
-                          <button
-                            type="button"
-                            onClick={() => handleQuickQuoteFromEnquiry(item)}
-                            className="px-3 py-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-bold text-xs font-mono flex items-center gap-1.5 shadow-md shadow-violet-600/30 border border-violet-400/30 cursor-pointer"
-                            title="Generate Instant Commercial Quotation"
-                          >
-                            <FileText className="w-3.5 h-3.5" />
-                            <span>Create Quote</span>
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleOpenEditEnquiry(item)}
-                            className="px-3 py-2 rounded-xl bg-violet-500/10 hover:bg-violet-500/20 text-violet-300 border border-violet-500/30 text-xs font-mono flex items-center gap-1.5 cursor-pointer"
-                            title="Edit Inquiry Details"
-                          >
-                            <Edit3 className="w-3.5 h-3.5" />
-                            <span>Edit</span>
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleDeleteEnquiry(item.id!)}
-                            className="px-3 py-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 text-xs font-mono flex items-center gap-1.5 cursor-pointer"
-                            title="Delete Inquiry"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                            <span>Delete</span>
-                          </button>
+                            <button
+                              type="button"
+                              onClick={() => handleOpenEditEnquiry(item)}
+                              className="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-violet-500/10 dark:hover:bg-violet-500/20 text-slate-700 dark:text-violet-300 border border-slate-200 dark:border-violet-500/30 text-xs font-mono font-bold flex items-center gap-1.5 cursor-pointer"
+                              title="Edit Inquiry Details"
+                            >
+                              <Edit3 className="w-3.5 h-3.5" />
+                              <span>Edit</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteEnquiry(item.id!)}
+                              className="px-3 py-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 border border-red-500/30 text-xs font-mono font-bold flex items-center gap-1.5 cursor-pointer"
+                              title="Delete Inquiry"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                              <span>Delete</span>
+                            </button>
+                          </div>
                         </div>
-                      </div>
 
-                      {item.message && (
-                        <div className="mt-3.5 pt-3 border-t border-white/5 text-xs text-zinc-300 bg-black/20 p-3 rounded-xl font-mono">
-                          "{item.message}"
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
+                        {item.message && (
+                          <div className="mt-3.5 pt-3 border-t border-slate-200 dark:border-white/5 text-xs text-slate-800 dark:text-zinc-300 bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/5 p-3.5 rounded-xl font-mono leading-relaxed shadow-xs">
+                            "{item.message}"
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })
+                )}
               </div>
             </div>
           )}
@@ -3545,58 +3863,61 @@ export const AdminPage: React.FC = () => {
           {/* -------------------------------------------------------- */}
           {/* TAB: TRAFFIC & GEOLOCATION */}
           {/* -------------------------------------------------------- */}
+          {/* -------------------------------------------------------- */}
+          {/* TAB: TRAFFIC & GEOLOCATION */}
+          {/* -------------------------------------------------------- */}
           {activeTab === 'traffic' && (
             <div className="space-y-8">
               {/* Traffic Metrics (MotionSites Standard) */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                <div className="p-6 rounded-[28px] bg-gradient-to-b from-cyan-500/10 via-cyan-500/[0.03] to-transparent backdrop-blur-xl border border-cyan-500/20 hover:border-cyan-500/40 transition-all relative overflow-hidden group shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
+                <div className="p-6 rounded-[28px] bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-cyan-200 dark:border-cyan-500/20 hover:border-cyan-500/40 transition-all relative overflow-hidden group shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
                   <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent" />
-                  <div className="text-xs font-mono text-cyan-300 uppercase tracking-widest mb-1.5 flex items-center justify-between">
+                  <div className="text-xs font-mono text-cyan-700 dark:text-cyan-300 uppercase tracking-widest mb-1.5 flex items-center justify-between font-bold">
                     <span>Total Visitors Logged</span>
-                    <BarChart3 className="w-4 h-4 text-cyan-400" />
+                    <BarChart3 className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
                   </div>
-                  <div className="text-3xl sm:text-4xl font-black font-display text-cyan-400 tracking-tight">{totalViews}</div>
-                  <div className="text-xs text-cyan-300/70 font-mono mt-1.5 flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                  <div className="text-3xl sm:text-4xl font-black font-display text-cyan-600 dark:text-cyan-400 tracking-tight">{totalViews}</div>
+                  <div className="text-xs text-cyan-600/70 dark:text-cyan-300/70 font-mono mt-1.5 flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse" />
                     <span>IP & Geolocation Active</span>
                   </div>
                 </div>
 
-                <div className="p-6 rounded-[28px] bg-gradient-to-b from-white/[0.04] to-transparent backdrop-blur-xl border border-white/[0.08] hover:border-white/20 transition-all relative overflow-hidden group shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
-                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-                  <div className="text-xs font-mono text-zinc-400 uppercase tracking-widest mb-1.5 flex items-center justify-between">
+                <div className="p-6 rounded-[28px] bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-white/[0.08] hover:border-violet-500/30 transition-all relative overflow-hidden group shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-500/20 to-transparent" />
+                  <div className="text-xs font-mono text-slate-500 dark:text-zinc-400 uppercase tracking-widest mb-1.5 flex items-center justify-between font-bold">
                     <span>Active Global Cities</span>
-                    <MapPin className="w-4 h-4 text-violet-400" />
+                    <MapPin className="w-4 h-4 text-violet-600 dark:text-violet-400" />
                   </div>
-                  <div className="text-3xl sm:text-4xl font-black font-display text-white tracking-tight">{sortedCities.length}</div>
-                  <div className="text-xs text-zinc-500 font-mono mt-1.5">Unique visitor locations</div>
+                  <div className="text-3xl sm:text-4xl font-black font-display text-slate-900 dark:text-white tracking-tight">{sortedCities.length}</div>
+                  <div className="text-xs text-slate-400 dark:text-zinc-500 font-mono mt-1.5">Unique visitor locations</div>
                 </div>
 
-                <div className="p-6 rounded-[28px] bg-gradient-to-b from-violet-500/10 via-violet-500/[0.03] to-transparent backdrop-blur-xl border border-violet-500/20 hover:border-violet-500/40 transition-all relative overflow-hidden group shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
+                <div className="p-6 rounded-[28px] bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-violet-200 dark:border-violet-500/20 hover:border-violet-500/40 transition-all relative overflow-hidden group shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
                   <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-400/30 to-transparent" />
-                  <div className="text-xs font-mono text-violet-300 uppercase tracking-widest mb-1.5 flex items-center justify-between">
+                  <div className="text-xs font-mono text-violet-700 dark:text-violet-300 uppercase tracking-widest mb-1.5 flex items-center justify-between font-bold">
                     <span>Device Distribution</span>
-                    <Smartphone className="w-4 h-4 text-violet-400" />
+                    <Smartphone className="w-4 h-4 text-violet-600 dark:text-violet-400" />
                   </div>
-                  <div className="text-3xl sm:text-4xl font-black font-display text-violet-400 tracking-tight">
+                  <div className="text-3xl sm:text-4xl font-black font-display text-violet-600 dark:text-violet-400 tracking-tight">
                     {pageViews.filter((p) => p.device_type === 'desktop').length}D / {pageViews.filter((p) => p.device_type === 'mobile').length}M
                   </div>
-                  <div className="text-xs text-violet-300/70 font-mono mt-1.5">Desktop vs Mobile views</div>
+                  <div className="text-xs text-violet-600/70 dark:text-violet-300/70 font-mono mt-1.5">Desktop vs Mobile views</div>
                 </div>
               </div>
 
               {/* Real-Time Visitor Log Table */}
-              <div className="p-6 rounded-[28px] bg-gradient-to-b from-white/[0.04] to-transparent backdrop-blur-xl border border-white/[0.08] space-y-4 shadow-[0_8px_30px_rgb(0,0,0,0.3)] relative overflow-hidden">
-                <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+              <div className="p-6 rounded-[28px] bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-white/[0.08] space-y-4 shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)] relative overflow-hidden">
+                <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-500/20 to-transparent" />
                 <div className="flex items-center justify-between">
-                  <h3 className="text-base font-bold font-display text-white flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-emerald-400" />
+                  <h3 className="text-base font-bold font-display text-slate-900 dark:text-white flex items-center gap-2">
+                    <Clock className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                     <span>Real-Time Visitor Log Stream (IP & Geolocation)</span>
                   </h3>
                   {pageViews.length > 0 && (
                     <button
                       onClick={handleClearAllPageViews}
-                      className="px-3 py-1.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 text-xs font-mono flex items-center gap-1.5 cursor-pointer"
+                      className="px-3 py-1.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 border border-red-500/20 text-xs font-mono flex items-center gap-1.5 cursor-pointer font-bold"
                       title="Clear All Visitor Logs"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -3608,8 +3929,8 @@ export const AdminPage: React.FC = () => {
                 <div className="overflow-x-auto">
                   <table className="w-full text-xs font-mono border-collapse">
                     <thead>
-                      <tr className="border-b border-white/10 text-left text-zinc-400">
-                        <th className="py-2.5">Time</th>
+                      <tr className="border-b border-slate-200 dark:border-white/10 text-left text-slate-500 dark:text-zinc-400">
+                        <th className="py-2.5">Date & Time</th>
                         <th className="py-2.5">Page Path</th>
                         <th className="py-2.5">IP Address</th>
                         <th className="py-2.5">Location</th>
@@ -3618,21 +3939,41 @@ export const AdminPage: React.FC = () => {
                         <th className="py-2.5 text-right">Action</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-white/5">
+                    <tbody className="divide-y divide-slate-100 dark:divide-white/5">
                       {pageViews.map((pv) => (
-                        <tr key={pv.id} className="hover:bg-white/[0.02]">
-                          <td className="py-3 text-zinc-400">{new Date(pv.created_at || '').toLocaleTimeString()}</td>
-                          <td className="py-3 text-white font-bold">{pv.page_path}</td>
-                          <td className="py-3 text-cyan-400">{pv.ip_address || '127.0.0.1'}</td>
-                          <td className="py-3 text-zinc-200">
+                        <tr key={pv.id} className="hover:bg-slate-50/70 dark:hover:bg-white/[0.02]">
+                          <td className="py-3 whitespace-nowrap">
+                            <div className="text-slate-900 dark:text-zinc-200 font-bold">
+                              {pv.created_at
+                                ? new Date(pv.created_at).toLocaleDateString('en-IN', {
+                                  day: '2-digit',
+                                  month: 'short',
+                                  year: 'numeric',
+                                })
+                                : 'Today'}
+                            </div>
+                            <div className="text-[11px] text-slate-500 dark:text-zinc-500 font-mono">
+                              {pv.created_at
+                                ? new Date(pv.created_at).toLocaleTimeString('en-IN', {
+                                  hour: '2-digit',
+                                  minute: '2-digit',
+                                  second: '2-digit',
+                                  hour12: true,
+                                })
+                                : ''}
+                            </div>
+                          </td>
+                          <td className="py-3 text-slate-900 dark:text-white font-bold">{pv.page_path}</td>
+                          <td className="py-3 text-violet-600 dark:text-cyan-400 font-medium">{pv.ip_address || '127.0.0.1'}</td>
+                          <td className="py-3 text-slate-800 dark:text-zinc-200">
                             {pv.city ? `${pv.city}, ${pv.country_code || pv.country}` : 'Local Network'}
                           </td>
-                          <td className="py-3 text-zinc-400 capitalize">{pv.device_type || 'Desktop'}</td>
-                          <td className="py-3 text-zinc-500 truncate max-w-[150px]">{pv.isp || 'Broadband'}</td>
+                          <td className="py-3 text-slate-600 dark:text-zinc-400 capitalize">{pv.device_type || 'Desktop'}</td>
+                          <td className="py-3 text-slate-500 dark:text-zinc-500 truncate max-w-[150px]">{pv.isp || 'Broadband'}</td>
                           <td className="py-3 text-right">
                             <button
                               onClick={() => handleDeletePageView(pv.id!)}
-                              className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 cursor-pointer"
+                              className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 border border-red-500/20 cursor-pointer"
                               title="Delete visit"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
@@ -3652,71 +3993,408 @@ export const AdminPage: React.FC = () => {
           {/* -------------------------------------------------------- */}
           {activeTab === 'messages' && (
             <div className="space-y-6">
-              <div>
-                <h3 className="text-base font-bold text-white">Direct Contact Messages</h3>
-                <p className="text-xs text-zinc-400 font-mono">Customer contact forms requesting quotes & replies</p>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-200 dark:border-white/10">
+                <div>
+                  <h3 className="text-lg font-bold font-display text-slate-900 dark:text-white flex items-center gap-2">
+                    <Mail className="w-5 h-5 text-violet-600 dark:text-violet-400" />
+                    <span>Direct Contact Messages</span>
+                    <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-violet-100 dark:bg-violet-950/60 text-violet-700 dark:text-violet-300 border border-violet-200 dark:border-violet-800">
+                      {contactMessages.length} Messages
+                    </span>
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-zinc-400 font-mono mt-0.5">
+                    Customer contact forms requesting quotes & replies
+                  </p>
+                </div>
               </div>
 
               <div className="space-y-4">
-                {contactMessages.map((msg) => (
-                  <div key={msg.id} className="p-6 rounded-2xl bg-white/5 border border-white/10 space-y-4">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <h4 className="text-base font-bold text-white">{msg.name}</h4>
-                          <span className="text-xs font-mono text-violet-400">({msg.service || 'Custom Service'})</span>
-                        </div>
-                        <div className="text-xs text-zinc-400 font-mono mt-0.5">
-                          {msg.email} • {msg.phone} • {msg.company || 'Direct Client'}
-                        </div>
-                      </div>
+                {contactMessages.length === 0 ? (
+                  <div className="p-12 text-center rounded-3xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-white/10 space-y-3">
+                    <Mail className="w-10 h-10 text-slate-400 dark:text-zinc-600 mx-auto" />
+                    <div className="text-sm font-bold text-slate-700 dark:text-zinc-300 font-mono">No Direct Contact Messages</div>
+                    <p className="text-xs text-slate-500 dark:text-zinc-500 font-mono">
+                      Customer contact forms requesting quotes & replies will appear here.
+                    </p>
+                  </div>
+                ) : (
+                  contactMessages.map((msg) => {
+                    const isMsgMailDelivered = Boolean(
+                      msg.raw_data?.mail_sent ||
+                      (msg.email && emailLogs.some((l) => l.recipient_email?.toLowerCase().includes(msg.email!.toLowerCase())))
+                    );
+                    return (
+                    <div
+                      key={msg.id}
+                      className="p-6 sm:p-7 rounded-3xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-white/10 space-y-4 shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)] transition-all relative overflow-hidden"
+                    >
+                      <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-violet-500 via-indigo-500 to-transparent" />
 
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <button
-                          onClick={() => {
-                            setReplyRecipient(msg);
-                            setReplySubject(`Re: Your Inquiry with Pyrow - ${msg.service || 'Software Development'}`);
-                            setReplyBody(`Hi ${msg.name},\n\nThank you for reaching out to Pyrow Technologies. We have reviewed your project requirements regarding ${msg.service || 'software development'}.\n\nOur technical lead would be glad to discuss your architecture and provide a roadmap.\n\nBest regards,\nPyrow Team\nsupport@pyrow.in\n+91 73581 63590`);
-                          }}
-                          className="px-3 py-1.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-mono font-bold flex items-center gap-1.5 cursor-pointer shadow-md"
-                        >
-                          <Send className="w-3.5 h-3.5" />
-                          <span>Draft Reply</span>
-                        </button>
-                        {msg.phone && (
+                      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2.5 flex-wrap">
+                            <h4 className="text-base font-bold text-slate-900 dark:text-white">{msg.name}</h4>
+                            <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded-lg bg-violet-50 dark:bg-violet-950/40 text-violet-700 dark:text-violet-300 border border-violet-200 dark:border-violet-800">
+                              {msg.service || 'Custom Service'}
+                            </span>
+                            {isMsgMailDelivered ? (
+                              <span
+                                className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-500/30 text-[11px] font-mono text-emerald-700 dark:text-emerald-300 font-bold"
+                                title={msg.raw_data?.mail_sent_at ? `Sent at ${new Date(msg.raw_data.mail_sent_at).toLocaleString()}` : 'Mail Sent'}
+                              >
+                                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                                <span>Mail Sent</span>
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-500/30 text-[11px] font-mono text-amber-700 dark:text-amber-300 font-medium">
+                                <Clock className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+                                <span>Mail Pending</span>
+                              </span>
+                            )}
+                          </div>
+
+                          <div className="text-xs text-slate-600 dark:text-zinc-400 font-mono flex items-center gap-2 flex-wrap pt-0.5">
+                            <span className="font-medium text-slate-800 dark:text-zinc-300">{msg.email}</span>
+                            <span className="text-slate-300 dark:text-zinc-600">•</span>
+                            <span>{msg.phone}</span>
+                            <span className="text-slate-300 dark:text-zinc-600">•</span>
+                            <span className="text-slate-700 dark:text-zinc-300 font-medium">{msg.company || 'Direct Client'}</span>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2 flex-wrap">
+                          {msg.email && (
+                            <button
+                              type="button"
+                              disabled={quickSendingMailId === msg.id}
+                              onClick={() => handleQuickTriggerEmail(msg)}
+                              className={`px-3.5 py-2 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 cursor-pointer shadow-sm transition-all ${isMsgMailDelivered
+                                ? 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-zinc-200 border border-slate-200 dark:border-white/10'
+                                : 'bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white shadow-md shadow-violet-600/30 border border-violet-400/40'
+                                }`}
+                              title="1-Click Dispatch Email Notification from support@pyrow.in to client & admin"
+                            >
+                              {quickSendingMailId === msg.id ? (
+                                <>
+                                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                  <span>Sending...</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Zap className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
+                                  <span>{isMsgMailDelivered ? 'Resend' : '⚡ 1-Click Send'}</span>
+                                </>
+                              )}
+                            </button>
+                          )}
+                          <button
+                            onClick={() => {
+                              setReplyRecipient(msg);
+                              setReplySubject(`Re: Your Inquiry with Pyrow - ${msg.service || 'Software Development'}`);
+                              setReplyBody(`Hi ${msg.name},\n\nThank you for reaching out to Pyrow Technologies. We have reviewed your project requirements regarding ${msg.service || 'software development'}.\n\nOur technical lead would be glad to discuss your architecture and provide a roadmap.\n\nBest regards,\nPyrow Team\nsupport@pyrow.in\n+91 73581 63590`);
+                            }}
+                            className="px-3.5 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-mono font-bold flex items-center gap-1.5 cursor-pointer shadow-sm shadow-violet-600/30"
+                          >
+                            <Send className="w-3.5 h-3.5" />
+                            <span>Draft Reply</span>
+                          </button>
+                          {msg.phone && (
+                            <button
+                              type="button"
+                              onClick={() => handleSendWhatsAppDirect(msg.phone!, `Hi ${msg.name || ''}, thank you for contacting Pyrow Technologies regarding ${msg.service || 'your project'}. How can we assist you today?`, 'contact_reply')}
+                              className="px-3.5 py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 text-xs font-mono font-semibold flex items-center gap-1 cursor-pointer"
+                            >
+                              <MessageSquare className="w-3.5 h-3.5" />
+                              <span>WhatsApp</span>
+                            </button>
+                          )}
                           <button
                             type="button"
-                            onClick={() => handleSendWhatsAppDirect(msg.phone!, `Hi ${msg.name || ''}, thank you for contacting Pyrow Technologies regarding ${msg.service || 'your project'}. How can we assist you today?`, 'contact_reply')}
-                            className="px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-mono flex items-center gap-1 cursor-pointer"
+                            onClick={() => handleOpenEditEnquiry(msg)}
+                            className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-white/10 cursor-pointer transition-colors"
+                            title="Edit Message"
                           >
-                            <MessageSquare className="w-3.5 h-3.5" />
-                            <span>WhatsApp</span>
+                            <Edit3 className="w-3.5 h-3.5 text-violet-600 dark:text-violet-400" />
                           </button>
-                        )}
-                        <button
-                          type="button"
-                          onClick={() => handleOpenEditEnquiry(msg)}
-                          className="p-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 border border-white/10 cursor-pointer"
-                          title="Edit Message"
-                        >
-                          <Edit3 className="w-3.5 h-3.5 text-violet-400" />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleDeleteEnquiry(msg.id!)}
-                          className="p-1.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 cursor-pointer"
-                          title="Delete Message"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteEnquiry(msg.id!)}
+                            className="p-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 border border-red-500/30 cursor-pointer transition-colors"
+                            title="Delete Message"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/10 text-xs text-slate-800 dark:text-zinc-200 font-mono leading-relaxed shadow-xs">
+                        "{msg.message}"
                       </div>
                     </div>
+                  );
+                })
+              )}
+              </div>
+            </div>
+          )}
 
-                    <div className="p-4 rounded-xl bg-black/30 border border-white/5 text-xs text-zinc-200 font-mono leading-relaxed">
-                      "{msg.message}"
+          {/* -------------------------------------------------------- */}
+          {/* TAB: EMAIL AUDIT LEDGER (HOSTINGER CLOUD DISPATCH) */}
+          {/* -------------------------------------------------------- */}
+          {activeTab === 'emails' && (
+            <div className="space-y-6">
+              {/* Header Overview Card */}
+              <div className="p-6 sm:p-8 rounded-[28px] bg-gradient-to-r from-violet-500/10 via-white to-white dark:from-violet-950/40 dark:via-[#070512] dark:to-[#070512] border border-violet-500/20 dark:border-violet-500/30 backdrop-blur-xl space-y-5 shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)] relative overflow-hidden">
+                <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-400/40 to-transparent" />
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div className="flex items-center gap-3.5">
+                    <div className="w-12 h-12 rounded-2xl bg-violet-500/15 border border-violet-500/30 flex items-center justify-center text-violet-600 dark:text-violet-400 shadow-sm">
+                      <MailCheck className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h2 className="text-lg font-bold font-display text-slate-900 dark:text-white flex items-center gap-2">
+                        <span>Customer Email Dispatch Ledger</span>
+                        <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 text-[11px] font-mono font-bold border border-emerald-500/30">
+                          support@pyrow.in
+                        </span>
+                      </h2>
+                      <p className="text-xs text-slate-500 dark:text-zinc-400 font-mono mt-0.5">
+                        Real-time audit track of all customer-facing communications dispatched from support@pyrow.in.
+                      </p>
                     </div>
                   </div>
-                ))}
+
+                  <div className="flex items-center gap-2">
+                    {emailLogs.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={handleClearAllEmailLogs}
+                        className="px-3.5 py-2 rounded-2xl bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 border border-red-500/20 text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-xs"
+                        title="Delete all unwanted sent email logs"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>Clear All Logs</span>
+                      </button>
+                    )}
+                    <button
+                      onClick={async () => {
+                        soundFX.playClick();
+                        const logs = await fetchEmailLogs();
+                        if (logs) setEmailLogs(logs);
+                        setSuccessMessage('Email ledger synchronized with cloud records');
+                        setTimeout(() => setSuccessMessage(''), 3000);
+                      }}
+                      className="px-4 py-2 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-800 dark:text-zinc-300 border border-slate-200 dark:border-white/10 text-xs font-mono font-bold flex items-center gap-2 transition-all cursor-pointer shadow-xs"
+                    >
+                      <RefreshCw className="w-3.5 h-3.5 text-violet-600 dark:text-violet-400" />
+                      <span>Refresh Ledger</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Metrics Grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+                  <div className="p-4 rounded-2xl bg-white/80 dark:bg-black/40 border border-slate-200/80 dark:border-white/5 space-y-1 shadow-xs dark:shadow-none">
+                    <div className="text-[10px] font-mono text-slate-500 dark:text-zinc-500 uppercase tracking-wider font-bold">Total Dispatched</div>
+                    <div className="text-2xl font-bold font-mono text-slate-900 dark:text-white flex items-center gap-2">
+                      <span>{emailLogs.length}</span>
+                      <span className="text-[10px] font-normal text-emerald-600 dark:text-emerald-400 font-sans">All channels</span>
+                    </div>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-white/80 dark:bg-black/40 border border-slate-200/80 dark:border-white/5 space-y-1 shadow-xs dark:shadow-none">
+                    <div className="text-[10px] font-mono text-slate-500 dark:text-zinc-500 uppercase tracking-wider font-bold">Form Confirmations</div>
+                    <div className="text-2xl font-bold font-mono text-violet-600 dark:text-violet-400">
+                      {emailLogs.filter((l) => l.email_type === 'confirmation').length}
+                    </div>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-white/80 dark:bg-black/40 border border-slate-200/80 dark:border-white/5 space-y-1 shadow-xs dark:shadow-none">
+                    <div className="text-[10px] font-mono text-slate-500 dark:text-zinc-500 uppercase tracking-wider font-bold">Quotations Sent</div>
+                    <div className="text-2xl font-bold font-mono text-cyan-600 dark:text-cyan-400">
+                      {emailLogs.filter((l) => l.email_type === 'quotation').length}
+                    </div>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-white/80 dark:bg-black/40 border border-slate-200/80 dark:border-white/5 space-y-1 shadow-xs dark:shadow-none">
+                    <div className="text-[10px] font-mono text-slate-500 dark:text-zinc-500 uppercase tracking-wider font-bold">Tax Invoices Sent</div>
+                    <div className="text-2xl font-bold font-mono text-emerald-600 dark:text-emerald-400">
+                      {emailLogs.filter((l) => l.email_type === 'invoice').length}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Filters & Search Bar */}
+              <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
+                <div className="relative flex-1">
+                  <Search className="w-4 h-4 text-slate-400 dark:text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    placeholder="Search by recipient, email address, subject, or reference..."
+                    value={emailSearchTerm}
+                    onChange={(e) => setEmailSearchTerm(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-xs font-mono text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 shadow-sm dark:shadow-none"
+                  />
+                  {emailSearchTerm && (
+                    <button
+                      onClick={() => setEmailSearchTerm('')}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-mono text-slate-400 hover:text-slate-700 dark:text-zinc-500 dark:hover:text-white"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
+
+                {/* Filter Chips */}
+                <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+                  {[
+                    { id: 'all', label: 'All', count: emailLogs.length },
+                    { id: 'confirmation', label: 'Confirmations', count: emailLogs.filter((l) => l.email_type === 'confirmation').length },
+                    { id: 'quotation', label: 'Quotations', count: emailLogs.filter((l) => l.email_type === 'quotation').length },
+                    { id: 'invoice', label: 'Invoices', count: emailLogs.filter((l) => l.email_type === 'invoice').length },
+                    { id: 'broadcast', label: 'Broadcasts', count: emailLogs.filter((l) => l.email_type === 'broadcast' || l.email_type === 'custom').length },
+                  ].map((filter) => (
+                    <button
+                      key={filter.id}
+                      onClick={() => {
+                        soundFX.playClick();
+                        setEmailFilterType(filter.id);
+                      }}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-mono whitespace-nowrap transition-all flex items-center gap-1.5 cursor-pointer shadow-xs ${emailFilterType === filter.id
+                        ? 'bg-violet-600 text-white font-bold border border-violet-500 shadow-md shadow-violet-600/20'
+                        : 'bg-white dark:bg-white/5 text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-white/5'
+                        }`}
+                    >
+                      <span>{filter.label}</span>
+                      <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${emailFilterType === filter.id ? 'bg-black/25 text-white' : 'bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-zinc-400'
+                        }`}>
+                        {filter.count}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Email Logs List */}
+              <div className="space-y-3.5">
+                {filteredEmailLogs.length === 0 ? (
+                  <div className="p-12 text-center rounded-3xl bg-white dark:bg-white/[0.02] border border-slate-200 dark:border-white/5 space-y-3 shadow-sm">
+                    <MailCheck className="w-10 h-10 text-slate-300 dark:text-zinc-600 mx-auto" />
+                    <div className="text-sm font-bold text-slate-700 dark:text-zinc-400 font-mono">No Email Logs Found</div>
+                    <p className="text-xs text-slate-500 dark:text-zinc-500 font-mono max-w-md mx-auto">
+                      {emailSearchTerm
+                        ? `No sent emails matched your query "${emailSearchTerm}". Try searching a different recipient or clearing filters.`
+                        : 'Customer communications dispatched from forms, Quotation Studio, or Billing & GST Invoices will appear here automatically.'}
+                    </p>
+                  </div>
+                ) : (
+                  filteredEmailLogs.map((log) => (
+                    <div
+                      key={log.id}
+                      className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-white/[0.03] hover:bg-slate-50/80 dark:hover:bg-white/[0.05] border border-slate-200/90 dark:border-white/10 shadow-sm dark:shadow-[0_4px_20px_rgb(0,0,0,0.2)] transition-all space-y-3.5 group"
+                    >
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div className="flex items-start gap-3.5">
+                          <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border ${log.email_type === 'quotation'
+                            ? 'bg-cyan-500/15 border-cyan-500/30 text-cyan-700 dark:text-cyan-400'
+                            : log.email_type === 'invoice'
+                              ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-700 dark:text-emerald-400'
+                              : 'bg-violet-500/15 border-violet-500/30 text-violet-700 dark:text-violet-400'
+                            }`}>
+                            {log.email_type === 'quotation' ? (
+                              <FileText className="w-5 h-5" />
+                            ) : log.email_type === 'invoice' ? (
+                              <Receipt className="w-5 h-5" />
+                            ) : (
+                              <MailCheck className="w-5 h-5" />
+                            )}
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="text-sm font-bold text-slate-900 dark:text-white font-mono">
+                                {log.recipient_name || 'Customer'}
+                              </span>
+                              <span className="text-xs font-mono text-slate-500 dark:text-zinc-400">
+                                &lt;{log.recipient_email}&gt;
+                              </span>
+                              <span className={`text-[10px] font-mono px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider ${log.email_type === 'quotation'
+                                ? 'bg-cyan-100 text-cyan-800 dark:bg-cyan-500/10 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-500/30'
+                                : log.email_type === 'invoice'
+                                  ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/10 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-500/30'
+                                  : 'bg-violet-100 text-violet-800 dark:bg-violet-500/10 dark:text-violet-300 border border-violet-200 dark:border-violet-500/30'
+                                }`}>
+                                {log.email_type}
+                              </span>
+                              {log.reference_id && (
+                                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-zinc-400 border border-slate-200 dark:border-white/10 font-bold">
+                                  Ref: {log.reference_id}
+                                </span>
+                              )}
+                            </div>
+                            <div className="text-sm font-semibold text-slate-900 dark:text-zinc-100 mt-1 font-mono">
+                              {log.subject}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-1.5 shrink-0 text-right">
+                          <span className="text-[11px] font-mono text-slate-500 dark:text-zinc-400 flex items-center gap-1.5">
+                            <Clock className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500" />
+                            <span>
+                              {log.created_at
+                                ? new Date(log.created_at).toLocaleString('en-IN', {
+                                  day: '2-digit',
+                                  month: 'short',
+                                  year: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit',
+                                })
+                                : 'Just now'}
+                            </span>
+                          </span>
+                          <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-500/10 text-emerald-800 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20 font-bold flex items-center gap-1.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                            <span>Mail API 200 OK</span>
+                          </span>
+                        </div>
+                      </div>
+
+                      {log.preview_text && (
+                        <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-black/40 border border-slate-200/80 dark:border-white/5 text-xs font-mono text-slate-700 dark:text-zinc-300 leading-relaxed">
+                          {log.preview_text}
+                        </div>
+                      )}
+
+                      <div className="flex items-center justify-between pt-2 text-xs font-mono text-slate-500 dark:text-zinc-400 border-t border-slate-100 dark:border-white/5">
+                        <span className="flex items-center gap-1.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-violet-500" />
+                          <span>Sender: <strong className="text-slate-700 dark:text-zinc-200">support@pyrow.in</strong> (Pyrow Software)</span>
+                        </span>
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              navigator.clipboard.writeText(log.recipient_email);
+                              setSuccessMessage(`Copied ${log.recipient_email} to clipboard`);
+                              setTimeout(() => setSuccessMessage(''), 3000);
+                            }}
+                            className="text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-white/10 font-bold flex items-center gap-1.5 transition-colors cursor-pointer text-[11px]"
+                          >
+                            <Copy className="w-3.5 h-3.5" />
+                            <span>Copy Recipient</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteEmailLog(log.id)}
+                            className="text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 px-2.5 py-1 rounded-lg border border-red-200 dark:border-red-500/20 font-bold flex items-center gap-1 transition-all cursor-pointer text-[11px]"
+                            title="Delete this unwanted sent email log"
+                          >
+                            <Trash2 className="w-3.5 h-3.5 text-red-500" />
+                            <span>Delete</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           )}
@@ -3726,43 +4404,43 @@ export const AdminPage: React.FC = () => {
           {/* -------------------------------------------------------- */}
           {activeTab === 'settings' && (
             <div className="space-y-8">
-              <div className="p-6 rounded-2xl bg-white/5 border border-white/10 space-y-6">
-                <h3 className="text-base font-bold text-white flex items-center gap-2">
-                  <Shield className="w-4 h-4 text-emerald-400" />
+              <div className="p-6 sm:p-7 rounded-3xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-white/10 space-y-6 shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
+                <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                  <Shield className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                   <span>Security & Access Controls</span>
                 </h3>
 
                 <div className="space-y-4 text-xs font-mono">
-                  <div className="flex justify-between items-center p-3 rounded-xl bg-black/30 border border-white/5">
+                  <div className="flex justify-between items-center p-3.5 rounded-2xl bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/5 shadow-xs">
                     <div>
-                      <div className="text-white font-bold">Session Storage Isolation</div>
-                      <div className="text-zinc-500 text-[11px]">Tokens stored in memory; wiped automatically on tab exit</div>
+                      <div className="text-slate-900 dark:text-white font-bold">Session Storage Isolation</div>
+                      <div className="text-slate-500 dark:text-zinc-500 text-[11px]">Tokens stored in memory; wiped automatically on tab exit</div>
                     </div>
-                    <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 font-bold">Active</span>
+                    <span className="px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-500/10 text-emerald-800 dark:text-emerald-400 font-bold border border-emerald-300 dark:border-emerald-500/20">Active</span>
                   </div>
 
-                  <div className="flex justify-between items-center p-3 rounded-xl bg-black/30 border border-white/5">
+                  <div className="flex justify-between items-center p-3.5 rounded-2xl bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/5 shadow-xs">
                     <div>
-                      <div className="text-white font-bold">Inactivity Auto-Logout Timer</div>
-                      <div className="text-zinc-500 text-[11px]">Auto locks session after 15 minutes of zero input</div>
+                      <div className="text-slate-900 dark:text-white font-bold">Inactivity Auto-Logout Timer</div>
+                      <div className="text-slate-500 dark:text-zinc-500 text-[11px]">Auto locks session after 15 minutes of zero input</div>
                     </div>
-                    <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 font-bold">15 Minutes</span>
+                    <span className="px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-500/10 text-emerald-800 dark:text-emerald-400 font-bold border border-emerald-300 dark:border-emerald-500/20">15 Minutes</span>
                   </div>
 
-                  <div className="flex justify-between items-center p-3 rounded-xl bg-black/30 border border-white/5">
+                  <div className="flex justify-between items-center p-3.5 rounded-2xl bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/5 shadow-xs">
                     <div>
-                      <div className="text-white font-bold">Row-Level Security (RLS)</div>
-                      <div className="text-zinc-500 text-[11px]">PostgreSQL database kernel enforcement on all tables</div>
+                      <div className="text-slate-900 dark:text-white font-bold">Row-Level Security (RLS)</div>
+                      <div className="text-slate-500 dark:text-zinc-500 text-[11px]">PostgreSQL database kernel enforcement on all tables</div>
                     </div>
-                    <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 font-bold">Strict</span>
+                    <span className="px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-500/10 text-emerald-800 dark:text-emerald-400 font-bold border border-emerald-300 dark:border-emerald-500/20">Strict</span>
                   </div>
 
-                  <div className="flex justify-between items-center p-3 rounded-xl bg-black/30 border border-white/5">
+                  <div className="flex justify-between items-center p-3.5 rounded-2xl bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/5 shadow-xs">
                     <div>
-                      <div className="text-white font-bold">Master Admin Account</div>
-                      <div className="text-zinc-500 text-[11px]">support@pyrow.in (Verified Administrator)</div>
+                      <div className="text-slate-900 dark:text-white font-bold">Master Admin Account</div>
+                      <div className="text-slate-500 dark:text-zinc-500 text-[11px]">support@pyrow.in (Verified Administrator)</div>
                     </div>
-                    <span className="px-2.5 py-1 rounded-full bg-violet-500/10 text-violet-400 font-bold">Master</span>
+                    <span className="px-2.5 py-1 rounded-full bg-violet-100 dark:bg-violet-500/10 text-violet-800 dark:text-violet-400 font-bold border border-violet-300 dark:border-violet-500/20">Master</span>
                   </div>
                 </div>
               </div>
@@ -3817,11 +4495,10 @@ export const AdminPage: React.FC = () => {
                         key={cat.id}
                         type="button"
                         onClick={() => setPresetFilterCategory(cat.id)}
-                        className={`px-2.5 py-1 rounded-lg text-[10px] font-mono whitespace-nowrap transition-colors cursor-pointer ${
-                          presetFilterCategory === cat.id
-                            ? 'bg-violet-600 text-white font-bold shadow-xs'
-                            : 'bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10'
-                        }`}
+                        className={`px-2.5 py-1 rounded-lg text-[10px] font-mono whitespace-nowrap transition-colors cursor-pointer ${presetFilterCategory === cat.id
+                          ? 'bg-violet-600 text-white font-bold shadow-xs'
+                          : 'bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10'
+                          }`}
                       >
                         {cat.label}
                       </button>
@@ -3840,11 +4517,10 @@ export const AdminPage: React.FC = () => {
                         key={key}
                         type="button"
                         onClick={() => handleApplySoftwarePreset(key)}
-                        className={`p-2.5 rounded-xl text-left border text-xs font-mono transition-all cursor-pointer ${
-                          selectedPresetKey === key
-                            ? 'border-violet-500 bg-violet-600/20 text-white font-bold shadow-md shadow-violet-600/20'
-                            : 'border-white/10 bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10'
-                        }`}
+                        className={`p-2.5 rounded-xl text-left border text-xs font-mono transition-all cursor-pointer ${selectedPresetKey === key
+                          ? 'border-violet-500 bg-violet-600/20 text-white font-bold shadow-md shadow-violet-600/20'
+                          : 'border-white/10 bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10'
+                          }`}
                       >
                         <div className="font-bold truncate">{preset.name.split('(')[0]}</div>
                         <div className="text-[10px] text-zinc-500 truncate">{preset.category}</div>
@@ -3997,11 +4673,10 @@ export const AdminPage: React.FC = () => {
                             total_amount: total,
                           });
                         }}
-                        className={`py-2.5 px-3 rounded-xl border text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-                          Number(quoteFormData.tax_rate ?? 18) > 0
-                            ? 'bg-violet-600/30 border-violet-500 text-violet-300 shadow-md shadow-violet-500/20'
-                            : 'bg-white/5 border-white/10 text-zinc-400 hover:text-white'
-                        }`}
+                        className={`py-2.5 px-3 rounded-xl border text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${Number(quoteFormData.tax_rate ?? 18) > 0
+                          ? 'bg-violet-600/30 border-violet-500 text-violet-300 shadow-md shadow-violet-500/20'
+                          : 'bg-white/5 border-white/10 text-zinc-400 hover:text-white'
+                          }`}
                       >
                         <Check className="w-3.5 h-3.5" />
                         <span>With GST (18%)</span>
@@ -4023,11 +4698,10 @@ export const AdminPage: React.FC = () => {
                             total_amount: total,
                           });
                         }}
-                        className={`py-2.5 px-3 rounded-xl border text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-                          Number(quoteFormData.tax_rate ?? 18) === 0
-                            ? 'bg-violet-600/30 border-violet-500 text-violet-300 shadow-md shadow-violet-500/20'
-                            : 'bg-white/5 border-white/10 text-zinc-400 hover:text-white'
-                        }`}
+                        className={`py-2.5 px-3 rounded-xl border text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${Number(quoteFormData.tax_rate ?? 18) === 0
+                          ? 'bg-violet-600/30 border-violet-500 text-violet-300 shadow-md shadow-violet-500/20'
+                          : 'bg-white/5 border-white/10 text-zinc-400 hover:text-white'
+                          }`}
                       >
                         <span>✕ Without GST (0%)</span>
                       </button>
@@ -4213,7 +4887,7 @@ export const AdminPage: React.FC = () => {
       </AnimatePresence>
 
       {/* -------------------------------------------------------- */}
-      {/* MODAL: CREATE GST TAX INVOICE */}
+      {/* MODAL: CREATE / EDIT GST TAX INVOICE */}
       {/* -------------------------------------------------------- */}
       <AnimatePresence>
         {showInvoiceModal && (
@@ -4223,91 +4897,132 @@ export const AdminPage: React.FC = () => {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="relative w-full max-w-2xl bg-slate-900 border border-white/15 rounded-3xl p-6 sm:p-8 shadow-2xl z-10 max-h-[92vh] overflow-y-auto space-y-6"
+              className="relative w-full max-w-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/15 rounded-3xl p-6 sm:p-8 shadow-2xl z-10 max-h-[92vh] overflow-y-auto space-y-6 text-slate-900 dark:text-white"
             >
-              <div className="flex items-center justify-between pb-4 border-b border-white/10">
+              <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-white/10">
                 <div className="flex items-center gap-2.5">
                   <img
                     src="/assets/pyrow-icon-transparent.png"
                     alt="Pyrow Icon"
-                    className="h-6 w-auto object-contain"
+                    className="h-7 w-auto object-contain"
                   />
-                  <h3 className="text-lg font-bold text-white">
-                    {editingInvoiceId ? 'Edit Tax Invoice' : 'Generate Official GST Tax Invoice'}
-                  </h3>
+                  <div>
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                      <span>{editingInvoiceId ? 'Edit Tax Invoice' : 'Generate Official GST Tax Invoice'}</span>
+                      {editingInvoiceId && (
+                        <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-violet-100 dark:bg-violet-950/60 text-violet-700 dark:text-violet-300 border border-violet-200 dark:border-violet-800">
+                          Editing
+                        </span>
+                      )}
+                    </h3>
+                    <p className="text-[11px] text-slate-500 dark:text-zinc-400 font-mono">
+                      {editingInvoiceId ? `Modify invoice parameters, deliverables, or client email` : 'Create official 18% GST or zero-tax invoice'}
+                    </p>
+                  </div>
                 </div>
-                <button onClick={() => setShowInvoiceModal(false)} className="p-1.5 text-zinc-400 hover:text-white">✕</button>
+                <button
+                  onClick={() => setShowInvoiceModal(false)}
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors cursor-pointer"
+                >
+                  ✕
+                </button>
               </div>
 
               <form onSubmit={handleSaveInvoice} className="space-y-5 text-xs font-mono">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-zinc-400 block mb-1">Invoice Reference Number *</label>
+                    <label className="text-slate-700 dark:text-zinc-300 font-semibold block mb-1">Invoice Reference Number *</label>
                     <input
                       required
                       type="text"
-                      value={invoiceFormData.invoice_number}
+                      value={invoiceFormData.invoice_number || ''}
                       onChange={(e) => setInvoiceFormData({ ...invoiceFormData, invoice_number: e.target.value })}
-                      className="w-full px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-white"
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white font-mono focus:outline-none focus:border-violet-500"
                     />
                   </div>
                   <div>
-                    <label className="text-zinc-400 block mb-1">Payment Due Date</label>
+                    <label className="text-slate-700 dark:text-zinc-300 font-semibold block mb-1">Payment Due Date</label>
                     <input
                       type="date"
-                      value={invoiceFormData.due_date}
+                      value={invoiceFormData.due_date || ''}
                       onChange={(e) => setInvoiceFormData({ ...invoiceFormData, due_date: e.target.value })}
-                      className="w-full px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-white"
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white font-mono focus:outline-none focus:border-violet-500"
                     />
                   </div>
                   <div>
-                    <label className="text-zinc-400 block mb-1">Client Full Name *</label>
+                    <label className="text-slate-700 dark:text-zinc-300 font-semibold block mb-1">Client Full Name *</label>
                     <input
                       required
                       type="text"
-                      value={invoiceFormData.client_name}
+                      value={invoiceFormData.client_name || ''}
                       onChange={(e) => setInvoiceFormData({ ...invoiceFormData, client_name: e.target.value })}
                       placeholder="e.g. Vikramaditya Sharma"
-                      className="w-full px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-white"
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white font-mono focus:outline-none focus:border-violet-500"
                     />
                   </div>
                   <div>
-                    <label className="text-zinc-400 block mb-1">Client Company / Entity</label>
+                    <label className="text-slate-700 dark:text-zinc-300 font-semibold block mb-1">Client Company / Entity</label>
                     <input
                       type="text"
-                      value={invoiceFormData.client_company}
+                      value={invoiceFormData.client_company || ''}
                       onChange={(e) => setInvoiceFormData({ ...invoiceFormData, client_company: e.target.value })}
                       placeholder="e.g. Apex Retail & Logistics Ltd"
-                      className="w-full px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-white"
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white font-mono focus:outline-none focus:border-violet-500"
                     />
                   </div>
+
+                  {/* PROMINENT EDITABLE CLIENT EMAIL ADDRESS FIELD */}
+                  <div className="sm:col-span-2 p-4 rounded-2xl bg-violet-50 dark:bg-violet-950/20 border-2 border-violet-300 dark:border-violet-500/40 shadow-sm">
+                    <div className="flex items-center justify-between mb-1.5 flex-wrap gap-1">
+                      <label className="text-xs font-bold text-violet-900 dark:text-violet-300 flex items-center gap-1.5">
+                        <Mail className="w-4 h-4 text-violet-600 dark:text-violet-400" />
+                        <span>Client Email Address (for PDF & Dispatch) *</span>
+                      </label>
+                      <span className="text-[10px] text-violet-600 dark:text-violet-400 font-mono font-medium">Dispatched via support@pyrow.in</span>
+                    </div>
+                    <div className="relative">
+                      <input
+                        required
+                        type="email"
+                        value={invoiceFormData.client_email || ''}
+                        onChange={(e) => setInvoiceFormData({ ...invoiceFormData, client_email: e.target.value })}
+                        placeholder="e.g. accounts@clientcompany.com or client@gmail.com"
+                        className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-white dark:bg-black/50 border border-violet-300 dark:border-violet-500/40 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-500 font-mono text-xs focus:outline-none focus:ring-2 focus:ring-violet-500 shadow-sm"
+                      />
+                      <Mail className="w-4 h-4 text-violet-400 absolute left-3 top-3 pointer-events-none" />
+                    </div>
+                    <p className="text-[11px] text-slate-500 dark:text-zinc-400 mt-1 font-mono">
+                      Edit this email address anytime. The official PDF Tax Invoice and payment receipt will be sent directly to this address.
+                    </p>
+                  </div>
+
                   <div>
-                    <label className="text-zinc-400 block mb-1">Client Phone (for WhatsApp digital bill)</label>
+                    <label className="text-slate-700 dark:text-zinc-300 font-semibold block mb-1">Client Phone (for WhatsApp digital bill)</label>
                     <input
                       type="tel"
-                      value={invoiceFormData.client_phone}
+                      value={invoiceFormData.client_phone || ''}
                       onChange={(e) => setInvoiceFormData({ ...invoiceFormData, client_phone: e.target.value })}
                       placeholder="+91 73581 63590"
-                      className="w-full px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-white"
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white font-mono focus:outline-none focus:border-violet-500"
                     />
                   </div>
                   <div>
-                    <label className="text-zinc-400 block mb-1">Client GSTIN (Optional)</label>
+                    <label className="text-slate-700 dark:text-zinc-300 font-semibold block mb-1">Client GSTIN (Optional)</label>
                     <input
                       type="text"
-                      value={invoiceFormData.client_gstin}
+                      value={invoiceFormData.client_gstin || ''}
                       onChange={(e) => setInvoiceFormData({ ...invoiceFormData, client_gstin: e.target.value })}
                       placeholder="33AAAAA0000A1Z5"
-                      className="w-full px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-white"
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white font-mono focus:outline-none focus:border-violet-500"
                     />
                   </div>
                 </div>
 
                 {/* EDITABLE INVOICE DELIVERABLES / ITEMS */}
-                <div className="p-4 rounded-2xl bg-black/40 border border-white/10 space-y-3 font-mono text-xs">
-                  <div className="flex items-center justify-between pb-2 border-b border-white/10">
-                    <span className="font-bold text-white flex items-center gap-1.5">
-                      <Receipt className="w-4 h-4 text-emerald-400" />
+                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/10 space-y-3 font-mono text-xs">
+                  <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-white/10">
+                    <span className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                      <Receipt className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
                       <span>Invoice Deliverables & Services</span>
                     </span>
                     <button
@@ -4324,14 +5039,14 @@ export const AdminPage: React.FC = () => {
                     {((invoiceFormData.items && invoiceFormData.items.length > 0) ? invoiceFormData.items : [
                       { id: '1', description: '', quantity: 1, rate: 0, amount: 0 }
                     ]).map((item, idx) => (
-                      <div key={idx} className="p-2.5 rounded-xl bg-slate-900 border border-white/10 grid grid-cols-12 gap-2 items-center">
+                      <div key={idx} className="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 grid grid-cols-12 gap-2 items-center">
                         <div className="col-span-12 sm:col-span-6">
                           <input
                             type="text"
                             value={item.description}
                             onChange={(e) => handleUpdateInvoiceItem(idx, 'description', e.target.value)}
                             placeholder="Service deliverable description"
-                            className="w-full px-2.5 py-1.5 rounded-lg bg-black/50 border border-white/10 text-white text-xs"
+                            className="w-full px-2.5 py-1.5 rounded-lg bg-slate-50 dark:bg-black/50 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-xs"
                           />
                         </div>
                         <div className="col-span-4 sm:col-span-2">
@@ -4340,7 +5055,7 @@ export const AdminPage: React.FC = () => {
                             min="1"
                             value={item.quantity}
                             onChange={(e) => handleUpdateInvoiceItem(idx, 'quantity', Number(e.target.value))}
-                            className="w-full px-2 py-1.5 rounded-lg bg-black/50 border border-white/10 text-white text-xs text-center"
+                            className="w-full px-2 py-1.5 rounded-lg bg-slate-50 dark:bg-black/50 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-xs text-center"
                           />
                         </div>
                         <div className="col-span-5 sm:col-span-3">
@@ -4348,14 +5063,14 @@ export const AdminPage: React.FC = () => {
                             type="number"
                             value={item.rate}
                             onChange={(e) => handleUpdateInvoiceItem(idx, 'rate', Number(e.target.value))}
-                            className="w-full px-2.5 py-1.5 rounded-lg bg-black/50 border border-white/10 text-white text-xs"
+                            className="w-full px-2.5 py-1.5 rounded-lg bg-slate-50 dark:bg-black/50 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-xs"
                           />
                         </div>
                         <div className="col-span-3 sm:col-span-1 flex justify-end">
                           <button
                             type="button"
                             onClick={() => handleRemoveInvoiceItem(idx)}
-                            className="p-1 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 cursor-pointer"
+                            className="p-1 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-500 dark:text-red-400 border border-red-500/20 cursor-pointer"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -4368,7 +5083,7 @@ export const AdminPage: React.FC = () => {
                 {/* GST TAX SCHEME TOGGLE: WITH GST (18%) VS WITHOUT GST (0%) */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-zinc-400 block mb-1 font-bold">GST Tax Application *</label>
+                    <label className="text-slate-700 dark:text-zinc-400 block mb-1 font-bold">GST Tax Application *</label>
                     <div className="grid grid-cols-2 gap-2">
                       <button
                         type="button"
@@ -4382,11 +5097,10 @@ export const AdminPage: React.FC = () => {
                             total_amount: sub + tax,
                           });
                         }}
-                        className={`py-2.5 px-3 rounded-xl border text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-                          Number(invoiceFormData.tax_rate ?? 18) > 0
-                            ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400 shadow-md shadow-emerald-500/20'
-                            : 'bg-white/5 border-white/10 text-zinc-400 hover:text-white'
-                        }`}
+                        className={`py-2.5 px-3 rounded-xl border text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${Number(invoiceFormData.tax_rate ?? 18) > 0
+                          ? 'bg-emerald-500/20 border-emerald-500 text-emerald-700 dark:text-emerald-400 shadow-md shadow-emerald-500/20'
+                          : 'bg-slate-100 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white'
+                          }`}
                       >
                         <Check className="w-3.5 h-3.5" />
                         <span>With GST (18%)</span>
@@ -4403,11 +5117,10 @@ export const AdminPage: React.FC = () => {
                             total_amount: sub,
                           });
                         }}
-                        className={`py-2.5 px-3 rounded-xl border text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-                          Number(invoiceFormData.tax_rate ?? 18) === 0
-                            ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400 shadow-md shadow-emerald-500/20'
-                            : 'bg-white/5 border-white/10 text-zinc-400 hover:text-white'
-                        }`}
+                        className={`py-2.5 px-3 rounded-xl border text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${Number(invoiceFormData.tax_rate ?? 18) === 0
+                          ? 'bg-emerald-500/20 border-emerald-500 text-emerald-700 dark:text-emerald-400 shadow-md shadow-emerald-500/20'
+                          : 'bg-slate-100 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white'
+                          }`}
                       >
                         <span>✕ Without GST (0% Tax)</span>
                       </button>
@@ -4416,11 +5129,11 @@ export const AdminPage: React.FC = () => {
 
                   {/* Payment Method Selector */}
                   <div>
-                    <label className="text-zinc-400 block mb-1">Payment Method</label>
+                    <label className="text-slate-700 dark:text-zinc-400 block mb-1 font-bold">Payment Method</label>
                     <select
                       value={invoiceFormData.payment_mode}
                       onChange={(e) => setInvoiceFormData({ ...invoiceFormData, payment_mode: e.target.value })}
-                      className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-white/10 text-white cursor-pointer"
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white cursor-pointer font-mono text-xs focus:outline-none focus:border-violet-500"
                     >
                       <option value="UPI">UPI / Instant QR (pyrow@upi)</option>
                       <option value="NEFT">NEFT Bank Transfer</option>
@@ -4431,34 +5144,34 @@ export const AdminPage: React.FC = () => {
                 </div>
 
                 {/* Calculation Box */}
-                <div className="p-4 rounded-xl bg-black/40 border border-white/10 space-y-1.5 text-xs">
-                  <div className="flex justify-between text-zinc-400">
+                <div className="p-4 rounded-xl bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/10 space-y-1.5 text-xs">
+                  <div className="flex justify-between text-slate-600 dark:text-zinc-400">
                     <span>Subtotal Value:</span>
-                    <span>₹{Number(invoiceFormData.subtotal).toLocaleString('en-IN')}</span>
+                    <span className="font-semibold text-slate-900 dark:text-white">₹{Number(invoiceFormData.subtotal).toLocaleString('en-IN')}</span>
                   </div>
-                  <div className="flex justify-between text-zinc-400">
+                  <div className="flex justify-between text-slate-600 dark:text-zinc-400">
                     <span>GST (SAC 998314):</span>
-                    <span className={Number(invoiceFormData.tax_rate) === 0 ? 'text-zinc-500 font-bold' : ''}>
+                    <span className={Number(invoiceFormData.tax_rate) === 0 ? 'text-slate-500 dark:text-zinc-500 font-bold' : 'text-slate-900 dark:text-white'}>
                       {Number(invoiceFormData.tax_rate) === 0 ? '₹0.00 (Without GST - 0% Tax)' : `₹${Number(invoiceFormData.tax_amount).toLocaleString('en-IN')} (18%)`}
                     </span>
                   </div>
-                  <div className="flex justify-between text-white font-bold text-sm pt-2 border-t border-white/10">
+                  <div className="flex justify-between text-slate-900 dark:text-white font-bold text-sm pt-2 border-t border-slate-200 dark:border-white/10">
                     <span>Total Invoiced:</span>
-                    <span className="text-emerald-400">₹{Number(invoiceFormData.total_amount).toLocaleString('en-IN')}</span>
+                    <span className="text-emerald-600 dark:text-emerald-400 font-black">₹{Number(invoiceFormData.total_amount).toLocaleString('en-IN')}</span>
                   </div>
                 </div>
 
-                <div className="flex justify-end gap-3 pt-3 border-t border-white/10">
+                <div className="flex justify-end gap-3 pt-3 border-t border-slate-200 dark:border-white/10">
                   <button
                     type="button"
                     onClick={() => setShowInvoiceModal(false)}
-                    className="px-4 py-2 rounded-xl bg-white/5 text-zinc-300 cursor-pointer"
+                    className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 dark:text-zinc-300 cursor-pointer font-bold transition-colors"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold shadow-lg shadow-emerald-600/30 cursor-pointer"
+                    className="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold shadow-lg shadow-emerald-600/30 cursor-pointer transition-all"
                   >
                     {editingInvoiceId ? 'Update Tax Invoice' : 'Save & Issue Invoice'}
                   </button>
@@ -4470,7 +5183,7 @@ export const AdminPage: React.FC = () => {
       </AnimatePresence>
 
       {/* -------------------------------------------------------- */}
-      {/* MODAL: PRINTABLE TAX INVOICE WITH UPI QR */}
+      {/* MODAL: PRINTABLE TAX INVOICE */}
       {/* -------------------------------------------------------- */}
       <AnimatePresence>
         {activeInvoicePreview && (
@@ -4521,12 +5234,47 @@ export const AdminPage: React.FC = () => {
               </div>
 
               {/* Billed To */}
-              <div className="text-xs font-mono space-y-1">
-                <span className="text-slate-400 font-bold uppercase text-[10px]">BILLED TO:</span>
+              <div className="text-xs font-mono space-y-1.5 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-400 font-bold uppercase text-[10px]">BILLED TO:</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const toEdit = activeInvoicePreview;
+                      setActiveInvoicePreview(null);
+                      handleOpenEditInvoice(toEdit);
+                    }}
+                    className="text-[11px] text-violet-600 hover:text-violet-800 font-bold flex items-center gap-1 cursor-pointer no-print"
+                  >
+                    <Edit3 className="w-3.5 h-3.5" />
+                    <span>Edit Client / Email</span>
+                  </button>
+                </div>
                 <div className="text-base font-bold text-slate-900">{activeInvoicePreview.client_name}</div>
-                {activeInvoicePreview.client_company && <div>{activeInvoicePreview.client_company}</div>}
-                {activeInvoicePreview.client_email && <div>{activeInvoicePreview.client_email}</div>}
-                {activeInvoicePreview.client_phone && <div>{activeInvoicePreview.client_phone}</div>}
+                {activeInvoicePreview.client_company && <div className="text-slate-700">{activeInvoicePreview.client_company}</div>}
+                {activeInvoicePreview.client_email ? (
+                  <div className="text-slate-700 flex items-center gap-1.5 font-medium">
+                    <Mail className="w-3.5 h-3.5 text-violet-600" />
+                    <span>{activeInvoicePreview.client_email}</span>
+                  </div>
+                ) : (
+                  <div className="text-amber-600 font-semibold flex items-center gap-1.5 text-[11px]">
+                    <Mail className="w-3.5 h-3.5" />
+                    <span>⚠️ No email address recorded</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const toEdit = activeInvoicePreview;
+                        setActiveInvoicePreview(null);
+                        handleOpenEditInvoice(toEdit);
+                      }}
+                      className="underline text-violet-600 cursor-pointer ml-1 font-bold no-print"
+                    >
+                      [+ Add Email]
+                    </button>
+                  </div>
+                )}
+                {activeInvoicePreview.client_phone && <div className="text-slate-500">{activeInvoicePreview.client_phone}</div>}
               </div>
 
               {/* Invoice Table */}
@@ -4555,20 +5303,8 @@ export const AdminPage: React.FC = () => {
                 </tbody>
               </table>
 
-              {/* Calculation with UPI QR code */}
-              <div className="flex items-center justify-between pt-2">
-                {/* Instant UPI Payment Box */}
-                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-mono flex items-center gap-3">
-                  <div className="w-16 h-16 bg-white p-1 rounded-lg border border-slate-300 flex items-center justify-center">
-                    <QrCode className="w-14 h-14 text-slate-900" />
-                  </div>
-                  <div>
-                    <div className="font-bold text-slate-800">Scan to Pay via UPI</div>
-                    <div className="text-[11px] text-slate-500">VPA: 7358163590@upi</div>
-                    <div className="text-[10px] text-emerald-600 font-bold">Instant GST Receipt Confirmation</div>
-                  </div>
-                </div>
-
+              {/* Calculation Area */}
+              <div className="flex items-center justify-end pt-2">
                 <div className="space-y-1 text-xs font-mono text-right max-w-xs">
                   <div className="text-slate-600">Subtotal: ₹{Number(activeInvoicePreview.subtotal).toLocaleString('en-IN')}</div>
                   {Number(activeInvoicePreview.tax_rate) > 0 ? (
@@ -4585,20 +5321,64 @@ export const AdminPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-slate-200 flex justify-between items-center no-print">
+              <div className="pt-4 border-t border-slate-200 flex justify-between items-center no-print gap-2">
                 <button
                   onClick={() => setActiveInvoicePreview(null)}
-                  className="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 text-xs font-mono"
+                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-mono cursor-pointer"
                 >
                   Close
                 </button>
-                <button
-                  onClick={() => printInvoiceDocument(activeInvoicePreview)}
-                  className="px-6 py-2.5 rounded-xl bg-slate-900 text-white font-bold text-xs font-mono flex items-center gap-2"
-                >
-                  <Printer className="w-4 h-4" />
-                  <span>Print Official Invoice</span>
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const toEdit = activeInvoicePreview;
+                      setActiveInvoicePreview(null);
+                      handleOpenEditInvoice(toEdit);
+                    }}
+                    className="px-4 py-2.5 rounded-xl bg-violet-600/10 hover:bg-violet-600/20 text-violet-700 border border-violet-500/30 text-xs font-mono font-bold flex items-center gap-1.5 cursor-pointer"
+                    title="Edit Invoice details or client email"
+                  >
+                    <Edit3 className="w-3.5 h-3.5" />
+                    <span>Edit Tax Invoice</span>
+                  </button>
+                  {activeInvoicePreview.client_email ? (
+                    <button
+                      type="button"
+                      disabled={sendingInvoiceMailId === (activeInvoicePreview.id || activeInvoicePreview.invoice_number)}
+                      onClick={() => handleSendInvoiceEmail(activeInvoicePreview)}
+                      className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs font-mono flex items-center gap-2 cursor-pointer shadow-md disabled:opacity-50"
+                    >
+                      {sendingInvoiceMailId === (activeInvoicePreview.id || activeInvoicePreview.invoice_number) ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Mail className="w-4 h-4" />
+                      )}
+                      <span>Email to Client</span>
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const toEdit = activeInvoicePreview;
+                        setActiveInvoicePreview(null);
+                        handleOpenEditInvoice(toEdit);
+                      }}
+                      className="px-4 py-2.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-700 border border-amber-500/30 text-xs font-mono font-bold flex items-center gap-1.5 cursor-pointer"
+                      title="Add email address to enable email dispatch"
+                    >
+                      <Mail className="w-3.5 h-3.5" />
+                      <span>Add Email & Dispatch</span>
+                    </button>
+                  )}
+                  <button
+                    onClick={() => printInvoiceDocument(activeInvoicePreview)}
+                    className="px-6 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs font-mono flex items-center gap-2 cursor-pointer shadow-lg"
+                  >
+                    <Printer className="w-4 h-4" />
+                    <span>Print Official Invoice</span>
+                  </button>
+                </div>
               </div>
             </motion.div>
           </div>
@@ -4606,76 +5386,196 @@ export const AdminPage: React.FC = () => {
       </AnimatePresence>
 
       {/* -------------------------------------------------------- */}
-      {/* MODAL: DIRECT EMAIL COMPOSER */}
+      {/* MODAL: DIRECT HOSTINGER EMAIL COMPOSER */}
       {/* -------------------------------------------------------- */}
       <AnimatePresence>
         {replyRecipient && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
-            <div className="fixed inset-0" onClick={() => setReplyRecipient(null)} />
+            <div className="fixed inset-0" onClick={() => !mailSending && setReplyRecipient(null)} />
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="relative w-full max-w-xl bg-slate-900 border border-white/15 rounded-3xl p-6 sm:p-8 shadow-2xl z-10 space-y-4"
+              className="relative w-full max-w-2xl bg-slate-900 border border-white/15 rounded-3xl p-6 sm:p-8 shadow-2xl z-10 space-y-4 max-h-[92vh] overflow-y-auto"
             >
               <div className="flex items-center justify-between pb-3 border-b border-white/10">
-                <h3 className="text-base font-bold text-white flex items-center gap-2">
-                  <Mail className="w-4 h-4 text-violet-400" />
-                  <span>Respond to {replyRecipient.name}</span>
-                </h3>
-                <button onClick={() => setReplyRecipient(null)} className="text-zinc-400 hover:text-white">✕</button>
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 rounded-xl bg-violet-600/20 text-violet-400 border border-violet-500/30">
+                    <Mail className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-bold text-white flex items-center gap-2">
+                      <span>Dispatch Email to {replyRecipient.name}</span>
+                    </h3>
+                    <div className="flex items-center gap-2 text-[11px] font-mono text-zinc-400 mt-0.5">
+                      <span>From:</span>
+                      <span className="text-violet-400 font-semibold">support@pyrow.in</span>
+                      <span className="px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[9px] uppercase font-bold">
+                        Cloud Mail API
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  disabled={mailSending}
+                  onClick={() => setReplyRecipient(null)}
+                  className="text-zinc-400 hover:text-white p-2 rounded-xl hover:bg-white/5 transition-colors"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Status Alert Banner */}
+              {mailSentStatus && (
+                <div
+                  className={`p-3 rounded-xl border text-xs font-mono flex items-center gap-2 ${mailSentStatus.type === 'success'
+                    ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300'
+                    : 'bg-red-500/15 border-red-500/30 text-red-300'
+                    }`}
+                >
+                  {mailSentStatus.type === 'success' ? (
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                  ) : (
+                    <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
+                  )}
+                  <span>{mailSentStatus.message}</span>
+                </div>
+              )}
+
+              {/* Quick Template Presets */}
+              <div className="space-y-1.5">
+                <span className="text-[11px] font-mono text-zinc-400 uppercase tracking-wider block">
+                  Quick Response Templates:
+                </span>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <button
+                    type="button"
+                    disabled={mailSending}
+                    onClick={() => {
+                      setReplySubject(`Strategy Consultation Confirmed — Pyrow Technical Architecture`);
+                      setReplyBody(
+                        `Hi ${replyRecipient.name},\n\nThank you for scheduling a strategy consultation with Pyrow. Our principal solutions architect and growth lead have received your brief regarding "${replyRecipient.service || 'enterprise software'}".\n\nWe have scheduled your session. Attached is the direct Google Meet calendar link: https://meet.google.com/pyr-call\n\nPlease let us know if this time suits you or if you would prefer an alternative slot.\n\nBest regards,\nBarathraj S & Pyrow Engineering Team\nsupport@pyrow.in\nhttps://pyrow.in`
+                      );
+                    }}
+                    className="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-[11px] font-mono text-zinc-300 border border-white/10 hover:border-violet-500/50 transition-colors"
+                  >
+                    Strategy Call Invite
+                  </button>
+                  <button
+                    type="button"
+                    disabled={mailSending}
+                    onClick={() => {
+                      setReplySubject(`Architecture Review & Next Steps — Pyrow Technologies`);
+                      setReplyBody(
+                        `Hi ${replyRecipient.name},\n\nOur engineering team reviewed your requirements for ${replyRecipient.service || 'your project'}.\n\nTo move forward efficiently, we have prepared preliminary technical architecture recommendations covering system scale, cloud topology, and development sprints.\n\nCould you share your preferred time this week for a 20-minute alignment walk-through?\n\nWarm regards,\nPyrow Technical Team\nsupport@pyrow.in`
+                      );
+                    }}
+                    className="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-[11px] font-mono text-zinc-300 border border-white/10 hover:border-violet-500/50 transition-colors"
+                  >
+                    Architecture Review
+                  </button>
+                  <button
+                    type="button"
+                    disabled={mailSending}
+                    onClick={() => {
+                      setReplySubject(`Software Proposal & Scope Estimate — Pyrow`);
+                      setReplyBody(
+                        `Hi ${replyRecipient.name},\n\nThank you for reaching out to Pyrow regarding your software engineering and growth requirements.\n\nWe are preparing a formalized scope estimate and sprint deliverable roadmap. You can also view our official software stack and compliance standards at https://pyrow.in.\n\nLooking forward to collaborating with your team.\n\nBest regards,\nPyrow Solutions\nsupport@pyrow.in`
+                      );
+                    }}
+                    className="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-[11px] font-mono text-zinc-300 border border-white/10 hover:border-violet-500/50 transition-colors"
+                  >
+                    Proposal & Scope
+                  </button>
+                </div>
               </div>
 
               <div className="text-xs font-mono space-y-3">
-                <div>
-                  <span className="text-zinc-500 block mb-1">To:</span>
-                  <input
-                    readOnly
-                    value={replyRecipient.email || ''}
-                    className="w-full px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-white"
-                  />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <span className="text-zinc-500 block mb-1">To:</span>
+                    <input
+                      readOnly
+                      value={replyRecipient.email || ''}
+                      className="w-full px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-white font-mono text-xs"
+                    />
+                  </div>
+                  <div>
+                    <span className="text-zinc-500 block mb-1">Reply-To / From:</span>
+                    <input
+                      readOnly
+                      value="support@pyrow.in"
+                      className="w-full px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-violet-400 font-mono text-xs font-semibold"
+                    />
+                  </div>
                 </div>
+
                 <div>
                   <span className="text-zinc-500 block mb-1">Subject:</span>
                   <input
                     value={replySubject}
                     onChange={(e) => setReplySubject(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-white"
+                    className="w-full px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-white font-mono text-xs focus:border-violet-500 outline-none"
+                    placeholder="Email subject..."
                   />
                 </div>
+
                 <div>
-                  <span className="text-zinc-500 block mb-1">Body:</span>
+                  <span className="text-zinc-500 block mb-1">Message Body:</span>
                   <textarea
-                    rows={8}
+                    rows={7}
                     value={replyBody}
                     onChange={(e) => setReplyBody(e.target.value)}
-                    className="w-full px-3 py-2.5 rounded-xl bg-black/40 border border-white/10 text-white resize-none"
+                    className="w-full px-3 py-2.5 rounded-xl bg-black/40 border border-white/10 text-white font-mono text-xs resize-none focus:border-violet-500 outline-none leading-relaxed"
+                    placeholder="Compose message..."
                   />
                 </div>
               </div>
 
-              <div className="flex items-center justify-between pt-3 border-t border-white/10">
-                <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(replyBody);
-                    setCopiedMail(true);
-                    setTimeout(() => setCopiedMail(false), 2000);
-                  }}
-                  className="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 text-xs font-mono flex items-center gap-1.5"
-                >
-                  {copiedMail ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                  <span>{copiedMail ? 'Copied Body!' : 'Copy Body'}</span>
-                </button>
+              <div className="flex items-center justify-between pt-3 border-t border-white/10 flex-wrap gap-2">
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText(replyBody);
+                      setCopiedMail(true);
+                      setTimeout(() => setCopiedMail(false), 2000);
+                    }}
+                    className="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 text-xs font-mono flex items-center gap-1.5 transition-colors"
+                  >
+                    {copiedMail ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    <span>{copiedMail ? 'Copied Body!' : 'Copy'}</span>
+                  </button>
 
-                <a
-                  href={`mailto:${replyRecipient.email}?subject=${encodeURIComponent(replySubject)}&body=${encodeURIComponent(replyBody)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-bold text-xs font-mono flex items-center gap-2 shadow-lg shadow-violet-600/30"
+                  <a
+                    href={`mailto:${replyRecipient.email}?subject=${encodeURIComponent(replySubject)}&body=${encodeURIComponent(replyBody)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white text-xs font-mono flex items-center gap-1.5 transition-colors"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    <span>Mail Client</span>
+                  </a>
+                </div>
+
+                <button
+                  type="button"
+                  disabled={mailSending || !replySubject.trim() || !replyBody.trim()}
+                  onClick={handleSendHostingerMailDirect}
+                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 disabled:opacity-50 text-white font-bold text-xs font-mono flex items-center gap-2 shadow-lg shadow-violet-600/30 transition-all cursor-pointer"
                 >
-                  <Send className="w-3.5 h-3.5" />
-                  <span>Launch in Mail Client</span>
-                </a>
+                  {mailSending ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Sending Email...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-3.5 h-3.5" />
+                      <span>Send from support@pyrow.in</span>
+                    </>
+                  )}
+                </button>
               </div>
             </motion.div>
           </div>

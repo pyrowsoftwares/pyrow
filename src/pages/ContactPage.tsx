@@ -24,10 +24,14 @@ export const ContactPage: React.FC = () => {
 
   const projectTypes = [
     { value: 'web_development', label: 'Website & Web App Development' },
-    { value: 'mobile_app', label: 'Mobile App Development' },
+    { value: 'mobile_app', label: 'Mobile App Development (iOS & Android)' },
     { value: 'billing_system', label: 'POS & Billing Systems' },
     { value: 'automation_tools', label: 'AI & WhatsApp Automation' },
     { value: 'ecommerce_solution', label: 'E-commerce Solutions' },
+    { value: 'digital_marketing', label: 'Digital Marketing & Growth Campaigns' },
+    { value: 'performance_marketing', label: 'Performance Ads (Google & Meta Ads)' },
+    { value: 'seo_optimization', label: 'Search Engine Optimization (SEO)' },
+    { value: 'social_media_branding', label: 'Social Media Management & Brand Identity' },
     { value: 'other', label: 'Custom Software, ERP, CRM, SaaS & Other' },
   ];
 
@@ -190,6 +194,29 @@ export const ContactPage: React.FC = () => {
                 Every request goes directly to our technical founders and delivery leads. No sales runarounds, just honest architecture analysis and clear roadmaps.
               </p>
             </div>
+
+            {/* Official Social Channels */}
+            <div className="flex items-center gap-2.5 pt-2 flex-wrap">
+              <span className="text-xs font-mono text-slate-500 dark:text-zinc-400 font-semibold">Official Channels:</span>
+              <a
+                href="https://www.linkedin.com/company/pyrow-in"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 hover:border-violet-500 text-xs font-mono text-slate-700 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white transition-all shadow-sm"
+              >
+                <Linkedin className="w-3.5 h-3.5 text-[#0A66C2]" />
+                <span>LinkedIn</span>
+              </a>
+              <a
+                href="https://www.instagram.com/pyrow.in?gwpx=bXJ2ZzczemU3YWVu"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-obsidian-800 border border-slate-200 dark:border-white/10 hover:border-pink-500 text-xs font-mono text-slate-700 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white transition-all shadow-sm"
+              >
+                <Instagram className="w-3.5 h-3.5 text-[#E4405F]" />
+                <span>Instagram</span>
+              </a>
+            </div>
           </motion.div>
 
           {/* Right Column: Software Quote Form */}
@@ -313,7 +340,7 @@ export const ContactPage: React.FC = () => {
                       className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-obsidian-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-violet-500 transition-colors"
                     >
                       <option value="" disabled className="bg-white dark:bg-obsidian-900 text-slate-500">
-                        Select your software project type...
+                        Select your project or service type...
                       </option>
                       {projectTypes.map((pt) => (
                         <option
