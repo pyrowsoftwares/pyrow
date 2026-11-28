@@ -2618,7 +2618,9 @@ export const AdminPage: React.FC = () => {
             <button
               type="submit"
               disabled={loginSubmitting}
-              className="w-full mt-2 py-3.5 px-4 rounded-2xl bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 text-white font-bold text-sm tracking-wide shadow-xl shadow-violet-600/30 hover:brightness-110 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50"
+              draggable={false}
+              onDragStart={(e) => e.preventDefault()}
+              className="w-full mt-2 py-3.5 px-4 rounded-2xl bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 text-white font-bold text-sm tracking-wide shadow-xl shadow-violet-600/30 hover:brightness-110 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50 select-none"
             >
               {loginSubmitting ? <span>Authenticating...</span> : <span>Log In to Command Center</span>}
             </button>
@@ -3294,7 +3296,9 @@ export const AdminPage: React.FC = () => {
                       <button
                         type="submit"
                         disabled={waSending}
-                        className="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-800 dark:text-emerald-400 border border-slate-200 dark:border-emerald-500/30 font-bold flex items-center justify-center gap-2 cursor-pointer transition-all disabled:opacity-50"
+                        draggable={false}
+                        onDragStart={(e) => e.preventDefault()}
+                        className="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-800 dark:text-emerald-400 border border-slate-200 dark:border-emerald-500/30 font-bold flex items-center justify-center gap-2 cursor-pointer transition-all disabled:opacity-50 select-none"
                       >
                         <Send className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                         <span>{waSending ? 'Transmitting...' : '🤖 Transmit via Meta Cloud API Gateway'}</span>
@@ -4935,7 +4939,9 @@ export const AdminPage: React.FC = () => {
                   </button>
                   <button
                     type="submit"
-                    className="px-6 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-bold text-xs font-mono shadow-lg shadow-violet-600/30 cursor-pointer"
+                    draggable={false}
+                    onDragStart={(e) => e.preventDefault()}
+                    className="px-6 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-bold text-xs font-mono shadow-lg shadow-violet-600/30 cursor-pointer select-none"
                   >
                     {editingQuoteId ? 'Update Commercial Quotation' : 'Save & Generate Quotation'}
                   </button>
@@ -5404,7 +5410,9 @@ export const AdminPage: React.FC = () => {
                   </button>
                   <button
                     type="submit"
-                    className="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold shadow-lg shadow-emerald-600/30 cursor-pointer transition-all"
+                    draggable={false}
+                    onDragStart={(e) => e.preventDefault()}
+                    className="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold shadow-lg shadow-emerald-600/30 cursor-pointer transition-all select-none"
                   >
                     {editingInvoiceId ? 'Update Tax Invoice' : 'Save & Issue Invoice'}
                   </button>
@@ -5953,7 +5961,9 @@ export const AdminPage: React.FC = () => {
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-bold cursor-pointer shadow-lg shadow-violet-600/30"
+                    draggable={false}
+                    onDragStart={(e) => e.preventDefault()}
+                    className="px-5 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-bold cursor-pointer shadow-lg shadow-violet-600/30 select-none"
                   >
                     Save Changes
                   </button>
@@ -6038,7 +6048,9 @@ export const AdminPage: React.FC = () => {
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold cursor-pointer shadow-lg shadow-emerald-600/30"
+                    draggable={false}
+                    onDragStart={(e) => e.preventDefault()}
+                    className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold cursor-pointer shadow-lg shadow-emerald-600/30 select-none"
                   >
                     Save Changes
                   </button>

@@ -525,7 +525,9 @@ export const ContactPage: React.FC = () => {
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="w-full mt-4 py-4 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-bold text-sm tracking-wide shadow-lg shadow-violet-600/25 hover:opacity-95 hover:shadow-violet-600/40 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70"
+                    draggable={false}
+                    onDragStart={(e) => e.preventDefault()}
+                    className="w-full mt-4 py-4 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-bold text-sm tracking-wide shadow-lg shadow-violet-600/25 hover:opacity-95 hover:shadow-violet-600/40 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70 select-none"
                   >
                     <Send className="w-4 h-4" />
                     <span>{submitting ? 'Submitting Your Request...' : 'Request My Software Quote'}</span>

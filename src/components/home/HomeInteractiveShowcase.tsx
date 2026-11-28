@@ -623,7 +623,9 @@ export const HomeInteractiveShowcase: React.FC<{ onOpenDemoRequest?: (name?: str
                     />
                     <button
                       type="submit"
-                      className="p-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white cursor-pointer transition-all shadow-md shadow-violet-600/20"
+                      draggable={false}
+                      onDragStart={(e) => e.preventDefault()}
+                      className="p-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white cursor-pointer transition-all shadow-md shadow-violet-600/20 select-none"
                     >
                       <Send className="w-4 h-4" />
                     </button>

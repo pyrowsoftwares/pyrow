@@ -6,6 +6,7 @@ interface MagneticButtonProps extends React.ButtonHTMLAttributes<HTMLButtonEleme
   size?: 'sm' | 'md' | 'lg';
   children: React.ReactNode;
   icon?: React.ReactNode;
+  magnetic?: boolean;
 }
 
 export const MagneticButton: React.FC<MagneticButtonProps> = ({
@@ -15,13 +16,18 @@ export const MagneticButton: React.FC<MagneticButtonProps> = ({
   icon,
   className = '',
   onClick,
+  magnetic,
+  type,
   ...props
 }) => {
   const btnRef = useRef<HTMLButtonElement | null>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
+  // Strictly disable magnetic movement on submit buttons or when magnetic is false so button never drifts or feels draggable
+  const isMagneticEnabled = magnetic === true && type !== 'submit';
+
   const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (!btnRef.current) return;
+    if (!isMagneticEnabled || !btnRef.current) return;
     const { left, top, width, height } = btnRef.current.getBoundingClientRect();
     const x = (e.clientX - (left + width / 2)) * 0.25;
     const y = (e.clientY - (top + height / 2)) * 0.25;
@@ -29,7 +35,9 @@ export const MagneticButton: React.FC<MagneticButtonProps> = ({
   };
 
   const handleMouseLeave = () => {
-    setPosition({ x: 0, y: 0 });
+    if (isMagneticEnabled) {
+      setPosition({ x: 0, y: 0 });
+    }
   };
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -62,23 +70,28 @@ export const MagneticButton: React.FC<MagneticButtonProps> = ({
   return (
     <button
       ref={btnRef}
+      type={type}
+      draggable={false}
+      onDragStart={(e) => e.preventDefault()}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       onClick={handleClick}
       onMouseEnter={() => soundFX.playHover()}
-      style={{
-        transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
-      }}
+      style={
+        isMagneticEnabled
+          ? { transform: `translate3d(${position.x}px, ${position.y}px, 0)` }
+          : undefined
+      }
       className={`${baseStyles} ${sizeStyles} ${variantStyles} ${className}`}
       {...props}
     >
       {/* Light Reflection Sweep */}
-      <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/25 to-transparent -translate-x-full hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
+      <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/25 to-transparent -translate-x-full hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none select-none" />
 
       {/* Button content */}
-      <span className="relative z-10 flex items-center gap-2">
+      <span className="relative z-10 flex items-center gap-2 select-none" draggable={false}>
         {children}
-        {icon && <span className="transition-transform duration-300 group-hover:translate-x-1">{icon}</span>}
+        {icon && <span className="transition-transform duration-300 group-hover:translate-x-1 select-none" draggable={false}>{icon}</span>}
       </span>
     </button>
   );

@@ -75,6 +75,23 @@
     touch-action: manipulation;
   }
 
+  button, [type="submit"], [type="button"], [role="button"] {
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  button *, [type="submit"] *, [role="button"] * {
+    -webkit-user-drag: none;
+    user-drag: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
   /* Default light theme: Rich, luminous multi-stop portal gradient matching violet identity */
   html:not(.dark) body {
     background: linear-gradient(180deg, 
