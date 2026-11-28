@@ -888,9 +888,8 @@ export const AdminPage: React.FC = () => {
 
     <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 24px; padding-top: 16px; border-top: 1px solid #e2e8f0; font-family: monospace; font-size: 10px;">
       <div style="color: #64748b; line-height: 1.6;">
-        <div style="font-weight: bold; color: #0f172a;">Pyrow Technologies • Bank Settlement Details for Advance:</div>
-        <div>HDFC Bank Ltd • Account: <strong>50200084729103</strong> • IFSC: <strong>HDFC0001234</strong></div>
-        <div>UPI VPA: <strong>pyrow@upi</strong> • Official Support: <strong>support@pyrow.in</strong></div>
+        <div style="font-weight: bold; color: #0f172a;">Pyrow Technologies • Commercial Software Engineering</div>
+        <div>Official Support: <strong>support@pyrow.in</strong> • Tel: <strong>+91 73581 63590</strong> • <strong>https://pyrow.in</strong></div>
       </div>
       <div style="text-align: right; min-width: 180px;">
         <div style="font-weight: 700; color: #0f172a; margin-bottom: 30px;">For Pyrow Technologies</div>
@@ -1221,17 +1220,7 @@ export const AdminPage: React.FC = () => {
       <strong>Amount in Words:</strong> ${numberToIndianWords(totalAmount)}
     </div>
 
-    <div class="footer-section">
-      <div class="settlement-area">
-        <div class="settlement-title">Bank Settlement & Wire Details:</div>
-        <div class="settlement-row">Beneficiary: <strong>Pyrow Technologies</strong></div>
-        <div class="settlement-row">Bank: <strong>HDFC Bank Ltd</strong></div>
-        <div class="settlement-row">Account No: <strong>50200084729103</strong></div>
-        <div class="settlement-row">IFSC Code: <strong>HDFC0001234</strong> (Branch: Chennai Main)</div>
-        <div class="settlement-row">UPI VPA: <strong>pyrow@upi</strong></div>
-        <div class="settlement-row">Settlement Mode: <strong>${invoice.payment_mode || 'UPI / NEFT'}</strong></div>
-      </div>
-
+    <div class="footer-section" style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
       <div class="totals-area">
         <div class="totals-row">
           <span>Subtotal:</span>
@@ -5525,34 +5514,20 @@ export const AdminPage: React.FC = () => {
                 </tbody>
               </table>
 
-              {/* Calculation & Settlement Area */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-mono space-y-1">
-                  <div className="font-bold text-slate-900 uppercase text-[10px] tracking-wide mb-1 flex items-center gap-1.5">
-                    <CreditCard className="w-3.5 h-3.5 text-emerald-600" />
-                    <span>Official Bank Settlement Details</span>
-                  </div>
-                  <div className="text-slate-600">A/C Name: <span className="text-slate-900 font-bold">Pyrow Technologies</span></div>
-                  <div className="text-slate-600">Bank: <span className="text-slate-800">HDFC Bank Ltd</span></div>
-                  <div className="text-slate-600">A/C No: <span className="text-slate-900 font-bold">50200084729103</span></div>
-                  <div className="text-slate-600">IFSC Code: <span className="text-slate-800 font-mono">HDFC0001234</span></div>
-                  <div className="text-slate-600">UPI VPA: <span className="text-emerald-700 font-bold">pyrow@upi</span></div>
-                </div>
-
-                <div className="space-y-1.5 text-xs font-mono text-right flex flex-col justify-center">
-                  <div className="space-y-1">
-                    <div className="text-slate-600">Subtotal: ₹{Number(activeInvoicePreview.subtotal).toLocaleString('en-IN')}</div>
-                    {Number(activeInvoicePreview.tax_rate) > 0 ? (
-                      <>
-                        <div className="text-slate-600">CGST (9%): ₹{(Number(activeInvoicePreview.tax_amount) / 2).toLocaleString('en-IN')}</div>
-                        <div className="text-slate-600">SGST (9%): ₹{(Number(activeInvoicePreview.tax_amount) / 2).toLocaleString('en-IN')}</div>
-                      </>
-                    ) : (
-                      <div className="text-emerald-700 font-bold">GST: ₹0.00 (Without GST / 0%)</div>
-                    )}
-                    <div className="text-base font-black text-slate-900 pt-1 border-t border-slate-900">
-                      Total: ₹{Number(activeInvoicePreview.total_amount).toLocaleString('en-IN')}
-                    </div>
+              {/* Calculation Area */}
+              <div className="flex items-center justify-end pt-2">
+                <div className="space-y-1 text-xs font-mono text-right max-w-xs">
+                  <div className="text-slate-600">Subtotal: ₹{Number(activeInvoicePreview.subtotal).toLocaleString('en-IN')}</div>
+                  {Number(activeInvoicePreview.tax_rate) > 0 ? (
+                    <>
+                      <div className="text-slate-600">CGST (9%): ₹{(Number(activeInvoicePreview.tax_amount) / 2).toLocaleString('en-IN')}</div>
+                      <div className="text-slate-600">SGST (9%): ₹{(Number(activeInvoicePreview.tax_amount) / 2).toLocaleString('en-IN')}</div>
+                    </>
+                  ) : (
+                    <div className="text-emerald-700 font-bold">GST: ₹0.00 (Without GST / 0%)</div>
+                  )}
+                  <div className="text-base font-black text-slate-900 pt-1 border-t border-slate-900">
+                    Total: ₹{Number(activeInvoicePreview.total_amount).toLocaleString('en-IN')}
                   </div>
                 </div>
               </div>
