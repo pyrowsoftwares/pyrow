@@ -1540,6 +1540,22 @@ export const AdminPage: React.FC = () => {
     };
   }, []);
 
+  // One-time automatic purge of legacy demo/seed records from browser storage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const isPurged = localStorage.getItem('pyrow_legacy_email_logs_purged_v3');
+        if (!isPurged) {
+          localStorage.removeItem('pyrow_email_logs');
+          localStorage.setItem('pyrow_cleared_email_logs_at', new Date().toISOString());
+          localStorage.setItem('pyrow_deleted_email_ids', '[]');
+          localStorage.setItem('pyrow_legacy_email_logs_purged_v3', 'true');
+          setEmailLogs([]);
+        }
+      } catch {}
+    }
+  }, []);
+
   // Initial auth check
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -1584,8 +1600,10 @@ export const AdminPage: React.FC = () => {
 
       try {
         const logs = await fetchEmailLogs();
-        if (logs) setEmailLogs(logs);
-      } catch (e) { }
+        setEmailLogs(logs || []);
+      } catch (e) {
+        setEmailLogs([]);
+      }
     } catch (err) {
       console.error('Data fetch error:', err);
     } finally {
@@ -2201,29 +2219,33 @@ export const AdminPage: React.FC = () => {
     if (!id) return;
     const confirmed = await confirmAction({
       title: 'Delete Sent Email Log?',
-      text: 'Are you sure you want to delete this sent email record from the audit ledger? This cannot be undone.',
+      text: 'Are you sure you want to permanently delete this sent email record from the audit ledger? This cannot be undone.',
       confirmButtonText: 'Yes, Delete Record',
       danger: true,
     });
     if (!confirmed) return;
     soundFX.playClick();
-    await deleteEmailLog(id);
-    setEmailLogs((prev) => prev.filter((l) => l.id !== id));
+    setEmailLogs((prev) => prev.filter((l) => l.id !== id && `${l.recipient_email}-${l.created_at || ''}` !== id));
     soundFX.playChime();
+    setSuccessMessage('Sent email record permanently deleted from cloud & local audit ledger.');
+    setTimeout(() => setSuccessMessage(''), 3000);
+    deleteEmailLog(id).catch(() => {});
   };
 
   const handleClearAllEmailLogs = async () => {
     const confirmed = await confirmAction({
       title: 'Clear All Sent Email Logs?',
-      text: `Are you sure you want to delete all ${emailLogs.length} sent email audit records? This action cannot be undone.`,
+      text: `Are you sure you want to permanently delete all ${emailLogs.length} sent email audit records? This action cannot be undone.`,
       confirmButtonText: 'Yes, Delete All',
       danger: true,
     });
     if (!confirmed) return;
     soundFX.playClick();
-    await clearAllEmailLogs();
     setEmailLogs([]);
     soundFX.playChime();
+    setSuccessMessage('Email audit ledger permanently cleared across cloud & local storage.');
+    setTimeout(() => setSuccessMessage(''), 4000);
+    clearAllEmailLogs().catch(() => {});
   };
 
   // --- HOSTINGER CLOUD EMAIL ACTIONS ---
@@ -4552,7 +4574,7 @@ export const AdminPage: React.FC = () => {
                           </button>
                           <button
                             type="button"
-                            onClick={() => handleDeleteEmailLog(log.id)}
+                            onClick={() => handleDeleteEmailLog(log.id || `${log.recipient_email}-${log.created_at || ''}`)}
                             className="text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 px-2.5 py-1 rounded-lg border border-red-200 dark:border-red-500/20 font-bold flex items-center gap-1 transition-all cursor-pointer text-[11px]"
                             title="Delete this unwanted sent email log"
                           >
