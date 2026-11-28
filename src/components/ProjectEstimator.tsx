@@ -316,13 +316,12 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                           onChange={(e) => handleChange('name', e.target.value)}
                           onBlur={() => handleBlur('name')}
                           placeholder="Rajesh"
-                          className={`w-full bg-slate-50 dark:bg-white/[0.04] border rounded-xl px-3.5 py-2 text-sm text-slate-900 dark:text-white focus:outline-none transition-colors ${
-                            errors.name
-                              ? 'border-red-500 focus:border-red-500'
-                              : touched.name && !errors.name && contactForm.name.trim().length >= 2
-                                ? 'border-emerald-500/60 dark:border-emerald-500/40 focus:border-emerald-500'
-                                : 'border-slate-200 dark:border-white/[0.08] focus:border-violet-500'
-                          }`}
+                          className={`w-full bg-slate-50 dark:bg-white/[0.04] border rounded-xl px-3.5 py-2 text-sm text-slate-900 dark:text-white focus:outline-none transition-colors ${errors.name
+                            ? 'border-red-500 focus:border-red-500'
+                            : touched.name && !errors.name && contactForm.name.trim().length >= 2
+                              ? 'border-emerald-500/60 dark:border-emerald-500/40 focus:border-emerald-500'
+                              : 'border-slate-200 dark:border-white/[0.08] focus:border-violet-500'
+                            }`}
                         />
                         {errors.name && <p className="text-[11px] text-red-500 font-medium mt-1">{errors.name}</p>}
                       </div>
@@ -337,13 +336,12 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                           onChange={(e) => handleChange('email', e.target.value)}
                           onBlur={() => handleBlur('email')}
                           placeholder="rajesh@company.com"
-                          className={`w-full bg-slate-50 dark:bg-white/[0.04] border rounded-xl px-3.5 py-2 text-sm text-slate-900 dark:text-white focus:outline-none transition-colors ${
-                            errors.email
-                              ? 'border-red-500 focus:border-red-500'
-                              : touched.email && !errors.email && contactForm.email.trim().length >= 5
-                                ? 'border-emerald-500/60 dark:border-emerald-500/40 focus:border-emerald-500'
-                                : 'border-slate-200 dark:border-white/[0.08] focus:border-violet-500'
-                          }`}
+                          className={`w-full bg-slate-50 dark:bg-white/[0.04] border rounded-xl px-3.5 py-2 text-sm text-slate-900 dark:text-white focus:outline-none transition-colors ${errors.email
+                            ? 'border-red-500 focus:border-red-500'
+                            : touched.email && !errors.email && contactForm.email.trim().length >= 5
+                              ? 'border-emerald-500/60 dark:border-emerald-500/40 focus:border-emerald-500'
+                              : 'border-slate-200 dark:border-white/[0.08] focus:border-violet-500'
+                            }`}
                         />
                         {errors.email && <p className="text-[11px] text-red-500 font-medium mt-1">{errors.email}</p>}
                       </div>
@@ -361,13 +359,12 @@ export const ProjectEstimator: React.FC<ProjectEstimatorProps> = ({
                           onChange={(e) => handleChange('phone', e.target.value)}
                           onBlur={() => handleBlur('phone')}
                           placeholder="+91 98765 43210 / +1 202 555 0199"
-                          className={`w-full bg-slate-50 dark:bg-white/[0.04] border rounded-xl px-3.5 py-2 text-sm text-slate-900 dark:text-white focus:outline-none transition-colors ${
-                            errors.phone
-                              ? 'border-red-500 focus:border-red-500'
-                              : touched.phone && !errors.phone && contactForm.phone.trim().length >= 7
-                                ? 'border-emerald-500/60 dark:border-emerald-500/40 focus:border-emerald-500'
-                                : 'border-slate-200 dark:border-white/[0.08] focus:border-violet-500'
-                          }`}
+                          className={`w-full bg-slate-50 dark:bg-white/[0.04] border rounded-xl px-3.5 py-2 text-sm text-slate-900 dark:text-white focus:outline-none transition-colors ${errors.phone
+                            ? 'border-red-500 focus:border-red-500'
+                            : touched.phone && !errors.phone && contactForm.phone.trim().length >= 7
+                              ? 'border-emerald-500/60 dark:border-emerald-500/40 focus:border-emerald-500'
+                              : 'border-slate-200 dark:border-white/[0.08] focus:border-violet-500'
+                            }`}
                         />
                         {errors.phone && <p className="text-[11px] text-red-500 font-medium mt-1">{errors.phone}</p>}
                       </div>

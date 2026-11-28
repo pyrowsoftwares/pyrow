@@ -377,13 +377,12 @@ export const ContactPage: React.FC = () => {
                         onChange={(e) => handleChange('fullName', e.target.value)}
                         onBlur={() => handleBlur('fullName')}
                         placeholder="Rajesh"
-                        className={`w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-obsidian-900 border text-slate-900 dark:text-white text-sm focus:outline-none transition-colors ${
-                          errors.fullName
-                            ? 'border-red-500 focus:border-red-500'
-                            : touched.fullName && !errors.fullName && formData.fullName.trim().length >= 2
-                              ? 'border-emerald-500/60 dark:border-emerald-500/40 focus:border-emerald-500'
-                              : 'border-slate-200 dark:border-white/10 focus:border-violet-500'
-                        }`}
+                        className={`w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-obsidian-900 border text-slate-900 dark:text-white text-sm focus:outline-none transition-colors ${errors.fullName
+                          ? 'border-red-500 focus:border-red-500'
+                          : touched.fullName && !errors.fullName && formData.fullName.trim().length >= 2
+                            ? 'border-emerald-500/60 dark:border-emerald-500/40 focus:border-emerald-500'
+                            : 'border-slate-200 dark:border-white/10 focus:border-violet-500'
+                          }`}
                       />
                       {errors.fullName && <p className="text-[11px] text-red-500 font-medium mt-1">{errors.fullName}</p>}
                     </div>
@@ -400,13 +399,12 @@ export const ContactPage: React.FC = () => {
                         onChange={(e) => handleChange('email', e.target.value)}
                         onBlur={() => handleBlur('email')}
                         placeholder="john@example.com"
-                        className={`w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-obsidian-900 border text-slate-900 dark:text-white text-sm focus:outline-none transition-colors ${
-                          errors.email
-                            ? 'border-red-500 focus:border-red-500'
-                            : touched.email && !errors.email && formData.email.trim().length >= 5
-                              ? 'border-emerald-500/60 dark:border-emerald-500/40 focus:border-emerald-500'
-                              : 'border-slate-200 dark:border-white/10 focus:border-violet-500'
-                        }`}
+                        className={`w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-obsidian-900 border text-slate-900 dark:text-white text-sm focus:outline-none transition-colors ${errors.email
+                          ? 'border-red-500 focus:border-red-500'
+                          : touched.email && !errors.email && formData.email.trim().length >= 5
+                            ? 'border-emerald-500/60 dark:border-emerald-500/40 focus:border-emerald-500'
+                            : 'border-slate-200 dark:border-white/10 focus:border-violet-500'
+                          }`}
                       />
                       {errors.email && <p className="text-[11px] text-red-500 font-medium mt-1">{errors.email}</p>}
                     </div>
@@ -426,13 +424,12 @@ export const ContactPage: React.FC = () => {
                       onChange={(e) => handleChange('contactNumber', e.target.value)}
                       onBlur={() => handleBlur('contactNumber')}
                       placeholder="+91 98765 43210 / +1 202 555 0199"
-                      className={`w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-obsidian-900 border text-slate-900 dark:text-white text-sm focus:outline-none transition-colors ${
-                        errors.contactNumber
-                          ? 'border-red-500 focus:border-red-500'
-                          : touched.contactNumber && !errors.contactNumber && formData.contactNumber.trim().length >= 7
-                            ? 'border-emerald-500/60 dark:border-emerald-500/40 focus:border-emerald-500'
-                            : 'border-slate-200 dark:border-white/10 focus:border-violet-500'
-                      }`}
+                      className={`w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-obsidian-900 border text-slate-900 dark:text-white text-sm focus:outline-none transition-colors ${errors.contactNumber
+                        ? 'border-red-500 focus:border-red-500'
+                        : touched.contactNumber && !errors.contactNumber && formData.contactNumber.trim().length >= 7
+                          ? 'border-emerald-500/60 dark:border-emerald-500/40 focus:border-emerald-500'
+                          : 'border-slate-200 dark:border-white/10 focus:border-violet-500'
+                        }`}
                     />
                     {errors.contactNumber && <p className="text-[11px] text-red-500 font-medium mt-1">{errors.contactNumber}</p>}
                   </div>
@@ -475,13 +472,12 @@ export const ContactPage: React.FC = () => {
                       onChange={(e) => handleChange('projectDescription', e.target.value)}
                       onBlur={() => handleBlur('projectDescription')}
                       placeholder="Tell us what you want to build, current bottlenecks, required features, and timeline..."
-                      className={`w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-obsidian-900 border text-slate-900 dark:text-white text-sm focus:outline-none transition-colors resize-none ${
-                        errors.projectDescription
-                          ? 'border-red-500 focus:border-red-500'
-                          : touched.projectDescription && !errors.projectDescription && formData.projectDescription.trim().length >= 10
-                            ? 'border-emerald-500/60 dark:border-emerald-500/40 focus:border-emerald-500'
-                            : 'border-slate-200 dark:border-white/10 focus:border-violet-500'
-                      }`}
+                      className={`w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-obsidian-900 border text-slate-900 dark:text-white text-sm focus:outline-none transition-colors resize-none ${errors.projectDescription
+                        ? 'border-red-500 focus:border-red-500'
+                        : touched.projectDescription && !errors.projectDescription && formData.projectDescription.trim().length >= 10
+                          ? 'border-emerald-500/60 dark:border-emerald-500/40 focus:border-emerald-500'
+                          : 'border-slate-200 dark:border-white/10 focus:border-violet-500'
+                        }`}
                     />
                     {errors.projectDescription && (
                       <p className="text-[11px] text-red-500 font-medium mt-1">{errors.projectDescription}</p>

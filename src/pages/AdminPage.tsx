@@ -81,6 +81,7 @@ import {
 import { useRouter } from '../context/RouterContext';
 import { soundFX } from '../components/ui/sound-effects';
 import { showEmailAlert, confirmAction, showAlert } from '../lib/sweetAlert';
+import { numberToIndianWords } from '../lib/utils';
 
 type AdminTab = 'dashboard' | 'enquiries' | 'traffic' | 'quotations' | 'whatsapp' | 'billing' | 'database' | 'messages' | 'emails' | 'settings';
 
@@ -874,11 +875,27 @@ export const AdminPage: React.FC = () => {
       </div>
     </div>
 
+    <div style="margin-bottom: 16px; padding: 10px 14px; background: #faf5ff; border: 1px solid #e9d5ff; border-radius: 8px; font-family: monospace; font-size: 11px; color: #581c87;">
+      <strong>Total in Words:</strong> ${numberToIndianWords(totalAmount)}
+    </div>
+
     <div class="terms-box">
       <div class="terms-title">Commercial Payment Terms:</div>
       <p>${quote.terms || '50% advance upon contract signing, 50% upon final staging approval and production go-live.'}</p>
       <div class="terms-title" style="margin-top: 8px;">Architecture Warranty & SLA:</div>
       <p>${quote.notes || 'Architecture SLA: 99.9% cloud uptime SLA, full source code ownership, enterprise Docker container deployment, 1-year security & bug-fix patch warranty.'}</p>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 24px; padding-top: 16px; border-top: 1px solid #e2e8f0; font-family: monospace; font-size: 10px;">
+      <div style="color: #64748b; line-height: 1.6;">
+        <div style="font-weight: bold; color: #0f172a;">Pyrow Technologies • Bank Settlement Details for Advance:</div>
+        <div>HDFC Bank Ltd • Account: <strong>50200084729103</strong> • IFSC: <strong>HDFC0001234</strong></div>
+        <div>UPI VPA: <strong>pyrow@upi</strong> • Official Support: <strong>support@pyrow.in</strong></div>
+      </div>
+      <div style="text-align: right; min-width: 180px;">
+        <div style="font-weight: 700; color: #0f172a; margin-bottom: 30px;">For Pyrow Technologies</div>
+        <div style="border-top: 1px dashed #94a3b8; padding-top: 4px; color: #475569;">Authorized Commercial Signatory</div>
+      </div>
     </div>
   </div>
 </body>
@@ -1054,18 +1071,75 @@ export const AdminPage: React.FC = () => {
 
     .footer-section {
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
       align-items: flex-start;
       margin-bottom: 20px;
+      gap: 24px;
     }
-    .upi-title {
+    .settlement-area {
+      flex: 1;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-family: monospace;
+      font-size: 11px;
+    }
+    .settlement-title {
       font-weight: 700;
       color: #0f172a;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      font-size: 10px;
+      letter-spacing: 0.5px;
     }
-    .upi-vpa {
-      color: #059669;
+    .settlement-row {
+      color: #475569;
+      margin-bottom: 3px;
+    }
+    .settlement-row strong {
+      color: #0f172a;
+    }
+    .words-box {
+      margin-bottom: 16px;
+      padding: 10px 14px;
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 11px;
+      color: #065f46;
+    }
+    .signatory-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid #e2e8f0;
+      font-family: monospace;
+      font-size: 10px;
+    }
+    .terms-text {
+      color: #64748b;
+      max-width: 60%;
+      line-height: 1.5;
+    }
+    .signatory-block {
+      text-align: right;
+      min-width: 180px;
+    }
+    .signatory-firm {
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 35px;
+      font-size: 11px;
+    }
+    .signatory-line {
+      border-top: 1px dashed #94a3b8;
+      padding-top: 4px;
+      color: #475569;
       font-weight: 600;
-      margin-top: 2px;
     }
 
     .totals-area {
@@ -1143,7 +1217,21 @@ export const AdminPage: React.FC = () => {
       </tbody>
     </table>
 
+    <div class="words-box">
+      <strong>Amount in Words:</strong> ${numberToIndianWords(totalAmount)}
+    </div>
+
     <div class="footer-section">
+      <div class="settlement-area">
+        <div class="settlement-title">Bank Settlement & Wire Details:</div>
+        <div class="settlement-row">Beneficiary: <strong>Pyrow Technologies</strong></div>
+        <div class="settlement-row">Bank: <strong>HDFC Bank Ltd</strong></div>
+        <div class="settlement-row">Account No: <strong>50200084729103</strong></div>
+        <div class="settlement-row">IFSC Code: <strong>HDFC0001234</strong> (Branch: Chennai Main)</div>
+        <div class="settlement-row">UPI VPA: <strong>pyrow@upi</strong></div>
+        <div class="settlement-row">Settlement Mode: <strong>${invoice.payment_mode || 'UPI / NEFT'}</strong></div>
+      </div>
+
       <div class="totals-area">
         <div class="totals-row">
           <span>Subtotal:</span>
@@ -1168,6 +1256,19 @@ export const AdminPage: React.FC = () => {
           <span>Total Payable:</span>
           <span class="amount">₹${totalAmount.toLocaleString('en-IN')}</span>
         </div>
+      </div>
+    </div>
+
+    <div class="signatory-row">
+      <div class="terms-text">
+        <strong>Terms & Declarations:</strong><br />
+        1. All payments are strictly non-refundable and subject to bank clearance.<br />
+        2. Software licenses, source repos & production deployment keys transfer upon full clearance.<br />
+        3. This is an authenticated computer-generated official Tax Invoice.
+      </div>
+      <div class="signatory-block">
+        <div class="signatory-firm">For Pyrow Technologies</div>
+        <div class="signatory-line">Authorized Signatory</div>
       </div>
     </div>
   </div>
@@ -1568,140 +1669,168 @@ export const AdminPage: React.FC = () => {
 
   // Quotation calculations
   const calculateQuoteTotals = (items: QuotationItem[], discount: number, taxRate: number) => {
-    const subtotal = items.reduce((sum, item) => sum + item.quantity * item.rate, 0);
+    const subtotal = (items || []).reduce((sum, item) => {
+      const itemAmt = Number(item.amount) || ((Number(item.quantity) || 1) * (Number(item.rate) || 0)) || 0;
+      return sum + itemAmt;
+    }, 0);
     const discounted = Math.max(0, subtotal - discount);
-    const taxAmount = (discounted * taxRate) / 100;
+    const taxAmount = taxRate > 0 ? (discounted * taxRate) / 100 : 0;
     const total = discounted + taxAmount;
     return { subtotal, taxAmount, total };
   };
 
   // Deliverable Line Item Helpers for Quotation Studio
   const handleUpdateQuoteItem = (index: number, field: keyof QuotationItem, value: any) => {
-    const newItems = [...(quoteFormData.items || [])];
-    newItems[index] = { ...newItems[index], [field]: value };
-    if (field === 'quantity' || field === 'rate') {
-      const q = Number(field === 'quantity' ? value : newItems[index].quantity) || 1;
-      const r = Number(field === 'rate' ? value : newItems[index].rate) || 0;
-      newItems[index].amount = q * r;
-    }
-    const { subtotal, taxAmount, total } = calculateQuoteTotals(
-      newItems,
-      Number(quoteFormData.discount || 0),
-      Number(quoteFormData.tax_rate ?? 18)
-    );
-    setQuoteFormData({
-      ...quoteFormData,
-      items: newItems,
-      subtotal,
-      tax_amount: taxAmount,
-      total_amount: total,
+    setQuoteFormData((prev) => {
+      const newItems = [...(prev.items || [])];
+      const currentItem = { ...(newItems[index] || { id: String(index + 1), description: '', quantity: 1, rate: 0, amount: 0 }) };
+
+      if (field === 'rate' || field === 'amount') {
+        const numVal = typeof value === 'number' ? value : (value === '' ? 0 : Number(value) || 0);
+        currentItem.rate = numVal;
+        currentItem.amount = (Number(currentItem.quantity) || 1) * numVal;
+      } else if (field === 'quantity') {
+        const q = typeof value === 'number' ? value : (value === '' ? 1 : Number(value) || 1);
+        currentItem.quantity = q;
+        currentItem.amount = q * (Number(currentItem.rate) || 0);
+      } else {
+        (currentItem as any)[field] = value;
+      }
+      newItems[index] = currentItem;
+
+      const taxRate = Number(prev.tax_rate ?? 18);
+      const discount = Number(prev.discount || 0);
+      const { subtotal, taxAmount, total } = calculateQuoteTotals(newItems, discount, taxRate);
+
+      return {
+        ...prev,
+        items: newItems,
+        subtotal,
+        tax_amount: taxAmount,
+        total_amount: total,
+      };
     });
   };
 
   const handleAddQuoteItem = () => {
-    const current = quoteFormData.items || [];
-    const newItems: QuotationItem[] = [
-      ...current,
-      {
-        id: String(current.length + 1),
-        description: '',
-        quantity: 1,
-        rate: 0,
-        amount: 0,
-      },
-    ];
-    const { subtotal, taxAmount, total } = calculateQuoteTotals(
-      newItems,
-      Number(quoteFormData.discount || 0),
-      Number(quoteFormData.tax_rate ?? 18)
-    );
-    setQuoteFormData({
-      ...quoteFormData,
-      items: newItems,
-      subtotal,
-      tax_amount: taxAmount,
-      total_amount: total,
+    setQuoteFormData((prev) => {
+      const current = prev.items || [];
+      const newItems: QuotationItem[] = [
+        ...current,
+        {
+          id: String(current.length + 1),
+          description: '',
+          quantity: 1,
+          rate: 0,
+          amount: 0,
+        },
+      ];
+      const taxRate = Number(prev.tax_rate ?? 18);
+      const discount = Number(prev.discount || 0);
+      const { subtotal, taxAmount, total } = calculateQuoteTotals(newItems, discount, taxRate);
+      return {
+        ...prev,
+        items: newItems,
+        subtotal,
+        tax_amount: taxAmount,
+        total_amount: total,
+      };
     });
   };
 
   const handleRemoveQuoteItem = (index: number) => {
-    const newItems = (quoteFormData.items || []).filter((_, i) => i !== index);
-    const { subtotal, taxAmount, total } = calculateQuoteTotals(
-      newItems,
-      Number(quoteFormData.discount || 0),
-      Number(quoteFormData.tax_rate ?? 18)
-    );
-    setQuoteFormData({
-      ...quoteFormData,
-      items: newItems,
-      subtotal,
-      tax_amount: taxAmount,
-      total_amount: total,
+    setQuoteFormData((prev) => {
+      const newItems = (prev.items || []).filter((_, i) => i !== index);
+      const taxRate = Number(prev.tax_rate ?? 18);
+      const discount = Number(prev.discount || 0);
+      const { subtotal, taxAmount, total } = calculateQuoteTotals(newItems, discount, taxRate);
+      return {
+        ...prev,
+        items: newItems,
+        subtotal,
+        tax_amount: taxAmount,
+        total_amount: total,
+      };
     });
   };
 
   // Deliverable Line Item Helpers for Invoice Studio
   const handleUpdateInvoiceItem = (index: number, field: string, value: any) => {
-    const current = (invoiceFormData.items && invoiceFormData.items.length > 0)
-      ? invoiceFormData.items
-      : [{ id: '1', description: '', quantity: 1, rate: 0, amount: 0 }];
-    const newItems = [...current];
-    newItems[index] = { ...newItems[index], [field]: value };
-    if (field === 'quantity' || field === 'rate') {
-      const q = Number(field === 'quantity' ? value : newItems[index].quantity) || 1;
-      const r = Number(field === 'rate' ? value : newItems[index].rate) || 0;
-      newItems[index].amount = q * r;
-    }
-    const subtotal = newItems.reduce((sum, it) => sum + (Number(it.amount) || 0), 0);
-    const taxRate = Number(invoiceFormData.tax_rate ?? 18);
-    const tax = taxRate > 0 ? (subtotal * taxRate) / 100 : 0;
-    setInvoiceFormData({
-      ...invoiceFormData,
-      items: newItems,
-      subtotal,
-      tax_amount: tax,
-      total_amount: subtotal + tax,
+    setInvoiceFormData((prev) => {
+      const current = (prev.items && prev.items.length > 0)
+        ? prev.items
+        : [{ id: '1', description: '', quantity: 1, rate: 0, amount: 0 }];
+      const newItems = [...current];
+      const currentItem = { ...(newItems[index] || { id: String(index + 1), description: '', quantity: 1, rate: 0, amount: 0 }) };
+
+      if (field === 'rate' || field === 'amount') {
+        const numVal = typeof value === 'number' ? value : (value === '' ? 0 : Number(value) || 0);
+        currentItem.rate = numVal;
+        currentItem.amount = (Number(currentItem.quantity) || 1) * numVal;
+      } else if (field === 'quantity') {
+        const q = typeof value === 'number' ? value : (value === '' ? 1 : Number(value) || 1);
+        currentItem.quantity = q;
+        currentItem.amount = q * (Number(currentItem.rate) || 0);
+      } else {
+        (currentItem as any)[field] = value;
+      }
+      newItems[index] = currentItem;
+
+      const subtotal = newItems.reduce((sum, it) => sum + (Number(it.amount) || ((Number(it.quantity) || 1) * (Number(it.rate) || 0)) || 0), 0);
+      const taxRate = Number(prev.tax_rate ?? 18);
+      const tax = taxRate > 0 ? (subtotal * taxRate) / 100 : 0;
+      return {
+        ...prev,
+        items: newItems,
+        subtotal,
+        tax_amount: tax,
+        total_amount: subtotal + tax,
+      };
     });
   };
 
   const handleAddInvoiceItem = () => {
-    const current = (invoiceFormData.items && invoiceFormData.items.length > 0)
-      ? invoiceFormData.items
-      : [{ id: '1', description: '', quantity: 1, rate: 0, amount: 0 }];
-    const newItems = [
-      ...current,
-      {
-        id: String(current.length + 1),
-        description: '',
-        quantity: 1,
-        rate: 0,
-        amount: 0,
-      },
-    ];
-    const subtotal = newItems.reduce((sum, it) => sum + (Number(it.amount) || 0), 0);
-    const taxRate = Number(invoiceFormData.tax_rate ?? 18);
-    const tax = taxRate > 0 ? (subtotal * taxRate) / 100 : 0;
-    setInvoiceFormData({
-      ...invoiceFormData,
-      items: newItems,
-      subtotal,
-      tax_amount: tax,
-      total_amount: subtotal + tax,
+    setInvoiceFormData((prev) => {
+      const current = (prev.items && prev.items.length > 0)
+        ? prev.items
+        : [{ id: '1', description: '', quantity: 1, rate: 0, amount: 0 }];
+      const newItems = [
+        ...current,
+        {
+          id: String(current.length + 1),
+          description: '',
+          quantity: 1,
+          rate: 0,
+          amount: 0,
+        },
+      ];
+      const subtotal = newItems.reduce((sum, it) => sum + (Number(it.amount) || ((Number(it.quantity) || 1) * (Number(it.rate) || 0)) || 0), 0);
+      const taxRate = Number(prev.tax_rate ?? 18);
+      const tax = taxRate > 0 ? (subtotal * taxRate) / 100 : 0;
+      return {
+        ...prev,
+        items: newItems,
+        subtotal,
+        tax_amount: tax,
+        total_amount: subtotal + tax,
+      };
     });
   };
 
   const handleRemoveInvoiceItem = (index: number) => {
-    const current = invoiceFormData.items || [];
-    const newItems = current.filter((_, i) => i !== index);
-    const subtotal = newItems.reduce((sum, it) => sum + (Number(it.amount) || 0), 0);
-    const taxRate = Number(invoiceFormData.tax_rate ?? 18);
-    const tax = taxRate > 0 ? (subtotal * taxRate) / 100 : 0;
-    setInvoiceFormData({
-      ...invoiceFormData,
-      items: newItems,
-      subtotal,
-      tax_amount: tax,
-      total_amount: subtotal + tax,
+    setInvoiceFormData((prev) => {
+      const current = prev.items || [];
+      const newItems = current.filter((_, i) => i !== index);
+      const subtotal = newItems.reduce((sum, it) => sum + (Number(it.amount) || ((Number(it.quantity) || 1) * (Number(it.rate) || 0)) || 0), 0);
+      const taxRate = Number(prev.tax_rate ?? 18);
+      const tax = taxRate > 0 ? (subtotal * taxRate) / 100 : 0;
+      return {
+        ...prev,
+        items: newItems,
+        subtotal,
+        tax_amount: tax,
+        total_amount: subtotal + tax,
+      };
     });
   };
 
@@ -1710,26 +1839,67 @@ export const AdminPage: React.FC = () => {
     const preset = SOFTWARE_PRESETS[presetKey];
     if (!preset) return;
 
-    const items: QuotationItem[] = preset.deliverables.map((d, i) => ({
-      id: String(i + 1),
-      description: d.description,
-      quantity: 1,
-      rate: d.rate,
-      amount: d.rate,
+    setQuoteFormData((prev) => {
+      const items: QuotationItem[] = preset.deliverables.map((d, i) => ({
+        id: String(i + 1),
+        description: d.description,
+        quantity: 1,
+        rate: d.rate,
+        amount: d.rate,
+      }));
+
+      const taxRate = Number(prev.tax_rate ?? 18);
+      const discount = Number(prev.discount || 0);
+      const { subtotal, taxAmount, total } = calculateQuoteTotals(items, discount, taxRate);
+
+      return {
+        ...prev,
+        project_title: preset.name,
+        software_name: preset.name.split('(')[0].trim(),
+        items,
+        subtotal,
+        tax_amount: taxAmount,
+        total_amount: total,
+        notes: preset.defaultTerms,
+      };
+    });
+  };
+
+  // Convert Quotation into a Tax Invoice seamlessly
+  const handleConvertQuoteToInvoice = (quote: QuotationRecord) => {
+    soundFX.playClick();
+    setEditingInvoiceId(null);
+    const nextNum = generateNextInvoiceNumber();
+    const quoteItems = (quote.items || []).map((it, idx) => ({
+      id: String(idx + 1),
+      description: it.description || 'Enterprise Software Deliverables',
+      quantity: Number(it.quantity) || 1,
+      rate: Number(it.rate || it.amount) || 0,
+      amount: Number(it.amount || it.rate) || 0,
     }));
 
-    const { subtotal, taxAmount, total } = calculateQuoteTotals(items, quoteFormData.discount || 0, 18);
-
-    setQuoteFormData({
-      ...quoteFormData,
-      project_title: preset.name,
-      software_name: preset.name.split('(')[0].trim(),
-      items,
-      subtotal,
-      tax_amount: taxAmount,
-      total_amount: total,
-      notes: preset.defaultTerms,
+    setInvoiceFormData({
+      invoice_number: nextNum,
+      client_name: quote.client_name || '',
+      client_company: quote.client_company || '',
+      client_email: quote.client_email || '',
+      client_phone: quote.client_phone || '',
+      client_gstin: '',
+      hsn_sac: '998314',
+      items: quoteItems.length > 0 ? quoteItems : [{ id: '1', description: quote.project_title || 'Enterprise Software Engineering Deliverables', quantity: 1, rate: Number(quote.subtotal || 0), amount: Number(quote.subtotal || 0) }],
+      subtotal: Number(quote.subtotal || 0),
+      discount: Number(quote.discount || 0),
+      tax_rate: Number(quote.tax_rate ?? 18),
+      tax_amount: Number(quote.tax_amount || 0),
+      total_amount: Number(quote.total_amount || 0),
+      payment_mode: 'UPI',
+      status: 'pending',
+      due_date: new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10),
+      notes: 'Official GST invoice with 18% Input Tax Credit (ITC). Bank NEFT/RTGS & UPI settlement details attached.',
     });
+    setActiveQuotePreview(null);
+    setShowInvoiceModal(true);
+    setActiveTab('billing');
   };
 
   // Direct WhatsApp Launcher - 100% Reliable Delivery Straight to Phone
@@ -3623,6 +3793,16 @@ export const AdminPage: React.FC = () => {
                             <span>PDF</span>
                           </button>
 
+                          <button
+                            type="button"
+                            onClick={() => handleConvertQuoteToInvoice(q)}
+                            className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1 cursor-pointer"
+                            title="Convert quotation into a formal Tax Invoice"
+                          >
+                            <Receipt className="w-3.5 h-3.5" />
+                            <span>To Invoice</span>
+                          </button>
+
                           {q.client_phone && (
                             <button
                               type="button"
@@ -4625,16 +4805,19 @@ export const AdminPage: React.FC = () => {
                           />
                         </div>
                         <div className="col-span-9 sm:col-span-3">
-                          <label className="text-[10px] text-zinc-500 block mb-0.5 font-bold">Amount (₹)</label>
+                          <label className="text-[10px] text-zinc-400 block mb-0.5 font-bold">Amount (₹)</label>
                           <input
-                            type="number"
-                            value={item.amount || item.rate}
+                            type="text"
+                            inputMode="numeric"
+                            value={item.rate !== undefined && item.rate !== null && item.rate !== 0 ? String(item.rate) : (item.amount ? String(item.amount) : '')}
                             onChange={(e) => {
-                              const val = Number(e.target.value);
+                              // Strip non-digits and prevent leading zeros (e.g. 00122 -> 122, 00 -> 0)
+                              const clean = e.target.value.replace(/[^0-9]/g, '').replace(/^0+(?=\d)/, '');
+                              const val = clean === '' ? 0 : parseInt(clean, 10);
                               handleUpdateQuoteItem(idx, 'rate', val);
-                              handleUpdateQuoteItem(idx, 'amount', val);
                             }}
-                            className="w-full px-3 py-2 rounded-lg bg-black/50 border border-white/10 text-white text-xs font-bold"
+                            placeholder="0"
+                            className="w-full px-3 py-2 rounded-lg bg-black/50 border border-white/10 text-white text-xs font-bold focus:border-violet-500 focus:outline-none"
                           />
                         </div>
                         <div className="col-span-3 sm:col-span-1 flex justify-end pt-3 sm:pt-0">
@@ -4660,17 +4843,19 @@ export const AdminPage: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => {
-                          const { subtotal, taxAmount, total } = calculateQuoteTotals(
-                            quoteFormData.items || [],
-                            Number(quoteFormData.discount || 0),
-                            18
-                          );
-                          setQuoteFormData({
-                            ...quoteFormData,
-                            tax_rate: 18,
-                            subtotal,
-                            tax_amount: taxAmount,
-                            total_amount: total,
+                          setQuoteFormData((prev) => {
+                            const { subtotal, taxAmount, total } = calculateQuoteTotals(
+                              prev.items || [],
+                              Number(prev.discount || 0),
+                              18
+                            );
+                            return {
+                              ...prev,
+                              tax_rate: 18,
+                              subtotal,
+                              tax_amount: taxAmount,
+                              total_amount: total,
+                            };
                           });
                         }}
                         className={`py-2.5 px-3 rounded-xl border text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${Number(quoteFormData.tax_rate ?? 18) > 0
@@ -4685,17 +4870,19 @@ export const AdminPage: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => {
-                          const { subtotal, total } = calculateQuoteTotals(
-                            quoteFormData.items || [],
-                            Number(quoteFormData.discount || 0),
-                            0
-                          );
-                          setQuoteFormData({
-                            ...quoteFormData,
-                            tax_rate: 0,
-                            subtotal,
-                            tax_amount: 0,
-                            total_amount: total,
+                          setQuoteFormData((prev) => {
+                            const { subtotal, total } = calculateQuoteTotals(
+                              prev.items || [],
+                              Number(prev.discount || 0),
+                              0
+                            );
+                            return {
+                              ...prev,
+                              tax_rate: 0,
+                              subtotal,
+                              tax_amount: 0,
+                              total_amount: total,
+                            };
                           });
                         }}
                         className={`py-2.5 px-3 rounded-xl border text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${Number(quoteFormData.tax_rate ?? 18) === 0
@@ -4857,6 +5044,12 @@ export const AdminPage: React.FC = () => {
                 </div>
               </div>
 
+              {/* Amount in Words */}
+              <div className="p-3 rounded-xl bg-violet-50/70 border border-violet-100 text-xs font-mono text-violet-900">
+                <span className="font-bold text-violet-950">Amount in Words: </span>
+                <span>{numberToIndianWords(Number(activeQuotePreview.total_amount))}</span>
+              </div>
+
               {/* Terms & Notes */}
               <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 space-y-1 font-mono">
                 <div className="font-bold text-slate-800">Commercial Terms:</div>
@@ -4866,20 +5059,31 @@ export const AdminPage: React.FC = () => {
               </div>
 
               {/* Actions */}
-              <div className="pt-4 border-t border-slate-200 flex justify-between items-center no-print">
+              <div className="pt-4 border-t border-slate-200 flex justify-between items-center no-print gap-2">
                 <button
                   onClick={() => setActiveQuotePreview(null)}
                   className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-mono cursor-pointer"
                 >
                   Close Preview
                 </button>
-                <button
-                  onClick={() => printQuotationDocument(activeQuotePreview)}
-                  className="px-6 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs font-mono flex items-center gap-2 cursor-pointer shadow-lg"
-                >
-                  <Printer className="w-4 h-4" />
-                  <span>Print / Save as PDF</span>
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleConvertQuoteToInvoice(activeQuotePreview)}
+                    className="px-4 py-2.5 rounded-xl bg-emerald-600/10 hover:bg-emerald-600/20 text-emerald-700 border border-emerald-500/30 text-xs font-mono font-bold flex items-center gap-1.5 cursor-pointer transition-colors"
+                    title="Convert this commercial quotation into an official Tax Invoice"
+                  >
+                    <Receipt className="w-3.5 h-3.5" />
+                    <span>Convert to Tax Invoice</span>
+                  </button>
+                  <button
+                    onClick={() => printQuotationDocument(activeQuotePreview)}
+                    className="px-6 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs font-mono flex items-center gap-2 cursor-pointer shadow-lg"
+                  >
+                    <Printer className="w-4 h-4" />
+                    <span>Print / Save as PDF</span>
+                  </button>
+                </div>
               </div>
             </motion.div>
           </div>
@@ -5041,6 +5245,7 @@ export const AdminPage: React.FC = () => {
                     ]).map((item, idx) => (
                       <div key={idx} className="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 grid grid-cols-12 gap-2 items-center">
                         <div className="col-span-12 sm:col-span-6">
+                          <label className="text-[10px] text-slate-500 dark:text-zinc-500 block mb-0.5 font-bold">Service Deliverable #{idx + 1}</label>
                           <input
                             type="text"
                             value={item.description}
@@ -5050,20 +5255,33 @@ export const AdminPage: React.FC = () => {
                           />
                         </div>
                         <div className="col-span-4 sm:col-span-2">
+                          <label className="text-[10px] text-slate-500 dark:text-zinc-500 block mb-0.5 font-bold text-center">Qty</label>
                           <input
-                            type="number"
-                            min="1"
-                            value={item.quantity}
-                            onChange={(e) => handleUpdateInvoiceItem(idx, 'quantity', Number(e.target.value))}
-                            className="w-full px-2 py-1.5 rounded-lg bg-slate-50 dark:bg-black/50 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-xs text-center"
+                            type="text"
+                            inputMode="numeric"
+                            value={item.quantity ? String(item.quantity) : '1'}
+                            onChange={(e) => {
+                              const clean = e.target.value.replace(/[^0-9]/g, '').replace(/^0+/, '');
+                              const q = clean === '' ? 1 : Math.max(1, parseInt(clean, 10));
+                              handleUpdateInvoiceItem(idx, 'quantity', q);
+                            }}
+                            className="w-full px-2 py-1.5 rounded-lg bg-slate-50 dark:bg-black/50 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-xs text-center font-bold"
                           />
                         </div>
                         <div className="col-span-5 sm:col-span-3">
+                          <label className="text-[10px] text-slate-500 dark:text-zinc-500 block mb-0.5 font-bold">Amount (₹)</label>
                           <input
-                            type="number"
-                            value={item.rate}
-                            onChange={(e) => handleUpdateInvoiceItem(idx, 'rate', Number(e.target.value))}
-                            className="w-full px-2.5 py-1.5 rounded-lg bg-slate-50 dark:bg-black/50 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-xs"
+                            type="text"
+                            inputMode="numeric"
+                            value={item.rate !== undefined && item.rate !== null && item.rate !== 0 ? String(item.rate) : (item.amount ? String(item.amount) : '')}
+                            onChange={(e) => {
+                              // Strip non-digits and prevent leading zeros (e.g. 00122 -> 122, 00 -> 0)
+                              const clean = e.target.value.replace(/[^0-9]/g, '').replace(/^0+(?=\d)/, '');
+                              const val = clean === '' ? 0 : parseInt(clean, 10);
+                              handleUpdateInvoiceItem(idx, 'rate', val);
+                            }}
+                            placeholder="0"
+                            className="w-full px-2.5 py-1.5 rounded-lg bg-slate-50 dark:bg-black/50 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-xs font-bold focus:border-emerald-500 focus:outline-none"
                           />
                         </div>
                         <div className="col-span-3 sm:col-span-1 flex justify-end">
@@ -5088,13 +5306,15 @@ export const AdminPage: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => {
-                          const sub = Number(invoiceFormData.subtotal || 0);
-                          const tax = (sub * 18) / 100;
-                          setInvoiceFormData({
-                            ...invoiceFormData,
-                            tax_rate: 18,
-                            tax_amount: tax,
-                            total_amount: sub + tax,
+                          setInvoiceFormData((prev) => {
+                            const sub = Number(prev.subtotal || 0);
+                            const tax = (sub * 18) / 100;
+                            return {
+                              ...prev,
+                              tax_rate: 18,
+                              tax_amount: tax,
+                              total_amount: sub + tax,
+                            };
                           });
                         }}
                         className={`py-2.5 px-3 rounded-xl border text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${Number(invoiceFormData.tax_rate ?? 18) > 0
@@ -5109,12 +5329,14 @@ export const AdminPage: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => {
-                          const sub = Number(invoiceFormData.subtotal || 0);
-                          setInvoiceFormData({
-                            ...invoiceFormData,
-                            tax_rate: 0,
-                            tax_amount: 0,
-                            total_amount: sub,
+                          setInvoiceFormData((prev) => {
+                            const sub = Number(prev.subtotal || 0);
+                            return {
+                              ...prev,
+                              tax_rate: 0,
+                              tax_amount: 0,
+                              total_amount: sub,
+                            };
                           });
                         }}
                         className={`py-2.5 px-3 rounded-xl border text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${Number(invoiceFormData.tax_rate ?? 18) === 0
@@ -5303,22 +5525,42 @@ export const AdminPage: React.FC = () => {
                 </tbody>
               </table>
 
-              {/* Calculation Area */}
-              <div className="flex items-center justify-end pt-2">
-                <div className="space-y-1 text-xs font-mono text-right max-w-xs">
-                  <div className="text-slate-600">Subtotal: ₹{Number(activeInvoicePreview.subtotal).toLocaleString('en-IN')}</div>
-                  {Number(activeInvoicePreview.tax_rate) > 0 ? (
-                    <>
-                      <div className="text-slate-600">CGST (9%): ₹{(Number(activeInvoicePreview.tax_amount) / 2).toLocaleString('en-IN')}</div>
-                      <div className="text-slate-600">SGST (9%): ₹{(Number(activeInvoicePreview.tax_amount) / 2).toLocaleString('en-IN')}</div>
-                    </>
-                  ) : (
-                    <div className="text-emerald-700 font-bold">GST: ₹0.00 (Without GST / 0%)</div>
-                  )}
-                  <div className="text-base font-black text-slate-900 pt-1 border-t border-slate-900">
-                    Total: ₹{Number(activeInvoicePreview.total_amount).toLocaleString('en-IN')}
+              {/* Calculation & Settlement Area */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-mono space-y-1">
+                  <div className="font-bold text-slate-900 uppercase text-[10px] tracking-wide mb-1 flex items-center gap-1.5">
+                    <CreditCard className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Official Bank Settlement Details</span>
+                  </div>
+                  <div className="text-slate-600">A/C Name: <span className="text-slate-900 font-bold">Pyrow Technologies</span></div>
+                  <div className="text-slate-600">Bank: <span className="text-slate-800">HDFC Bank Ltd</span></div>
+                  <div className="text-slate-600">A/C No: <span className="text-slate-900 font-bold">50200084729103</span></div>
+                  <div className="text-slate-600">IFSC Code: <span className="text-slate-800 font-mono">HDFC0001234</span></div>
+                  <div className="text-slate-600">UPI VPA: <span className="text-emerald-700 font-bold">pyrow@upi</span></div>
+                </div>
+
+                <div className="space-y-1.5 text-xs font-mono text-right flex flex-col justify-center">
+                  <div className="space-y-1">
+                    <div className="text-slate-600">Subtotal: ₹{Number(activeInvoicePreview.subtotal).toLocaleString('en-IN')}</div>
+                    {Number(activeInvoicePreview.tax_rate) > 0 ? (
+                      <>
+                        <div className="text-slate-600">CGST (9%): ₹{(Number(activeInvoicePreview.tax_amount) / 2).toLocaleString('en-IN')}</div>
+                        <div className="text-slate-600">SGST (9%): ₹{(Number(activeInvoicePreview.tax_amount) / 2).toLocaleString('en-IN')}</div>
+                      </>
+                    ) : (
+                      <div className="text-emerald-700 font-bold">GST: ₹0.00 (Without GST / 0%)</div>
+                    )}
+                    <div className="text-base font-black text-slate-900 pt-1 border-t border-slate-900">
+                      Total: ₹{Number(activeInvoicePreview.total_amount).toLocaleString('en-IN')}
+                    </div>
                   </div>
                 </div>
+              </div>
+
+              {/* Amount in Words */}
+              <div className="p-3 rounded-xl bg-emerald-50/70 border border-emerald-200 text-xs font-mono text-emerald-950">
+                <span className="font-bold text-emerald-900">Amount in Words: </span>
+                <span>{numberToIndianWords(Number(activeInvoicePreview.total_amount))}</span>
               </div>
 
               <div className="pt-4 border-t border-slate-200 flex justify-between items-center no-print gap-2">
